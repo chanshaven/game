@@ -1,197 +1,245 @@
-/* ===== CÂU MỚI TỪ OLYMPIA — ĐÃ LỌC LẠI ===== */
-
 (window.QBANK = window.QBANK || []).push(
 
-  ["NHỮNG NGÔI SAO XA XÔI", "Văn học",
-    "Thao, Nho và Phương Định là nhân vật trong tác phẩm nào của Lê Minh Khuê?"],
+  ["NƯỚC CHẢY ĐÁ MÒN", "Thành ngữ", "Thành ngữ nào nói sự bền bỉ lâu ngày sẽ đem lại kết quả?"],
 
-  ["KINH KỊCH", "Văn hóa",
-    "Môn kịch hát cổ truyền nổi tiếng của Trung Quốc có tên là gì?"],
+  ["GẬY ÔNG ĐẬP LƯNG ÔNG", "Thành ngữ", "Thành ngữ nào nói mưu kế của mình quay lại hại chính mình?"],
 
-  ["VÕ THỊ THẮNG", "Lịch sử",
-    "Nụ cười trong bức ảnh “Nụ cười chiến thắng” nổi tiếng là của ai?"],
+  ["TÍCH TIỂU THÀNH ĐẠI", "Thành ngữ", "Thành ngữ nào nói tích góp từng chút rồi sẽ thành nhiều?"],
 
-  ["KARATEDO", "Thể thao",
-    "Môn võ Nhật Bản chủ yếu sử dụng các đòn đánh bằng tay có tên là gì?"],
+  ["DỤC TỐC BẤT ĐẠT", "Thành ngữ", "Thành ngữ nào nói vội vàng quá thì dễ hỏng việc?"],
 
-  ["KHÁNH HÒA", "Địa lý",
-    "Vịnh Cam Ranh thuộc tỉnh nào?"],
+  ["MƯA DẦM THẤM LÂU", "Thành ngữ", "Thành ngữ nào nói tác động bền bỉ lâu ngày sẽ có hiệu quả?"],
 
-  ["VÂN KIỀU", "Văn hóa",
-    "Đàn Ta Lư là nhạc cụ gắn với dân tộc nào?"],
+  ["CHIẾN THẮNG ĐIỆN BIÊN PHỦ", "Lịch sử", "Chiến thắng nào được ca ngợi là “lừng lẫy năm châu, chấn động địa cầu”?"],
 
-  ["TCHAIKOVSKY", "Âm nhạc",
-    "Nhạc phẩm Hồ Thiên Nga là của nhà soạn nhạc nào?"],
+  ["LÝ THƯỜNG KIỆT", "Lịch sử", "Ai được xem là tác giả bài thơ Nam quốc sơn hà?"],
 
-  ["KYOTO", "Địa lý",
-    "Thành phố nào từng là kinh đô của Nhật Bản trước Tokyo?"],
+  ["NGÔ QUYỀN", "Lịch sử", "Ai đánh tan quân Nam Hán trên sông Bạch Đằng?"],
 
-  ["DÃY BẠCH MÃ", "Địa lý",
-    "Đèo Hải Vân cắt ngang dãy núi nào?"],
+  ["QUANG TRUNG", "Lịch sử", "Vị vua áo vải nào đại phá quân Thanh vào mùa xuân Kỷ Dậu?"],
 
-  ["PHƠN TÂY NAM", "Địa lý",
-    "Gió Lào còn được gọi bằng tên khí tượng nào?"],
+  ["LÊ LỢI", "Lịch sử", "Ai lãnh đạo cuộc khởi nghĩa Lam Sơn chống quân Minh?"],
 
-  ["TRÍ THÔNG MINH CẢM XÚC", "Kiến thức chung",
-    "Chỉ số EQ phản ánh loại trí thông minh nào?"],
+  ["NGUYỄN TRÃI", "Lịch sử", "Ai là tác giả của Bình Ngô đại cáo?"],
 
-  ["CUBA", "Địa lý",
-    "Hòn đảo lớn nhất vùng Caribe là đảo nào?"],
+  ["VÕ NGUYÊN GIÁP", "Lịch sử", "Vị đại tướng nào chỉ huy chiến dịch Điện Biên Phủ?"],
 
-  ["HỘI NGHỊ BÌNH THAN", "Lịch sử",
-    "Trần Quốc Toản bóp nát quả cam tại hội nghị nào?"],
+  ["TRỐNG ĐỒNG ĐÔNG SƠN", "Lịch sử", "Hiện vật nào tiêu biểu cho nền văn minh Đông Sơn?"],
 
-  ["TRÂU VÀNG", "Thể thao",
-    "Linh vật SEA Games lần đầu được tổ chức tại Việt Nam là gì?"],
+  ["NƯỚC VĂN LANG", "Lịch sử", "Nhà nước đầu tiên trong lịch sử người Việt tên là gì?"],
 
-  ["VỤ CHIÊM", "Nông nghiệp",
-    "Vụ lúa gieo vào đầu mùa lạnh và thu hoạch đầu mùa nóng gọi là gì?"],
+  ["BÀ TRIỆU", "Lịch sử", "Nữ anh hùng nào cưỡi voi ra trận đánh quân Ngô?"],
 
-  ["BÁNH RĂNG", "Kiến thức chung",
-    "Trên Quốc huy Việt Nam, hình ảnh nào tượng trưng cho công nghiệp?"],
+  ["ĐINH BỘ LĨNH", "Lịch sử", "Ai dẹp loạn mười hai sứ quân rồi lên ngôi hoàng đế?"],
 
-  ["OBITAN NGUYÊN TỬ", "Hóa học",
-    "Trong hóa học, ký hiệu AO chỉ khái niệm nào?"],
+  ["LÝ THÁI TỔ", "Lịch sử", "Vị vua nào dời đô từ Hoa Lư về Thăng Long?"],
 
-  ["LANG LIÊU", "Văn hóa",
-    "Theo truyền thuyết, ai là người làm ra bánh chưng và bánh giầy?"],
+  ["CHIẾU DỜI ĐÔ", "Lịch sử", "Văn kiện nào bàn việc dời kinh đô ra thành Đại La?"],
 
-  ["RƯỢU SIM", "Ẩm thực",
-    "Loại rượu đặc sản nổi tiếng của Phú Quốc được làm từ quả gì?"],
+  ["HỘI NGHỊ DIÊN HỒNG", "Lịch sử", "Hội nghị nào hỏi ý các bô lão nên hòa hay nên đánh?"],
 
-  ["ĐẦM DẠ TRẠCH", "Văn hóa",
-    "Địa danh nào gắn với truyền thuyết Chử Đồng Tử và Tiên Dung?"],
+  ["SAINT PETERSBURG", "Lịch sử", "Thành phố nào là trung tâm của Cách mạng Tháng Mười Nga?"],
 
-  ["HỘI LIM", "Văn hóa",
-    "Hội hát quan họ nổi tiếng ở Bắc Ninh có tên là gì?"],
+  ["VƯỜN TREO BABYLON", "Lịch sử", "Kỳ quan cổ đại nào gắn với vùng đất Babylon?"],
 
-  ["RĂNG CỬA", "Sinh học",
-    "Ngà voi thực chất là bộ phận nào phát triển biến đổi thành?"],
+  ["ĐẠI NGU", "Lịch sử", "Quốc hiệu nước ta dưới thời nhà Hồ là gì?"],
 
-  ["KIM TRỌNG", "Văn học",
-    "Nhân vật nào trong Truyện Kiều được Nguyễn Du miêu tả có “túi gió trăng”?"],
+  ["DU KÍCH BA TƠ", "Lịch sử", "Đơn vị vũ trang cách mạng nổi tiếng được thành lập tại Quảng Ngãi có tên gì?"],
 
-  ["TÊ LÊ MÁC", "Văn học",
-    "Trong sử thi Ôđixê, con trai của Uy-lít-xơ tên là gì?"],
+  ["HỒ NGUYÊN TRỪNG", "Lịch sử", "Ai nói: “Tôi không sợ đánh giặc, chỉ sợ lòng dân không theo”?"],
 
-  ["BỊ CÁO", "Pháp luật",
-    "Người đã bị tòa án quyết định đưa ra xét xử được gọi là gì?"],
+  ["ĐẠI NAM", "Lịch sử", "Quốc hiệu nước ta dưới thời vua Minh Mạng là gì?"],
 
-  ["MIỀN BẮC", "Âm nhạc",
-    "Cò lả là làn điệu dân ca của vùng nào ở Việt Nam?"],
+  ["VOLGOGRAD", "Lịch sử", "Bức tranh toàn cảnh chiến thắng Stalingrad trên đồi Mamayev nằm ở thành phố nào?"],
 
-  ["HOA GẠO", "Thực vật",
-    "Hoa pơ lang còn được gọi phổ biến bằng tên nào?"],
+  ["DƯƠNG VÂN NGA", "Lịch sử", "Người từng là Hoàng hậu của hai vua trong lịch sử Việt Nam là ai?"],
 
-  ["MƯA AXIT", "Khoa học",
-    "Khí lưu huỳnh đioxit là một nguyên nhân gây ra hiện tượng nào?"],
+  ["FERDINAND DE MAGELLAN", "Lịch sử", "Nhà thám hiểm nào gắn với chuyến hải hành đầu tiên vòng quanh Trái Đất?"],
 
-  ["LAM SƠN", "Lịch sử",
-    "Nhà Hậu Lê được thành lập sau thắng lợi của cuộc khởi nghĩa nào?"],
+  ["ANH", "Lịch sử", "Quốc gia nào đầu tiên sử dụng tem thư?"],
 
-  ["FLO", "Hóa học",
-    "Nguyên tố nào có độ âm điện lớn nhất trong bảng tuần hoàn?"],
+  ["LÊ LAI", "Lịch sử", "Danh tướng nào hy sinh để cứu Lê Lợi?"],
 
-  ["ĐÀO DUY TỪ", "Văn hóa",
-    "Ai thường được xem là một trong những ông tổ của nghệ thuật tuồng Việt Nam?"],
+  ["MALAYSIA", "Lịch sử", "Malacca là tiền thân của nước nào?"],
 
-  ["NAM PHI", "Địa lý",
-    "Quốc gia nào nổi tiếng vì có ba thủ đô?"],
+  ["NGUYỄN TRUNG TRỰC", "Lịch sử", "Ai nói câu “Bao giờ người Tây nhổ hết cỏ nước Nam…”?"],
 
-  ["DƯƠNG VĂN MINH", "Lịch sử",
-    "Ai đại diện chính quyền Việt Nam Cộng hòa tuyên bố đầu hàng ngày 30 tháng 4 năm 1975?"],
+  ["LÊ HỒNG PHONG", "Lịch sử", "Người Việt Nam đầu tiên tham gia Hồng quân Liên Xô là ai?"],
 
-  ["HỒNG", "Hóa học",
-    "Phenolphtalein chuyển sang màu gì trong môi trường bazơ?"],
+  ["LÊ HUY DOÃN", "Lịch sử", "Tên thật của Lê Hồng Phong là gì?"],
 
-  ["VATICAN", "Địa lý",
-    "Ngoài San Marino, quốc gia độc lập nào nằm hoàn toàn trong lãnh thổ Italia?"],
+  ["ROMA", "Lịch sử", "Kitô giáo ra đời tại quốc gia cổ đại nào?"],
 
-  ["SA HUỲNH", "Địa lý",
-    "Địa danh ven biển nào ở Quảng Ngãi có tên mang nghĩa là “cát vàng”?"],
+  ["TRIỆU QUANG PHỤC", "Lịch sử", "Dạ Trạch Vương là ai?"],
 
-  ["ĐÁY BÌNH", "Vật lý",
-    "Trong một bình chất lỏng đứng yên, áp suất lớn nhất ở vị trí nào?"],
+  ["KHỔNG TỬ", "Lịch sử", "Ai là người sáng lập Nho giáo?"],
 
-  ["GIA LONG", "Lịch sử",
-    "Vị vua nào đặt quốc hiệu Việt Nam vào đầu thế kỷ XIX?"],
+  ["DUY TÂN", "Lịch sử", "Nguyễn Phúc Vĩnh San là tên húy của vua nào?"],
 
-  ["TẾ BÀO NHÂN SƠ", "Sinh học",
-    "Loại tế bào nào không có màng nhân hoàn chỉnh?"],
+  ["CHỦ NGHĨA TRUMAN", "Lịch sử", "Chính sách đối ngoại nào của Mỹ mang tên Tổng thống Truman?"],
 
-  ["VĂN BIA", "Văn hóa",
-    "Văn bản được khắc trên bia đá thường được gọi là gì?"],
+  ["MAI THÚC LOAN", "Lịch sử", "Ai còn được gọi là Mai Hắc Đế?"],
 
-  ["THU BỒN", "Địa lý",
-    "Phố cổ Hội An nằm ở hạ lưu con sông nào?"],
+  ["LĂNG LI SƠN", "Lịch sử", "Lăng Tần Thủy Hoàng còn được gọi bằng tên nào?"],
 
-  ["PHÚ THỌ", "Văn hóa",
-    "Địa phương nào được xem là cái nôi của nghệ thuật hát xoan?"],
+  ["LÊ ĐỨC THỌ", "Lịch sử", "Ai được trao Nobel Hòa bình cùng Henry Kissinger nhưng từ chối nhận?"],
 
-  ["TẾ BÀO THẦN KINH", "Sinh học",
-    "Loại tế bào nào có thể có chiều dài lớn nhất trong cơ thể người?"],
+  ["TRẦN HƯNG ĐẠO", "Lịch sử", "Ai đề ra kế sách “khoan sức cho dân”?"],
 
-  ["BA CHÀNG NGỰ LÂM PHÁO THỦ", "Văn học",
-    "Câu “Một người vì mọi người, mọi người vì một người” gắn với tác phẩm nào?"],
+  ["ĐỒ GỐM", "Lịch sử", "Sản phẩm nhân tạo cổ xưa nào được làm từ đất sét?"],
 
-  ["DỤC THANH", "Lịch sử",
-    "Nguyễn Tất Thành từng dạy học tại ngôi trường nào ở Phan Thiết?"],
+  ["HOA TULIP", "Lịch sử", "Loài hoa nào từng gây ra cơn sốt đầu cơ ở Hà Lan?"],
 
-  ["THẲNG HÀNG", "Thiên văn",
-    "Khi Mặt Trời, Trái Đất và Mặt Trăng gần như ở vị trí nào thì biên độ thủy triều lớn?"],
+  ["VỊNH HẠ LONG", "Địa lý", "Di sản ở Quảng Ninh nổi tiếng với hàng nghìn đảo đá vôi tên là gì?"],
 
-  ["PHẢN XẠ TOÀN PHẦN", "Vật lý",
-    "Cáp quang truyền ánh sáng chủ yếu dựa trên hiện tượng nào?"],
+  ["PHONG NHA KẺ BÀNG", "Địa lý", "Vườn quốc gia nào nổi tiếng với hệ thống hang động kỳ vĩ ở miền Trung Việt Nam?"],
 
-  ["TAM GIANG", "Văn học",
-    "Điền địa danh còn thiếu: “Sợ truông Nhà Hồ, sợ phá…”?"],
+  ["CỐ ĐÔ HUẾ", "Địa lý", "Kinh đô cuối cùng của triều Nguyễn nay được gọi bằng tên nào?"],
 
-  ["GIẢM", "Hóa học",
-    "Khi hòa tan amoni nitrat vào nước, nhiệt độ của dung dịch thay đổi thế nào?"],
+  ["PHỐ CỔ HỘI AN", "Địa lý", "Thương cảng cổ nào nổi tiếng với những dãy nhà vàng và đèn lồng?"],
 
-  ["THÂN NHÂN TRUNG", "Lịch sử",
-    "Câu “Hiền tài là nguyên khí của quốc gia” là của ai?"],
+  ["THÁNH ĐỊA MỸ SƠN", "Địa lý", "Quần thể đền tháp Chăm nổi tiếng ở miền Trung có tên là gì?"],
 
-  ["HỖN HỐNG", "Hóa học",
-    "Hợp kim của thủy ngân với một kim loại khác được gọi là gì?"],
+  ["HOÀN KIẾM", "Địa lý", "Hồ nào ở Hà Nội gắn với sự tích vua Lê trả gươm?"],
 
-  ["NGUYỄN ĐÌNH CHIỂU", "Văn học",
-    "Ngư tiều y thuật vấn đáp là tác phẩm của ai?"],
+  ["CHỢ BẾN THÀNH", "Địa lý", "Khu chợ nào được coi là một biểu tượng của Sài Gòn?"],
 
-  ["VỐN GEN", "Sinh học",
-    "Toàn bộ các alen của một quần thể được gọi chung là gì?"],
+  ["ĐỒNG BẰNG SÔNG CỬU LONG", "Địa lý", "Vùng nào được coi là vựa lúa lớn nhất nước ta?"],
 
-  ["NHÀ LƯƠNG", "Lịch sử",
-    "Khởi nghĩa Lý Bí diễn ra nhằm chống lại sự cai trị của triều đại nào?"],
+  ["SÔNG HỒNG", "Địa lý", "Con sông nào bồi đắp nên đồng bằng Bắc Bộ?"],
 
-  ["VŨ TRỌNG PHỤNG", "Văn học",
-    "Phim truyền hình Trò đời được chuyển thể từ các tác phẩm của nhà văn nào?"],
+  ["SÔNG MÊ KÔNG", "Địa lý", "Dòng sông lớn nào chảy qua nhiều nước rồi đổ vào miền Tây Việt Nam?"],
 
-  ["ĐỘ ĐIỆN LY", "Hóa học",
-    "Tỷ lệ số phân tử phân ly thành ion so với số phân tử hòa tan gọi là gì?"],
+  ["ĐẢO PHÚ QUỐC", "Địa lý", "Hòn đảo lớn nhất Việt Nam tên là gì?"],
 
-  ["INDONESIA", "Lịch sử",
-    "Đảng cộng sản đầu tiên ở Đông Nam Á được thành lập tại quốc gia nào?"],
+  ["ĐẢO LÝ SƠN", "Địa lý", "Hòn đảo nào ở Quảng Ngãi được gọi là vương quốc tỏi?"],
 
-  ["KIM LOẠI CHUYỂN TIẾP", "Hóa học",
-    "Các nguyên tố kim loại thuộc khối d thường được gọi chung là gì?"],
+  ["ĐÈO HẢI VÂN", "Địa lý", "Con đèo nào giữa Huế và Đà Nẵng được gọi là thiên hạ đệ nhất hùng quan?"],
 
-  ["CÔNG NGHỆ THÔNG TIN", "Công nghệ",
-    "“Cuộc cách mạng chất xám” của Ấn Độ gắn nổi bật với lĩnh vực nào?"],
+  ["HANG SƠN ĐOÒNG", "Địa lý", "Hang động tự nhiên khổng lồ thuộc Vườn quốc gia Phong Nha Kẻ Bàng tên là gì?"],
 
-  ["THOÁT HƠI NƯỚC", "Sinh học",
-    "Hiện tượng sinh lý nào ở cây từng được gọi là “tai họa tất yếu”?"],
+  ["HỒ BA BỂ", "Địa lý", "Hồ nước ngọt tự nhiên nổi tiếng nằm trong vườn quốc gia cùng tên là gì?"],
 
-  ["TỨ DIỆN TRỰC TÂM", "Toán học",
-    "Tứ diện có các cặp cạnh đối vuông góc với nhau được gọi là gì?"],
+  ["RỪNG CÚC PHƯƠNG", "Địa lý", "Vườn quốc gia đầu tiên của Việt Nam tên là gì?"],
 
-  ["ĐƯỜNG KÁCH MỆNH", "Lịch sử",
-    "Tác phẩm tập hợp các bài giảng của Nguyễn Ái Quốc tại Quảng Châu có tên là gì?"],
+  ["THÀNH PHỐ ĐÀ LẠT", "Địa lý", "Thành phố nào được gọi là thành phố ngàn hoa?"],
 
-  ["ĐỂ GIÓ CUỐN ĐI", "Âm nhạc",
-    "Câu hát “Sống trong đời sống cần có một tấm lòng” thuộc ca khúc nào?"],
+  ["THÀNH PHỐ CẦN THƠ", "Địa lý", "Thành phố nào được mệnh danh là Tây Đô?"],
 
-  ["TRUYỆN NGỤ NGÔN", "Văn học",
-    "Con cáo và chùm nho của Aesop thuộc thể loại văn học nào?"]
+  ["THÀNH PHỐ HẢI PHÒNG", "Địa lý", "Thành phố nào được gọi là thành phố hoa phượng đỏ?"],
+
+  ["SÔNG BẠCH ĐẰNG", "Địa lý", "Dòng sông nào nhiều lần ghi chiến công chống ngoại xâm trong lịch sử Việt Nam?"],
+
+  ["CẦU RỒNG ĐÀ NẴNG", "Địa lý", "Cây cầu nào nổi tiếng với màn phun lửa và phun nước?"],
+
+  ["VINH", "Địa lý", "Thành phố nào từng được gọi là Trung Đô?"],
+
+  ["BÍCH ĐỘNG", "Địa lý", "Động nào được phong là Nam Thiên đệ nhị động?"],
+
+  ["IRAQ", "Địa lý", "Nền văn minh Babylon ngày nay thuộc đất nước nào?"],
+
+  ["TIẾNG MALAY", "Địa lý", "Ngôn ngữ quốc gia của Singapore là gì?"],
+
+  ["PHẦN LAN", "Địa lý", "Đất nước nào được xem là quê hương của ông già Noel?"],
+
+  ["AI CẬP", "Địa lý", "Kênh đào Suez thuộc quốc gia nào?"],
+
+  ["NEW YORK", "Địa lý", "Trụ sở chính của Liên Hợp Quốc đặt tại thành phố nào?"],
+
+  ["MONACO", "Địa lý", "Công quốc nhỏ bé nào nằm bên bờ Địa Trung Hải?"],
+
+  ["THIÊN AN MÔN", "Địa lý", "Quảng trường nổi tiếng nào nằm ở Bắc Kinh?"],
+
+  ["SINGAPORE", "Địa lý", "Nước nào có diện tích nhỏ nhất Đông Nam Á?"],
+
+  ["XÍCH ĐẠO", "Địa lý", "Tên nước Ecuador có nghĩa là gì?"],
+
+  ["QUẢNG NINH", "Địa lý", "Bãi cọc Bạch Đằng hiện thuộc tỉnh nào?"],
+
+  ["VENEZUELA", "Địa lý", "Thác nước cao nhất thế giới nằm ở nước nào?"],
+
+  ["PHILIPPINES", "Địa lý", "Quốc gia Đông Nam Á nào được đặt tên theo một hoàng tử Tây Ban Nha?"],
+
+  ["CHÂU PHI", "Địa lý", "Cây bao báp gắn liền với châu lục nào?"],
+
+  ["LŨNG CÚ", "Địa lý", "Địa danh nào là biểu tượng cực Bắc Việt Nam?"],
+
+  ["ALEXANDRIA", "Địa lý", "Thành phố nào nổi tiếng với thư viện cổ và ngọn hải đăng kỳ quan?"],
+
+  ["CONGO", "Địa lý", "Con sông nào đi qua đường xích đạo hai lần?"],
+
+  ["GIÁO ĐƯỜNG WESTMINSTER", "Địa lý", "Nơi nào ở Anh là nơi an táng nhiều danh nhân nổi tiếng?"],
+
+  ["IRELAND", "Địa lý", "Dublin là thủ đô của nước nào?"],
+
+  ["LAS VEGAS", "Địa lý", "Thành phố Mỹ nào nổi tiếng với casino và đèn neon?"],
+
+  ["HUẾ", "Địa lý", "Nơi nào xưa được gọi là “Xứ Thần Kinh”?"],
+
+  ["ICELAND", "Địa lý", "Nước nào được mệnh danh là vùng đất của băng và lửa?"],
+
+  ["HOÀNG THÀNH THĂNG LONG", "Kiến trúc", "Di tích nào ở Hà Nội từng là trung tâm quyền lực của nhiều triều đại?"],
+
+  ["THÀNH NHÀ HỒ", "Kiến trúc", "Tòa thành bằng đá nổi tiếng ở Thanh Hóa có tên là gì?"],
+
+  ["QUẦN THỂ TRÀNG AN", "Kiến trúc", "Danh thắng núi đá và sông nước nổi tiếng ở Ninh Bình tên là gì?"],
+
+  ["CHÙA MỘT CỘT", "Kiến trúc", "Ngôi chùa nào ở Hà Nội được dựng trên một trụ đá?"],
+
+  ["VĂN MIẾU QUỐC TỬ GIÁM", "Kiến trúc", "Nơi nào được coi là trường đại học đầu tiên của nước ta?"],
+
+  ["LONG BIÊN", "Kiến trúc", "Cây cầu thép cổ nào bắc qua sông Hồng ở Hà Nội?"],
+
+  ["DINH ĐỘC LẬP", "Kiến trúc", "Công trình lịch sử nổi tiếng nào nằm ở trung tâm Thành phố Hồ Chí Minh?"],
+
+  ["NHÀ THỜ ĐỨC BÀ", "Kiến trúc", "Nhà thờ gạch đỏ nổi tiếng ở trung tâm Sài Gòn tên là gì?"],
+
+  ["ĐỊA ĐẠO CỦ CHI", "Kiến trúc", "Hệ thống đường hầm nổi tiếng thời chiến ở Củ Chi có tên là gì?"],
+
+  ["NGUYỄN DU", "Văn học", "Ai được tôn là đại thi hào dân tộc Việt Nam?"],
+
+  ["HỒ XUÂN HƯƠNG", "Văn học", "Nữ sĩ nào được mệnh danh là bà chúa thơ Nôm?"],
+
+  ["ĐÀN BẦU", "Văn hóa", "Nhạc cụ truyền thống Việt Nam nào chỉ có một dây?"],
+
+  ["ĐÀN TRANH", "Văn hóa", "Nhạc cụ dây gảy truyền thống có mười sáu dây tên là gì?"],
+
+  ["CỒNG CHIÊNG TÂY NGUYÊN", "Văn hóa", "Không gian văn hóa nổi tiếng nào gắn với vùng Tây Nguyên?"],
+
+  ["NHÃ NHẠC CUNG ĐÌNH HUẾ", "Văn hóa", "Loại âm nhạc bác học nào từng được biểu diễn trong triều Nguyễn?"],
+
+  ["CA TRÙ", "Văn hóa", "Lối hát ả đào với tiếng phách và đàn đáy có tên là gì?"],
+
+  ["ĐỜN CA TÀI TỬ", "Văn hóa", "Loại hình âm nhạc dân gian đặc trưng của Nam Bộ tên là gì?"],
+
+  ["HÁT XOAN", "Văn hóa", "Lối hát thờ ở vùng đất Tổ Phú Thọ có tên là gì?"],
+
+  ["MÚA RỐI NƯỚC", "Văn hóa", "Nghệ thuật sân khấu nào được biểu diễn trên mặt nước?"],
+
+  ["LỄ HỘI CHÙA HƯƠNG", "Văn hóa", "Lễ hội mùa xuân nổi tiếng nào diễn ra ở huyện Mỹ Đức?"],
+
+  ["THÀNH CỔ LOA", "Kiến trúc", "Tòa thành hình xoáy trôn ốc do An Dương Vương xây có tên là gì?"],
+
+  ["CHÙA THIÊN MỤ", "Kiến trúc", "Ngôi chùa cổ nào soi bóng bên dòng sông Hương?"],
+
+  ["VERONA", "Văn học", "Thành phố Italia nào là bối cảnh của Romeo và Juliet?"],
+
+  ["ARGENTINA", "Văn hóa", "Điệu nhảy Tango có nguồn gốc từ quốc gia nào?"],
+
+  ["TAJ MAHAL", "Kiến trúc", "Công trình nào được mệnh danh là “công trình của tình yêu”?"],
+
+  ["TRƯỜNG CHINH", "Văn học", "Sóng Hồng là bút hiệu của ai?"],
+
+  ["NAM", "Kiến trúc", "Kinh thành và cung điện Huế chủ yếu quay về hướng nào?"],
+
+  ["TỬ CẤM THÀNH", "Kiến trúc", "Cung điện nổi tiếng nào nằm ở trung tâm Bắc Kinh?"],
+
+  ["MAXIM GORKI", "Văn học", "Tên nhà văn Nga nào có nghĩa là “cay đắng”?"],
+
+  ["HOMERE", "Văn học", "Nhà thơ mù nổi tiếng của Hy Lạp cổ đại là ai?"],
+
+  ["NEFERTITI", "Nghệ thuật", "Bức tượng nữ hoàng nào nổi tiếng trong nghệ thuật Ai Cập cổ đại?"]
 
 );
+
+

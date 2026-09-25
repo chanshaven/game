@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Mấy trò chơi tự làm để gửi bạn bè chơi. Mở bằng trình duyệt, không cần cài gì.">
+<title>Fiddle Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;600;800;900&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --wine-900:#26060E;
+  --wine-800:#4A0D1C;
+  --wine-700:#631226;
+  --gold-300:#FFE9A8;
+  --gold-400:#FFD166;
+  --gold-500:#EFA93A;
+  --gold-600:#B0711C;
+  --cream:#FFF4DC;
+  --cream-dim:#E8D5B4;
+  --jade:#3ECFAE;
+  --violet:#A981FF;
+  --fx-display:"Anton","Arial Narrow",Impact,sans-serif;
+  --fx-body:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100%;overflow-x:hidden;
+  font-family:var(--fx-body);color:var(--cream);
+  background:
+    radial-gradient(1100px 620px at 50% -14%, rgba(255,209,102,.22), transparent 62%),
+    radial-gradient(700px 500px at 6% 10%, rgba(255,91,65,.13), transparent 60%),
+    radial-gradient(700px 500px at 94% 14%, rgba(169,129,255,.13), transparent 60%),
+    linear-gradient(175deg,var(--wine-800) 0%, var(--wine-900) 52%, #16030A 100%);
+  background-attachment:fixed;
+}
+.beams{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.45;
+  background:conic-gradient(from 200deg at 50% -8%, transparent 0deg, rgba(255,222,150,.14) 7deg, transparent 15deg,
+    transparent 26deg, rgba(255,222,150,.1) 33deg, transparent 41deg,
+    transparent 52deg, rgba(255,222,150,.13) 59deg, transparent 67deg,
+    transparent 78deg, rgba(255,222,150,.09) 85deg, transparent 93deg);
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.95), transparent 70%)}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
+  box-shadow:inset 0 0 220px 60px rgba(10,2,6,.7)}
+
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding-inline:20px;padding-block:52px 60px}
+
+header{text-align:center;margin-bottom:44px}
+h1{
+  font-family:var(--fx-display);margin:0;line-height:.95;letter-spacing:.02em;
+  font-size:clamp(44px,11vw,88px);text-wrap:balance;
+  background:linear-gradient(180deg,#FFF6DD 0%,var(--gold-400) 46%,var(--gold-600) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 4px 0 rgba(120,60,10,.5)) drop-shadow(0 12px 26px rgba(0,0,0,.5));
+}
+header p{margin:16px auto 0;max-width:44ch;font-size:15.5px;line-height:1.65;color:var(--cream-dim)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:20px}
+
+.card{
+  display:flex;flex-direction:column;text-decoration:none;color:inherit;overflow:hidden;
+  border-radius:20px;border:1.5px solid rgba(255,209,102,.26);
+  background:linear-gradient(180deg, rgba(99,18,38,.62), rgba(30,6,13,.85));
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+  transition:transform .22s cubic-bezier(.3,1.1,.5,1), border-color .22s, box-shadow .22s;
+}
+.card:hover{transform:translateY(-6px);border-color:var(--gold-400);
+  box-shadow:0 0 0 3px rgba(255,209,102,.16), 0 24px 50px rgba(0,0,0,.55)}
+.card:focus-visible{outline:3px solid var(--gold-400);outline-offset:3px}
+
+.thumb{position:relative;height:150px;display:grid;place-items:center;
+  background:linear-gradient(180deg,rgba(255,209,102,.14),rgba(20,4,10,.35));
+  border-bottom:1px solid rgba(255,209,102,.2)}
+.wheel{width:104px;height:104px;border-radius:50%;position:relative;
+  border:5px solid #8E5711;box-shadow:0 8px 22px rgba(0,0,0,.5);
+  background:
+    radial-gradient(circle, #FFE9A8 0 19%, transparent 19.5%),
+    conic-gradient(
+      #8E0E24 0deg 30deg, #F2B33C 30deg 60deg, #8E0E24 60deg 90deg,
+      #3ECFAE 90deg 120deg, #8E0E24 120deg 150deg, #F2B33C 150deg 180deg,
+      #A981FF 180deg 210deg, #F2B33C 210deg 240deg, #8E0E24 240deg 270deg,
+      #F2B33C 270deg 300deg, #D62828 300deg 330deg, #F2B33C 330deg 360deg);
+  animation:turn 14s linear infinite}
+@keyframes turn{to{transform:rotate(360deg)}}
+.pin{position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;
+  border-top:15px solid var(--gold-400);filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+
+.body{padding:18px 19px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.name{font-family:var(--fx-display);font-size:24px;letter-spacing:.03em;line-height:1.1;color:var(--gold-300)}
+.desc{margin:0;font-size:13.5px;line-height:1.6;color:var(--cream-dim)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.tags span{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  padding:5px 10px;border-radius:999px;white-space:nowrap;
+  background:rgba(255,209,102,.13);border:1px solid rgba(255,209,102,.3);color:var(--gold-300)}
+.play{margin-top:auto;padding-top:14px}
+.play span{display:block;text-align:center;padding:12px;border-radius:13px;
+  font-family:var(--fx-display);font-size:17px;letter-spacing:.08em;color:#3A1704;
+  background:linear-gradient(180deg,#FFE9A8,var(--gold-400) 45%,#E09A29);
+  box-shadow:0 5px 0 #8E5711;transition:filter .15s}
+.card:hover .play span{filter:brightness(1.07)}
+
+.soon{border-style:dashed;border-color:rgba(255,244,220,.2);background:rgba(255,244,220,.03);
+  display:grid;place-items:center;text-align:center;padding:38px 22px;min-height:230px;border-radius:20px;border-width:1.5px}
+.soon b{display:block;font-family:var(--fx-display);font-size:20px;letter-spacing:.04em;color:rgba(255,244,220,.5);margin-bottom:8px}
+.soon p{margin:0;font-size:12.5px;line-height:1.6;color:rgba(255,244,220,.38);max-width:26ch}
+
+footer{margin-top:46px;text-align:center;font-size:12.5px;line-height:1.8;color:var(--cream-dim);opacity:.55}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="beams"></div>
+<div class="vignette"></div>
+
+<div class="wrap">
+  <header>
+    <h1>FIDDLE GAME</h1>
+    <p>Mấy trò chơi tự làm để gửi bạn bè chơi. Mở bằng trình duyệt là chạy, không cần cài gì, điện thoại hay máy tính đều được.</p>
+  </header>
+
+  <div class="grid">
+
+    <!-- ===== Chiếc Nón Kỳ Diệu ===== -->
+    <a class="card" href="./chiec-non-ky-dieu/">
+      <div class="thumb">
+        <div class="wheel"></div>
+        <div class="pin"></div>
+      </div>
+      <div class="body">
+        <div class="name">Chiếc Nón Kỳ Diệu</div>
+        <p class="desc">Quay nón, đoán chữ cái, mở ô chữ để giải cứu cún con khỏi tay kẻ bắt chó. Đoán sai là mất một trái tim, hết tim là cún bị chụp lưới.</p>
+        <div class="tags">
+          <span>1–4 người</span>
+          <span>Ô chữ Việt &amp; Anh</span>
+          <span>Có nhạc nền</span>
+        </div>
+        <div class="play"><span>CHƠI NGAY</span></div>
+      </div>
+    </a>
+
+    <!--
+      ===== THÊM GAME MỚI =====
+      1. Tạo thư mục mới cạnh thư mục chiec-non-ky-dieu, tên viết thường
+         và dùng gạch ngang, ví dụ:  game-do-vui
+      2. Bỏ file index.html của game đó vào trong thư mục vừa tạo.
+      3. Chép khối <a class="card"> ở trên xuống đây, sửa lại href, tên,
+         mô tả và mấy cái thẻ. Muốn ảnh khác thay cho vòng quay thì bỏ
+         <div class="wheel"></div> và <div class="pin"></div> đi, thay bằng
+         <img src="./ten-game/anh.png" alt="" style="width:100%;height:100%;object-fit:cover">
+      4. Xóa khối "soon" bên dưới khi đã có đủ game.
+      5. git add . && git commit -m "Thêm game mới" && git push
+         Cloudflare tự deploy lại sau khoảng một phút.
+    -->
+
+    <div class="soon card">
+      <div>
+        <b>Còn nữa...</b>
+        <p>Game tiếp theo đang nấu. Quay lại sau nhé.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    Làm cho vui, chơi cho vui.<br>
+    Gặp lỗi gì thì nhắn mình một tiếng.
+  </footer>
+</div>
+</body>
+</html>

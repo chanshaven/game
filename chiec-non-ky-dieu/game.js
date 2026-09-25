@@ -329,6 +329,7 @@
     pool: [], solvedCount: 0, angle: 0
   };
   const MAX_LIVES = 8, START_LIVES = 5;
+  const SCORE_STEP = 5000;   // mốc điểm mà ô MẤT ĐIỂM kéo tụt xuống
 
   /* ---------------- ngân hàng câu hỏi ---------------- */
   function freshPool() {
@@ -525,11 +526,20 @@
         p.score += 1000; sfx.big();
         setMsg('<b>CHÚC MỪNG!</b> ' + nm + ' được tặng thẳng 1.000 điểm.', 'good');
         break;
-      case 'zero':
-        p.score = 0; sfx.bad(); loseLives(p, 1); renderAll();
-        if (!p.alive) return void setTimeout(() => afterDeath(p), 900);
-        setMsg('<b>MẤT ĐIỂM.</b> Điểm của ' + nm + ' về 0 và cún mất một mạng, còn ' + p.lives + '.' + TL(), 'bad');
-        return void setTimeout(passTurn, 1400);
+      case 'zero': {
+        /* Không xoá sạch điểm nữa: tụt xuống mốc 5.000 liền dưới.
+           Đang đúng mốc thì tụt thêm một bậc, để lần nào cũng là phạt thật. */
+        const before = p.score;
+        let after = Math.floor(before / SCORE_STEP) * SCORE_STEP;
+        if (after === before) after = Math.max(0, before - SCORE_STEP);
+        p.score = after;
+        sfx.bad();
+        setMsg(before === after
+          ? '<b>MẤT ĐIỂM.</b> ' + nm + ' chưa có điểm nào để mất. Quay tiếp nào!'
+          : '<b>MẤT ĐIỂM.</b> Điểm của ' + nm + ' tụt từ ' + fmt(before) + ' xuống mốc <b>' +
+            fmt(after) + '</b>, mất ' + fmt(before - after) + ' điểm. Vẫn được quay tiếp.', 'bad');
+        break;
+      }
       case 'danger':
         sfx.fail(); loseLives(p, 1);
         if (!p.alive) { renderAll(); return void setTimeout(() => afterDeath(p), 900); }
@@ -1098,21 +1108,21 @@
     '<li>Mỗi ván có một <b>câu hỏi hiện sẵn</b> phía trên ô chữ. Đáp án của câu hỏi chính là ô chữ phải mở.</li>' +
     '<li>Quay nón rồi chọn một chữ cái. Mỗi chữ cái xuất hiện trong ô chữ được cộng đúng số điểm vừa quay.</li>' +
     '<li>Bảng chữ cái phân biệt rõ <b>A — Ă — Â</b>, <b>E — Ê</b>, <b>O — Ô — Ơ</b>, <b>U — Ư</b> và <b>D — Đ</b>. Chọn đúng nguyên âm sẽ mở mọi dấu thanh của nguyên âm đó.</li>' +
-    '<li>Mỗi người có <b>5 mạng</b>, hiện thành 5 trái tim trên khung cún. Đoán sai chữ cái, hoặc quay vào ô phạt <b>MẤT LƯỢT</b>, <b>MẤT ĐIỂM</b>, <b>CÚN GẶP NGUY</b>, <b>XUI RỒI</b>, <b>THỬ THÁCH</b> hỏng đều mất tim.</li>' +
+    '<li>Mỗi người có <b>5 mạng</b>, hiện thành 5 trái tim trên khung cún. Đoán sai chữ cái, hoặc quay vào ô phạt <b>MẤT LƯỢT</b>, <b>CÚN GẶP NGUY</b>, <b>XUI RỒI</b>, <b>THỬ THÁCH</b> hỏng đều mất tim.</li>' +
     '<li>Càng ít mạng thì kẻ bắt cún càng tiến sát và cún càng hoảng sợ. Hết 5 mạng là cún bị chụp lưới.</li>' +
     '<li><b>ĐOÁN ĐÁP ÁN</b> dùng được bất cứ lúc nào. Càng nhiều chữ còn ẩn thì thưởng càng lớn, nhưng sai là cún bị bắt ngay.</li>' +
     '</ul>' +
     '<h3 style="font-size:19px;margin-top:4px">Các ô trên vòng quay</h3>' +
     '<ul>' +
     '<li><b>Điểm</b> — từ 200 đến 1.000 cho mỗi chữ cái đoán đúng.</li>' +
-    '<li><b>MẤT LƯỢT</b> — mất một mạng và nhường nón cho người kế tiếp.</li>' +
+    '<li><b>MẤT LƯỢT</b> — giữ nguyên điểm nhưng mất một tim và nhường nón cho người kế tiếp.</li>' +
     '<li><b>GẤP ĐÔI</b> / <b>CHIA ĐÔI</b> — điểm hiện có nhân đôi hoặc chia đôi.</li>' +
     '<li><b>THÊM MẠNG</b> và <b>CỨU TRỢ</b> — được thêm một trái tim, kẻ bắt cún lùi lại một bước.</li>' +
     '<li><b>MAY MẮN</b> — ba phần quà hiện ra cho bạn xem, rồi úp xuống và xáo trộn. Bạn chọn một hộp để nhận quà, xong vẫn được quay tiếp.</li>' +
     '<li><b>XUI RỒI</b> — y hệt MAY MẮN nhưng là ba phần phạt. Chọn xong thì mất lượt.</li>' +
     '<li><b>THỬ THÁCH</b> — một câu đố phụ có ba lựa chọn, giới hạn 15 giây. Đúng thì được 1.000 điểm, mở thêm một chữ cái và quay tiếp; sai hoặc hết giờ thì mất một trái tim và mất lượt.</li>' +
     '<li><b>CHÚC MỪNG</b> — tặng thẳng 1.000 điểm.</li>' +
-    '<li><b>MẤT ĐIỂM</b> — điểm về 0, mất một mạng và mất lượt.</li>' +
+    '<li><b>MẤT ĐIỂM</b> — điểm tụt xuống mốc 5.000 liền dưới, ví dụ 12.400 còn 10.000. Không mất tim, không mất lượt.</li>' +
     '<li><b>CÚN GẶP NGUY</b> — mất ngay một mạng và mất lượt.</li>' +
     '<li><b>CƯỢC ĐÔI</b> — bạn tự chọn: nhận cược thì đúng được gấp ba điểm, sai mất hai mạng; bỏ qua thì ăn điểm như thường.</li>' +
     '</ul>' +

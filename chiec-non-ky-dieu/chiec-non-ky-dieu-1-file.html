@@ -2006,9 +2006,20 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
       if (!C) return false;
       A.ctx = new C();
       if (A.ctx.state === 'suspended' && A.ctx.resume) A.ctx.resume();
-      A.master = A.ctx.createGain(); A.master.gain.value = 0.85; A.master.connect(A.ctx.destination);
+      A.master = A.ctx.createGain(); A.master.gain.value = 0.9;
+      /* Bộ nén cuối đường: tiếng thắng cuộc có cả chục nốt chồng lên nhau,
+         không nén thì đỉnh sóng vọt lên gấp mấy lần nhạc nền và chói tai. */
+      let out = A.ctx.destination;
+      try {
+        const comp = A.ctx.createDynamicsCompressor();
+        comp.threshold.value = -6; comp.knee.value = 16; comp.ratio.value = 4;
+        comp.attack.value = 0.005; comp.release.value = 0.25;
+        comp.connect(A.ctx.destination);
+        out = comp;
+      } catch (e) { out = A.ctx.destination; }
+      A.master.connect(out);
       A.musicGain = A.ctx.createGain(); A.musicGain.gain.value = 0; A.musicGain.connect(A.master);
-      A.sfxGain = A.ctx.createGain(); A.sfxGain.gain.value = 0.85; A.sfxGain.connect(A.master);
+      A.sfxGain = A.ctx.createGain(); A.sfxGain.gain.value = 0.7; A.sfxGain.connect(A.master);
       const len = A.ctx.sampleRate * 1.4, buf = A.ctx.createBuffer(1, len, A.ctx.sampleRate), d = buf.getChannelData(0);
       for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
       A.noise = buf;
@@ -2072,13 +2083,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     /* ✨ tiếng lấp lánh */
     sparkle(t0) {
       if (!A.ctx) return; const t = t0 || now();
-      [1568, 2093, 2637, 3136].forEach((f, i) => tone(f, t + i * 0.045, 0.45, 'sine', 0.085));
+      [1568, 2093, 2637, 3136].forEach((f, i) => tone(f, t + i * 0.045, 0.45, 'sine', 0.1));
     },
 
     /* ✅ đoán đúng chữ — ting kèm lấp lánh */
     good() {
       if (!A.ctx) return; const t = now();
-      [659, 831, 988].forEach((f, i) => tone(f, t + i * 0.06, 0.24, 'triangle', 0.18));
+      [659, 831, 988].forEach((f, i) => tone(f, t + i * 0.06, 0.24, 'triangle', 0.13));
       sfx.sparkle(t + 0.1);
     },
 
@@ -2155,21 +2166,21 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     /* 🏆 nhạc chiến thắng */
     victory() {
       if (!A.ctx) return; const t = now();
-      [[523, 0], [659, .12], [784, .24], [1047, .36], [784, .52], [1047, .62], [1319, .74]]
-        .forEach(function (x) { tone(x[0], t + x[1], 0.45, 'square', 0.095); tone(x[0] * 2, t + x[1], 0.3, 'sine', 0.045); });
-      [131, 165, 196, 262].forEach((f, i) => tone(f, t + i * 0.12, 0.5, 'triangle', 0.13));
-      sfx.sparkle(t + 0.8);
+      [[523, 0], [659, .13], [784, .26], [1047, .39], [784, .56], [1047, .67], [1319, .8]]
+        .forEach(function (x) { tone(x[0], t + x[1], 0.34, 'triangle', 0.17); tone(x[0] * 2, t + x[1], 0.24, 'sine', 0.072); });
+      [131, 165, 196, 262].forEach((f, i) => tone(f, t + i * 0.13, 0.36, 'triangle', 0.2));
+      sfx.sparkle(t + 0.86);
     },
 
     /* 💀 thua đau */
     dramaticFail() {
       if (!A.ctx) return; const t = now();
       [392, 370, 349, 330].forEach((f, i) => {
-        tone(f, t + i * 0.19, 0.5, 'sawtooth', 0.1);
-        tone(f / 2, t + i * 0.19, 0.55, 'triangle', 0.12);
+        tone(f, t + i * 0.2, 0.42, 'sawtooth', 0.12);
+        tone(f / 2, t + i * 0.2, 0.46, 'triangle', 0.14);
       });
-      tone(62, t + 0.78, 1.1, 'sine', 0.22);
-      noiseHit(t + 0.78, 0.8, 0.13, 80);
+      tone(62, t + 0.82, 1.0, 'sine', 0.24);
+      noiseHit(t + 0.82, 0.7, 0.13, 80);
       sfx.whimper(t + 1.1);
     },
 
@@ -2195,9 +2206,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     const bar = Math.floor(s / 16) % 8, p = s % 16, ch = CHORDS[bar];
     if (p % 2 === 0) {
       const m = MEL[bar][p / 2];
-      if (m) tone(mtof(m), t, 0.26, 'triangle', 0.09, A.musicGain);
+      if (m) tone(mtof(m), t, 0.28, 'triangle', 0.115, A.musicGain);
     }
-    if (p === 0 || p === 6 || p === 8) tone(mtof(ch[0] - 24), t, 0.3, 'sine', 0.17, A.musicGain);
+    if (p === 0 || p === 6 || p === 8) tone(mtof(ch[0] - 24), t, 0.32, 'sine', 0.2, A.musicGain);
     if (p % 4 === 2) tone(mtof(ch[(((p - 2) / 4) % 3)] + 12), t, 0.14, 'square', 0.028, A.musicGain);
     if (p % 2 === 0) noiseHit(t, 0.03, 0.02, 6000, A.musicGain);
     if (p === 4 || p === 12) noiseHit(t, 0.12, 0.05, 1400, A.musicGain);
@@ -2220,7 +2231,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
     try { if (A.ctx.state === 'suspended' && A.ctx.resume) A.ctx.resume(); } catch (e) { /* bỏ qua */ }
     const g = A.musicGain.gain, t = A.ctx.currentTime;
     g.cancelScheduledValues(t); g.setValueAtTime(g.value, t);
-    g.linearRampToValueAtTime(on ? 0.2 : 0.0001, t + 0.6);
+    g.linearRampToValueAtTime(on ? 0.5 : 0.0001, t + 0.6);
     if (on) musicStart(); else setTimeout(musicStop, 700);
   }
 

@@ -1,0 +1,2410 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Trò chơi Chiếc Nón Kỳ Diệu — giải cứu cún con. Ô chữ tiếng Việt và tiếng Anh.">
+<title>Chiếc Nón Kỳ Diệu</title>
+<style>
+  /* reset tối thiểu — trước đây do nền tảng artifact tự thêm */
+  :root{ color-scheme:light;
+         padding-top:env(safe-area-inset-top,0px);
+         padding-bottom:env(safe-area-inset-bottom,0px); }
+  body{ margin:0; font:14px system-ui,-apple-system,"Segoe UI",sans-serif; background:#faf9f7; }
+  img{ max-width:100%; }
+  [hidden]{ display:none !important; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;600;800;900&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --wine-900:#26060E;
+  --wine-850:#380A16;
+  --wine-800:#4A0D1C;
+  --wine-700:#631226;
+  --wine-600:#7E1730;
+  --gold-300:#FFE9A8;
+  --gold-400:#FFD166;
+  --gold-500:#EFA93A;
+  --gold-600:#B0711C;
+  --cream:#FFF4DC;
+  --cream-dim:#E8D5B4;
+  --jade:#3ECFAE;
+  --ember:#FF5B41;
+  --violet:#A981FF;
+  --sky:#5FB0FF;
+  --shadow:0 18px 40px rgba(0,0,0,.45);
+  --radius:18px;
+  --fx-display:"Anton","Arial Narrow",Impact,sans-serif;
+  --fx-body:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:var(--fx-body);
+  color:var(--cream);
+  background:
+    radial-gradient(1100px 620px at 50% -12%, rgba(255,209,102,.22), transparent 62%),
+    radial-gradient(700px 500px at 8% 8%, rgba(255,91,65,.14), transparent 60%),
+    radial-gradient(700px 500px at 92% 12%, rgba(169,129,255,.13), transparent 60%),
+    linear-gradient(175deg,var(--wine-800) 0%, var(--wine-900) 52%, #16030A 100%);
+  background-attachment:fixed;
+  min-height:100%;
+  overflow-x:hidden;
+}
+.beams{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background:
+    conic-gradient(from 200deg at 50% -8%, transparent 0deg, rgba(255,222,150,.14) 7deg, transparent 15deg,
+      transparent 26deg, rgba(255,222,150,.10) 33deg, transparent 41deg,
+      transparent 52deg, rgba(255,222,150,.13) 59deg, transparent 67deg,
+      transparent 78deg, rgba(255,222,150,.09) 85deg, transparent 93deg);
+  mask-image:linear-gradient(to bottom, rgba(0,0,0,.95), transparent 72%);
+}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:0;
+  box-shadow:inset 0 0 220px 60px rgba(10,2,6,.75);}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:12px 20px}
+
+/* ---------- header ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:38px;height:38px;flex:0 0 auto;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
+.brand-name{font-family:var(--fx-display);font-size:clamp(19px,3.6vw,26px);letter-spacing:.04em;line-height:1;
+  background:linear-gradient(180deg,var(--gold-300),var(--gold-500) 60%,var(--gold-600));
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.brand-sub{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cream-dim);opacity:.75;margin-top:2px}
+.topbtns{display:flex;gap:8px}
+.ghost{
+  font-family:var(--fx-body);font-weight:600;font-size:13px;color:var(--gold-300);
+  background:rgba(255,222,150,.08);border:1px solid rgba(255,209,102,.34);
+  padding:9px 13px;border-radius:999px;cursor:pointer;transition:.18s;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.ghost:hover{background:rgba(255,222,150,.17);border-color:var(--gold-400)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold-400);outline-offset:2px}
+
+/* ---------- start screen ---------- */
+.hero{text-align:center;padding-block:8px 6px}
+.hero h1{
+  font-family:var(--fx-display);margin:0;line-height:.94;
+  font-size:clamp(40px,10.5vw,92px);letter-spacing:.015em;text-wrap:balance;
+  background:linear-gradient(180deg,#FFF6DD 0%,var(--gold-400) 44%,var(--gold-600) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 4px 0 rgba(120,60,10,.55)) drop-shadow(0 12px 26px rgba(0,0,0,.5));
+}
+.hero .tag{margin:12px auto 0;max-width:42ch;color:var(--cream-dim);font-size:15px;line-height:1.6}
+.panel{
+  background:linear-gradient(180deg, rgba(99,18,38,.72), rgba(38,8,16,.86));
+  border:1px solid rgba(255,209,102,.24);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:20px;margin-top:22px;
+}
+.panel h2{font-family:var(--fx-display);font-size:20px;letter-spacing:.05em;margin:0 0 4px;color:var(--gold-300)}
+.panel .sub{font-size:13px;color:var(--cream-dim);opacity:.8;margin-bottom:14px}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.mode{
+  text-align:left;cursor:pointer;padding:15px;border-radius:14px;color:var(--cream);
+  background:rgba(255,244,220,.05);border:1.5px solid rgba(255,209,102,.22);transition:.18s;font-family:var(--fx-body);
+}
+.mode:hover{background:rgba(255,244,220,.1);transform:translateY(-2px)}
+.mode[aria-pressed="true"]{border-color:var(--gold-400);background:rgba(255,209,102,.16);box-shadow:0 0 0 3px rgba(255,209,102,.16)}
+.mode b{display:block;font-size:16px;font-weight:800;margin-bottom:4px}
+.mode span{font-size:12.5px;color:var(--cream-dim);line-height:1.5}
+.names{margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.field label{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-300);margin-bottom:5px}
+.field input,.field select{
+  width:100%;padding:11px 12px;border-radius:11px;font-family:var(--fx-body);font-size:14px;font-weight:600;
+  background:rgba(12,3,7,.62);border:1.5px solid rgba(255,209,102,.26);color:var(--cream);
+}
+.row-opts{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:16px}
+.row-opts .field{min-width:150px;flex:1}
+.cta{
+  display:block;width:100%;margin-top:20px;padding:17px 22px;border:0;cursor:pointer;border-radius:16px;
+  font-family:var(--fx-display);font-size:clamp(20px,4.4vw,26px);letter-spacing:.07em;color:#3A1704;
+  background:linear-gradient(180deg,#FFE9A8,var(--gold-400) 45%,#E09A29);
+  box-shadow:0 7px 0 #8E5711, 0 16px 30px rgba(0,0,0,.42);transition:.12s;
+}
+.cta:hover{filter:brightness(1.06)}
+.cta:active{transform:translateY(4px);box-shadow:0 3px 0 #8E5711,0 8px 16px rgba(0,0,0,.4)}
+
+/* ---------- arena ---------- */
+.arena{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:16px;align-items:start;
+  grid-template-areas:"wheel question" "wheel board"}
+.wheelbox{grid-area:wheel}
+.qcard{grid-area:question}
+.boardbox{grid-area:board}
+/* trên điện thoại: câu hỏi lên trên cùng, đọc xong mới tới vòng quay */
+@media (max-width:860px){
+  .arena{grid-template-columns:1fr;grid-template-areas:"question" "wheel" "board"}
+}
+
+.wheelbox{--col:clamp(240px,52vh,360px);display:flex;flex-direction:column;align-items:center;gap:10px}
+.wheelstage{position:relative;width:100%;max-width:var(--col);aspect-ratio:1;}
+.wheelstage canvas{width:100%;height:100%;display:block;filter:drop-shadow(0 16px 34px rgba(0,0,0,.55))}
+.pointer{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:36px;height:46px;z-index:3;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.6))}
+.hub{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:23%;height:23%;border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, #FFF0C8, var(--gold-500) 55%, #8E5711);
+  border:3px solid #6B3E0C;display:grid;place-items:center;z-index:2;
+  box-shadow:0 6px 16px rgba(0,0,0,.5), inset 0 -4px 10px rgba(120,60,10,.5)}
+.hub span{font-family:var(--fx-display);font-size:clamp(11px,2.6vw,15px);color:#5B2A05;letter-spacing:.06em;text-align:center;line-height:1}
+.spinbtn{
+  width:100%;max-width:var(--col);padding:14px;border:0;border-radius:16px;cursor:pointer;
+  font-family:var(--fx-display);font-size:clamp(19px,4vw,24px);letter-spacing:.09em;color:#3A1704;
+  background:linear-gradient(180deg,#FFE9A8,var(--gold-400) 45%,#E09A29);
+  box-shadow:0 7px 0 #8E5711,0 14px 26px rgba(0,0,0,.4);transition:.12s;
+}
+.spinbtn:active:not(:disabled){transform:translateY(4px);box-shadow:0 3px 0 #8E5711}
+.spinbtn:disabled{filter:grayscale(.75) brightness(.8);cursor:not-allowed;box-shadow:0 3px 0 #4A3212}
+
+/* ---------- cảnh giải cứu cún ---------- */
+.scene{
+  position:relative;width:100%;max-width:var(--col);border-radius:var(--radius);overflow:hidden;
+  border:1.5px solid rgba(255,209,102,.24);box-shadow:var(--shadow);
+  --sky1:#9BE4F5; --sky2:#FFE7A8; --hill:#5FAE63; --ground:#7FC46A; --fence:#C98F4B; --alarm:0;
+  transition:box-shadow .4s;
+}
+.scene > svg{display:block;width:100%;height:auto}
+.scene[data-danger="1"]{--sky1:#8FD8EE;--sky2:#FFD98A;--hill:#569E5E;--ground:#75B863;--fence:#BE8544}
+.scene[data-danger="2"]{--sky1:#7EB7D9;--sky2:#FFBE73;--hill:#4B8A5C;--ground:#69A05C;--fence:#A9743B;--alarm:.35}
+.scene[data-danger="3"]{--sky1:#6B7FB0;--sky2:#F59A5E;--hill:#3F6D57;--ground:#57804F;--fence:#8E6033;--alarm:.6}
+.scene[data-danger="4"]{--sky1:#4A4A80;--sky2:#D9563F;--hill:#334F49;--ground:#42603F;--fence:#6F4A2A;--alarm:.85;
+  box-shadow:0 0 0 2px rgba(255,91,65,.5),var(--shadow)}
+.scene[data-danger="5"]{--sky1:#2A1730;--sky2:#7A1E2A;--hill:#241F33;--ground:#2E2B3C;--fence:#4A3420;--alarm:1;
+  box-shadow:0 0 0 2px rgba(255,91,65,.8),var(--shadow)}
+/* Kẻ bắt cún: mất càng nhiều mạng thì bước càng dài, tới mức 5 là lưới trùm lên cún */
+.catcher{transform:translateX(var(--cx,352px));transition:transform .7s cubic-bezier(.3,1.3,.45,1)}
+.scene[data-danger="1"] .catcher{--cx:324px}
+.scene[data-danger="2"] .catcher{--cx:288px}
+.scene[data-danger="3"] .catcher{--cx:248px}
+.scene[data-danger="4"] .catcher{--cx:226px}
+.scene[data-danger="5"] .catcher{--cx:193px}
+
+/* Cún lùi dần về phía sau khi kẻ bắt tới gần */
+.scene{--dogx:150px}
+.scene[data-danger="2"]{--dogx:147px}
+.scene[data-danger="3"]{--dogx:143px}
+.scene[data-danger="4"]{--dogx:138px}
+.scene[data-danger="5"]{--dogx:138px}
+
+/* Đèn báo động đỏ nhấp nháy ở hai mức cuối */
+.scene::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;
+  box-shadow:inset 0 0 44px 12px rgba(255,46,26,calc(var(--alarm,0) * .55));transition:box-shadow .45s}
+.scene[data-danger="4"]::after{animation:alarmPulse .85s ease-in-out infinite}
+.scene[data-danger="5"]::after{animation:alarmPulse .5s ease-in-out infinite}
+@keyframes alarmPulse{0%,100%{opacity:.5}50%{opacity:1}}
+.dogface{display:none}
+.scene[data-danger="0"] .f-calm,.scene[data-danger="1"] .f-calm{display:block}
+.scene[data-danger="2"] .f-worry{display:block}
+.scene[data-danger="3"] .f-panic{display:block}
+.scene[data-danger="4"] .f-terror{display:block}
+.scene[data-danger="5"] .f-caught{display:block}
+
+/* Tai cụp xuống khi sợ */
+.ear{transition:transform .45s}
+.ear-l{transform-origin:-13px 73px}
+.ear-r{transform-origin:5px 73px}
+.scene[data-danger="3"] .ear-l{transform:rotate(-26deg)}
+.scene[data-danger="3"] .ear-r{transform:rotate(26deg)}
+.scene[data-danger="4"] .ear-l,.scene[data-danger="5"] .ear-l{transform:rotate(-52deg)}
+.scene[data-danger="4"] .ear-r,.scene[data-danger="5"] .ear-r{transform:rotate(52deg)}
+.warnmark{opacity:0;transition:opacity .4s}
+.scene[data-danger="2"] .warnmark{opacity:.75;animation:bob .9s ease-in-out infinite}
+.scene[data-danger="3"] .warnmark{opacity:1;animation:bob .55s ease-in-out infinite}
+.scene[data-danger="4"] .warnmark{opacity:1;animation:bob .3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.12)}}
+
+.dogc{transform:translateX(var(--dogx));transform-origin:0 118px;transition:transform .5s}
+.scene[data-danger="2"] .dogc{animation:tremble .34s linear infinite}
+.scene[data-danger="3"] .dogc{animation:tremble .2s linear infinite}
+.scene[data-danger="4"] .dogc{animation:terror .12s linear infinite}
+@keyframes tremble{
+  0%,100%{transform:translateX(var(--dogx))}
+  50%{transform:translateX(calc(var(--dogx) - 1.8px))}
+}
+@keyframes terror{
+  0%,100%{transform:translateX(var(--dogx)) rotate(-2.4deg)}
+  50%{transform:translateX(calc(var(--dogx) + 3px)) rotate(2.4deg)}
+}
+.scene[data-danger="5"] .dogc{filter:grayscale(.55) brightness(.75)}
+.tail{transform-origin:18px 100px}
+.scene[data-danger="0"] .tail{animation:wag .5s ease-in-out infinite alternate}
+@keyframes wag{from{transform:rotate(-14deg)}to{transform:rotate(16deg)}}
+.scene.hit{animation:shakeScene .45s ease}
+@keyframes shakeScene{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+/* bảng điểm nổi ngay trên khung cún */
+.hud{position:absolute;inset:9px 9px auto 9px;z-index:2;display:flex;justify-content:space-between;
+  align-items:flex-start;gap:8px;pointer-events:none}
+.hudMain{background:rgba(14,3,8,.72);backdrop-filter:blur(7px);border:1px solid rgba(255,209,102,.5);
+  border-radius:12px;padding:5px 11px 6px;max-width:132px;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.hudName{display:block;font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--gold-300);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hudScore{display:block;font-family:var(--fx-display);font-size:27px;line-height:1.08;color:#FFF6E2;
+  letter-spacing:.02em;font-variant-numeric:tabular-nums;text-shadow:0 2px 7px rgba(0,0,0,.7)}
+.hudHearts{position:absolute;left:9px;bottom:9px;z-index:2;pointer-events:none;
+  display:flex;align-items:center;gap:2.5px;padding:4px 7px;border-radius:999px;
+  background:rgba(14,3,8,.6);backdrop-filter:blur(6px);border:1px solid rgba(255,96,96,.34)}
+.hudHearts svg{width:13px;height:13px;display:block;color:#FF4D5E;transition:.25s;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.hudHearts svg.off{color:#5E222B;opacity:.55;filter:none}
+.hudHearts .plus{font-family:var(--fx-body);font-size:10.5px;font-weight:800;color:#FF9AA4;margin-left:2px}
+.scene[data-danger="3"] .hudHearts svg:not(.off){animation:beat .68s ease-in-out infinite}
+.scene[data-danger="4"] .hudHearts svg:not(.off){animation:beat .38s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}28%{transform:scale(1.26)}56%{transform:scale(1)}}
+
+.hudRivals{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
+.rival{background:rgba(14,3,8,.66);backdrop-filter:blur(6px);border:1px solid rgba(255,209,102,.3);
+  border-radius:999px;padding:4px 10px;font-size:11.5px;font-weight:700;color:var(--cream-dim);
+  white-space:nowrap;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.rival b{color:var(--gold-300);font-variant-numeric:tabular-nums;margin-left:5px}
+.rival svg{display:inline-block;width:10px;height:10px;color:#FF4D5E;margin:0 2px 0 5px;vertical-align:-1px}
+.rival.out{opacity:.45;text-decoration:line-through}
+
+/* ---------- board ---------- */
+.boardbox{display:flex;flex-direction:column;gap:11px;min-width:0}
+.qcard{
+  position:relative;padding:14px 17px 15px;border-radius:var(--radius);
+  background:linear-gradient(180deg, rgba(255,209,102,.19), rgba(122,26,48,.5));
+  border:1.5px solid rgba(255,209,102,.5);box-shadow:var(--shadow), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.qlabel{font-family:var(--fx-display);font-size:13px;letter-spacing:.2em;color:var(--gold-300);
+  display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.qline{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,209,102,.55),transparent)}
+.qmeta{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.qmeta span{font-family:var(--fx-body);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 9px;border-radius:999px;white-space:nowrap;
+  background:rgba(255,209,102,.13);border:1px solid rgba(255,209,102,.32);color:var(--gold-300)}
+.qmeta span.round{background:rgba(62,207,174,.13);border-color:rgba(62,207,174,.38);color:var(--jade)}
+.qtext{margin:0;font-size:clamp(16px,2.5vw,21px);font-weight:700;line-height:1.45;color:#FFFBF0;text-wrap:balance}
+.board{
+  --t:clamp(24px,5.2vw,52px);
+  background:linear-gradient(180deg, rgba(18,4,9,.78), rgba(48,10,20,.6));
+  border:1.5px solid rgba(255,209,102,.22);border-radius:var(--radius);padding:14px 12px;
+  display:flex;flex-wrap:wrap;gap:11px;justify-content:center;min-height:96px;align-items:center;
+  box-shadow:inset 0 2px 20px rgba(0,0,0,.5);
+}
+.word{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.tile{
+  width:var(--t);height:calc(var(--t) * 1.28);border-radius:7px;display:grid;place-items:center;
+  font-family:var(--fx-display);font-size:calc(var(--t) * .68);line-height:1;
+  background:linear-gradient(180deg,#F7EAD0,#D9C296);color:#2B0A12;
+  border-bottom:3px solid #A88A5C;box-shadow:0 3px 8px rgba(0,0,0,.35);
+  transition:transform .3s cubic-bezier(.3,1.6,.5,1);
+}
+.tile.blank{background:linear-gradient(180deg,rgba(255,244,220,.2),rgba(255,244,220,.08));
+  color:transparent;border-bottom:3px solid rgba(255,209,102,.5);box-shadow:inset 0 0 0 1px rgba(255,209,102,.16)}
+.tile.just{animation:flip .5s ease}
+@keyframes flip{0%{transform:rotateX(90deg) scale(1.1);background:#FFD166}60%{transform:rotateX(-12deg)}100%{transform:none}}
+
+.msgline{min-height:46px;display:block;padding:13px 15px;border-radius:13px;
+  background:rgba(255,244,220,.06);border:1px solid rgba(255,209,102,.18);font-size:14.5px;line-height:1.5;font-weight:600}
+.msgline.good{background:rgba(62,207,174,.14);border-color:rgba(62,207,174,.45);color:#C9FFF2}
+.msgline.bad{background:rgba(255,91,65,.14);border-color:rgba(255,91,65,.45);color:#FFD6CD}
+.msgline.gold{background:rgba(255,209,102,.15);border-color:rgba(255,209,102,.5);color:var(--gold-300)}
+.minis{display:inline-flex;gap:8px;margin-left:8px;flex-wrap:wrap}
+.mini{font-family:var(--fx-body);font-weight:800;font-size:12px;letter-spacing:.04em;padding:7px 12px;border-radius:999px;
+  cursor:pointer;color:var(--cream);background:rgba(255,244,220,.1);border:1.5px solid rgba(255,209,102,.45);transition:.15s}
+.mini:hover{background:rgba(255,209,102,.24)}
+.mini.yes{background:linear-gradient(180deg,#FFE9A8,var(--gold-400));color:#3A1704;border-color:var(--gold-300)}
+
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(40px,1fr));gap:6px}
+.key{
+  font-family:var(--fx-display);font-size:clamp(15px,3.4vw,19px);letter-spacing:.02em;
+  padding:10px 2px;border-radius:10px;cursor:pointer;color:var(--cream);
+  background:linear-gradient(180deg,rgba(126,23,48,.75),rgba(46,9,19,.85));
+  border:1.5px solid rgba(255,209,102,.26);transition:.12s;
+}
+.key:hover:not(:disabled){background:linear-gradient(180deg,var(--gold-400),#DE9C2C);color:#3A1704;border-color:var(--gold-300)}
+.key:disabled{cursor:not-allowed}
+.key.hit{background:linear-gradient(180deg,#3ECFAE,#1E9C80);color:#052B22;border-color:#7DF0D6}
+.key.miss{background:rgba(20,5,10,.7);color:rgba(255,244,220,.25);border-color:rgba(255,244,220,.1)}
+.key.locked{opacity:.4}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.solve{
+  flex:1;min-width:200px;padding:14px;border:0;border-radius:14px;cursor:pointer;
+  font-family:var(--fx-display);font-size:clamp(16px,3.4vw,20px);letter-spacing:.07em;color:#22110A;
+  background:linear-gradient(180deg,#8CF2D6,var(--jade) 50%,#1E9C80);
+  box-shadow:0 6px 0 #14705B,0 12px 22px rgba(0,0,0,.35);transition:.12s
+}
+.solve:active:not(:disabled){transform:translateY(3px);box-shadow:0 3px 0 #14705B}
+.solve:disabled{filter:grayscale(.7) brightness(.8);cursor:not-allowed;box-shadow:0 3px 0 #2A3B37}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:20px;
+  background:rgba(10,2,6,.78);backdrop-filter:blur(5px)}
+.sheet{width:min(560px,100%);max-height:86vh;overflow:auto;padding:24px;border-radius:20px;
+  background:linear-gradient(180deg,#5E1226,#26060E);border:1.5px solid rgba(255,209,102,.36);box-shadow:var(--shadow)}
+.sheet h3{font-family:var(--fx-display);font-size:clamp(23px,5.4vw,32px);margin:0 0 6px;letter-spacing:.04em;color:var(--gold-300);text-wrap:balance}
+.sheet p{font-size:14px;line-height:1.65;color:var(--cream-dim);margin:0 0 12px}
+.sheet .qq{font-size:14.5px;color:#FFFBF0;font-weight:700;background:rgba(255,209,102,.1);
+  border-left:3px solid var(--gold-400);padding:10px 13px;border-radius:0 10px 10px 0;margin-bottom:12px;line-height:1.5}
+.sheet .reveal{font-family:var(--fx-display);font-size:clamp(20px,4.6vw,28px);color:var(--cream);letter-spacing:.03em;
+  padding:12px;border-radius:12px;background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.3);text-align:center;margin-bottom:14px;text-wrap:balance}
+.sheet ul{margin:0 0 14px;padding-left:20px;font-size:13.5px;line-height:1.75;color:var(--cream-dim)}
+.sheet li b{color:var(--gold-300)}
+.sheet .btns{display:flex;gap:10px;flex-wrap:wrap}
+.sheet .btns button{flex:1;min-width:130px}
+.rank{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.rank div{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:12px;
+  background:rgba(255,244,220,.06);border:1px solid rgba(255,209,102,.2);font-weight:700;font-size:14px}
+.rank div.first{background:rgba(255,209,102,.18);border-color:var(--gold-400)}
+.rank .pos{font-family:var(--fx-display);font-size:20px;color:var(--gold-300);width:26px}
+.rank .pts{margin-left:auto;font-family:var(--fx-display);font-size:19px;color:var(--gold-300);font-variant-numeric:tabular-nums}
+.guessinput{width:100%;padding:14px;border-radius:12px;font-family:var(--fx-display);font-size:20px;letter-spacing:.06em;
+  text-align:center;background:rgba(12,3,7,.7);border:1.5px solid rgba(255,209,102,.4);color:var(--cream);margin-bottom:12px}
+.warn{font-size:12.5px;color:#FFD6CD;background:rgba(255,91,65,.14);border:1px solid rgba(255,91,65,.4);
+  padding:10px 12px;border-radius:11px;line-height:1.5;margin-bottom:14px}
+/* nút thoát ván */
+.ghost.danger{color:#FFD9D0;border-color:rgba(255,91,65,.45);background:rgba(255,91,65,.1)}
+.ghost.danger:hover{background:rgba(255,91,65,.22);border-color:var(--ember)}
+
+/* ba hộp quà / hộp phạt */
+.boxrow{position:relative;height:126px;margin:4px 0 16px}
+.gbox{
+  position:absolute;top:0;left:0;width:calc((100% - 20px) / 3);height:126px;
+  transform:translateX(calc(var(--slot) * (100% + 10px)));
+  transition:transform .42s cubic-bezier(.35,1.15,.45,1), box-shadow .2s, border-color .2s;
+  display:grid;place-items:center;padding:10px;text-align:center;cursor:default;
+  border-radius:15px;border:2px solid rgba(255,209,102,.45);
+  background:linear-gradient(180deg,#7E1730,#380915);box-shadow:0 8px 20px rgba(0,0,0,.45);
+  font-family:var(--fx-body)}
+.gbox .face{font-size:13px;font-weight:800;line-height:1.4;color:var(--cream)}
+.gbox .back{display:none;font-family:var(--fx-display);font-size:46px;line-height:1;color:var(--gold-300);
+  text-shadow:0 3px 8px rgba(0,0,0,.5)}
+.gbox.down .face{display:none}
+.gbox.down .back{display:block}
+.gbox.pickable{cursor:pointer}
+.gbox.pickable:hover{border-color:var(--gold-400);box-shadow:0 0 0 3px rgba(255,209,102,.28),0 12px 26px rgba(0,0,0,.5)}
+.gbox.chosen{border-color:var(--gold-300);box-shadow:0 0 0 3px rgba(255,209,102,.45),0 12px 28px rgba(0,0,0,.55)}
+.gbox.curse{background:linear-gradient(180deg,#6B2A10,#2A0C08);border-color:rgba(255,120,70,.5)}
+.gbox.curse .back{color:#FFA17A}
+.gbox.dim{opacity:.4}
+
+/* thử thách */
+.qbar{height:7px;border-radius:999px;background:rgba(255,244,220,.13);overflow:hidden;margin-bottom:14px}
+.qbar i{display:block;height:100%;width:100%;
+  background:linear-gradient(90deg,var(--jade),var(--gold-400),var(--ember))}
+.qopts{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+.qopt{text-align:left;padding:13px 15px;border-radius:12px;cursor:pointer;
+  font-family:var(--fx-body);font-size:14px;font-weight:700;color:var(--cream);
+  background:rgba(255,244,220,.07);border:1.5px solid rgba(255,209,102,.3);transition:.15s}
+.qopt:hover:not(:disabled){background:rgba(255,209,102,.18);border-color:var(--gold-400)}
+.qopt:disabled{cursor:default}
+.qopt.right{background:rgba(62,207,174,.24);border-color:var(--jade);color:#D9FFF6}
+.qopt.wrong{background:rgba(255,91,65,.22);border-color:var(--ember);color:#FFD9D0}
+
+#confetti{position:fixed;inset:0;width:100%;height:100%;z-index:60;pointer-events:none}
+
+.foot{margin-top:26px;text-align:center;font-size:12px;color:var(--cream-dim);opacity:.6;line-height:1.7}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+
+<div class="beams"></div>
+<div class="vignette"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="ic-heart" viewBox="0 0 24 24">
+    <path d="M12 21.2C12 21.2 3.4 16 3.4 9.9A4.7 4.7 0 0 1 12 6.9a4.7 4.7 0 0 1 8.6 3c0 6.1-8.6 11.3-8.6 11.3z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-wheel" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="27" fill="#7E1730" stroke="#FFD166" stroke-width="3"/>
+    <path d="M32 5v54M5 32h54M13 13l38 38M51 13L13 51" stroke="#FFD166" stroke-width="2.6"/>
+    <circle cx="32" cy="32" r="7" fill="#FFD166"/>
+  </symbol>
+</defs></svg>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark"><use href="#ic-wheel"/></svg>
+      <div>
+        <div class="brand-name">CHIẾC NÓN KỲ DIỆU</div>
+        <div class="brand-sub">Giải cứu cún con</div>
+      </div>
+    </div>
+    <div class="topbtns">
+      <button class="ghost" id="btnMusic" aria-pressed="false">♪ Nhạc nền</button>
+      <button class="ghost" id="btnRules">Luật chơi</button>
+      <button class="ghost danger" id="btnExit" hidden>Thoát ván</button>
+    </div>
+  </header>
+
+  <section id="screenStart">
+    <div class="hero">
+      <h1>CHIẾC NÓN<br>KỲ DIỆU</h1>
+      <p class="tag">Đọc câu hỏi, quay nón rồi đoán từng chữ cái. Đoán sai hoặc quay vào ô phạt là mất một trái tim, kẻ bắt cún lại tiến sát thêm một bước — hết 5 tim là cún bị chụp lưới.</p>
+    </div>
+
+    <div class="panel">
+      <h2>CHỌN CÁCH CHƠI</h2>
+      <p class="sub">496 câu hỏi tiếng Việt và tiếng Anh, chọn ngẫu nhiên mỗi ván.</p>
+      <div class="modes">
+        <button class="mode" id="modeSolo" aria-pressed="true">
+          <b>Chơi một mình</b>
+          <span>Bạn giữ 5 mạng, giải càng nhiều ô chữ càng tốt cho tới khi cún bị bắt.</span>
+        </button>
+        <button class="mode" id="modeParty" aria-pressed="false">
+          <b>Nhiều người một máy</b>
+          <span>2 đến 4 người thay nhau quay trên cùng một điện thoại. Ai nhiều điểm nhất sẽ thắng.</span>
+        </button>
+      </div>
+
+      <div class="row-opts" id="partyOpts" hidden>
+        <div class="field">
+          <label for="numPlayers">Số người chơi</label>
+          <select id="numPlayers"><option value="2">2 người</option><option value="3">3 người</option><option value="4">4 người</option></select>
+        </div>
+        <div class="field">
+          <label for="numRounds">Số ván đấu</label>
+          <select id="numRounds"><option value="3">3 ván</option><option value="5" selected>5 ván</option><option value="7">7 ván</option></select>
+        </div>
+      </div>
+
+      <div class="names" id="nameFields"></div>
+      <button class="cta" id="btnStart">BẮT ĐẦU CHƠI</button>
+    </div>
+
+    <p class="foot">Mẹo: bấm <b>Nhạc nền</b> ở góc trên để bật tiếng. Gửi đường dẫn này cho bạn bè là họ chơi được ngay.</p>
+  </section>
+
+  <section id="screenGame" hidden>
+    <div class="arena">
+      <div class="wheelbox">
+        <div class="wheelstage">
+          <svg class="pointer" viewBox="0 0 36 46"><path d="M18 46 4 14a14 14 0 1 1 28 0z" fill="#FFD166" stroke="#7A4A0C" stroke-width="2.5" stroke-linejoin="round"/><circle cx="18" cy="14" r="4.5" fill="#7A4A0C"/></svg>
+          <canvas id="wheel" width="840" height="840" role="img" aria-label="Vòng quay chiếc nón kỳ diệu"></canvas>
+          <div class="hub"><span id="hubText">QUAY<br>ĐI!</span></div>
+        </div>
+        <button class="spinbtn" id="btnSpin">QUAY NÓN</button>
+
+        <div class="scene" id="scene" data-danger="0">
+          <svg viewBox="0 0 420 160" role="img" aria-labelledby="sceneAlt">
+            <title id="sceneAlt">Cún con đang bị kẻ bắt cún đuổi theo</title>
+            <defs>
+              <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--sky1)"/><stop offset="100%" stop-color="var(--sky2)"/>
+              </linearGradient>
+            </defs>
+            <rect width="420" height="160" fill="url(#sky)"/>
+            <circle cx="62" cy="36" r="17" fill="#FFF3C4" opacity="0.75"/>
+            <path d="M0 108 q54 -30 108 -6 q46 20 92 2 q52 -20 104 4 q58 24 116 6 v46 H0z" fill="var(--hill)"/>
+            <rect y="118" width="420" height="42" fill="var(--ground)"/>
+            <g stroke="var(--fence)" stroke-width="5" stroke-linecap="round" opacity=".85">
+              <path d="M300 118 v-22 M322 118 v-22 M344 118 v-22 M366 118 v-22 M388 118 v-22"/>
+              <path d="M294 102 h100 M294 112 h100"/>
+            </g>
+
+            <g class="warnmark">
+              <path d="M143 44 l8 0 -1.6 20 h-4.8z" fill="#FF5B41"/>
+              <circle cx="147" cy="70" r="3.4" fill="#FF5B41"/>
+            </g>
+
+            <g class="dogc">
+              <ellipse cx="0" cy="118" rx="27" ry="5" fill="rgba(0,0,0,.28)"/>
+              <path class="tail" d="M18 100 q15 -5 11 -20" stroke="#B0702F" stroke-width="7" fill="none" stroke-linecap="round"/>
+              <ellipse cx="2" cy="103" rx="20" ry="14" fill="#C8813F"/>
+              <rect x="-11" y="108" width="9" height="11" rx="4.5" fill="#B0702F"/>
+              <rect x="7" y="108" width="9" height="11" rx="4.5" fill="#B0702F"/>
+              <path class="ear ear-l" d="M-19 74 c-6 -10 -3 -19 3 -17 l6 10z" fill="#9A5A2B"/>
+              <path class="ear ear-r" d="M11 74 c6 -10 3 -19 -3 -17 l-6 10z" fill="#9A5A2B"/>
+              <circle cx="-4" cy="84" r="17" fill="#C8813F"/>
+              <ellipse cx="-4" cy="90.5" rx="10.5" ry="8" fill="#F0D5AE"/>
+              <ellipse cx="-4" cy="86.5" rx="3.4" ry="2.6" fill="#2B1206"/>
+              <g class="dogface f-calm">
+                <circle cx="-11" cy="79.5" r="2.6" fill="#2B1206"/><circle cx="3" cy="79.5" r="2.6" fill="#2B1206"/>
+                <path d="M-9 93 q5 4 10 0" stroke="#2B1206" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              </g>
+              <g class="dogface f-worry">
+                <circle cx="-11" cy="80.5" r="2.6" fill="#2B1206"/><circle cx="3" cy="80.5" r="2.6" fill="#2B1206"/>
+                <path d="M-15.5 74.5 l6.5 2.4 M7.5 74.5 l-6.5 2.4" stroke="#2B1206" stroke-width="1.7" stroke-linecap="round"/>
+                <ellipse cx="-4" cy="93.5" rx="3" ry="2.4" fill="#2B1206"/>
+              </g>
+              <g class="dogface f-panic">
+                <circle cx="-11" cy="79.5" r="4.3" fill="#FFF8EC"/><circle cx="-11" cy="80.2" r="2" fill="#2B1206"/>
+                <circle cx="3" cy="79.5" r="4.3" fill="#FFF8EC"/><circle cx="3" cy="80.2" r="2" fill="#2B1206"/>
+                <ellipse cx="-4" cy="94" rx="4.4" ry="3.6" fill="#2B1206"/>
+                <path d="M14 70 q4 6 0 8.5 q-4 -2.5 0 -8.5z" fill="#8FE0F7"/>
+              </g>
+              <g class="dogface f-terror">
+                <circle cx="-11.5" cy="79" r="5.4" fill="#FFF8EC"/><circle cx="-11.5" cy="80.4" r="1.9" fill="#2B1206"/>
+                <circle cx="3.5" cy="79" r="5.4" fill="#FFF8EC"/><circle cx="3.5" cy="80.4" r="1.9" fill="#2B1206"/>
+                <path d="M-18 70.5 l7 2.6 M10 70.5 l-7 2.6" stroke="#2B1206" stroke-width="1.7" stroke-linecap="round"/>
+                <ellipse cx="-4" cy="94.5" rx="5.4" ry="4.4" fill="#2B1206"/>
+                <ellipse cx="-4" cy="96.5" rx="2.6" ry="2" fill="#E8697E"/>
+                <path d="M14.5 68 q4.5 6.5 0 9.2 q-4.5 -2.7 0 -9.2z" fill="#8FE0F7"/>
+                <path d="M-22 73 q3.8 5.5 0 7.8 q-3.8 -2.3 0 -7.8z" fill="#8FE0F7"/>
+              </g>
+              <g class="dogface f-caught">
+                <path d="M-14.5 80 q3.5 -3.5 7 0 M-0.5 80 q3.5 -3.5 7 0" stroke="#2B1206" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+                <path d="M-8 93.5 h8" stroke="#2B1206" stroke-width="1.9" stroke-linecap="round"/>
+              </g>
+            </g>
+
+            <g class="catcher">
+              <g>
+                <path d="M-30 68 L26 92" stroke="#6B4E22" stroke-width="7" stroke-linecap="round"/>
+                <ellipse cx="-55" cy="62" rx="27" ry="31" fill="rgba(230,240,255,.18)" stroke="#241D36" stroke-width="4.5"/>
+                <path d="M-80 50 h50 M-82 62 h54 M-80 74 h50 M-55 31 v62 M-68 35 v54 M-42 35 v54"
+                      stroke="#241D36" stroke-width="1.5" opacity=".5" fill="none"/>
+              </g>
+              <g fill="#241D36">
+                <rect x="20" y="88" width="11" height="31" rx="5"/>
+                <rect x="36" y="88" width="11" height="31" rx="5"/>
+                <rect x="16" y="52" width="35" height="42" rx="15"/>
+                <circle cx="33" cy="38" r="13"/>
+                <path d="M17 33 h33 a7 7 0 0 0 -7 -13 h-19 a7 7 0 0 0 -7 13z"/>
+              </g>
+              <path d="M22 62 L-26 74" stroke="#241D36" stroke-width="9" stroke-linecap="round" fill="none"/>
+            </g>
+          </svg>
+          <div class="hud">
+            <div class="hudMain">
+              <span class="hudName" id="hudName">Bạn</span>
+              <span class="hudScore" id="hudScore">0</span>
+            </div>
+            <div class="hudRivals" id="hudRivals"></div>
+          </div>
+          <div class="hudHearts" id="hudHearts"></div>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qlabel">CÂU HỎI<span class="qline"></span>
+          <span class="qmeta"><span class="round" id="chipRound">Ván 1</span><span id="chipLen">0 chữ cái</span></span>
+        </div>
+        <p class="qtext" id="qtext">Câu hỏi sẽ hiện ở đây.</p>
+      </div>
+
+      <div class="boardbox">
+        <div class="board" id="board"></div>
+        <div class="msgline" id="msg">Bấm <b>QUAY NÓN</b> để bắt đầu lượt của bạn.</div>
+        <div class="keys" id="keys"></div>
+        <div class="actions">
+          <button class="solve" id="btnSolve">ĐOÁN ĐÁP ÁN</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="modal" id="modal" hidden><div class="sheet" id="sheet"></div></div>
+
+<script>
+/* =========================================================================
+   NGÂN HÀNG Ô CHỮ — Chiếc Nón Kỳ Diệu
+   -------------------------------------------------------------------------
+   Mỗi dòng là một ô chữ, theo đúng thứ tự:
+       ["ĐÁP ÁN", "Chủ đề", "Câu hỏi hiện cho người chơi"]
+
+   ĐÁP ÁN
+   - Viết HOA toàn bộ, có dấu đầy đủ.  Ví dụ: "ĂN QUẢ NHỚ KẺ TRỒNG CÂY"
+   - Chỉ dùng chữ cái và dấu cách.  KHÔNG dùng dấu phẩy, chấm, gạch nối,
+     ngoặc kép hay chữ số  (viết "MƯỜI" thay cho "10").
+   - Dấu cách là chỗ ngắt từ trên bảng ô chữ.
+   - Đáp án tiếng Anh viết HOA không dấu, ví dụ: "PRACTICE MAKES PERFECT".
+
+   CHỦ ĐỀ
+   - Chỉ để bạn sắp xếp file cho gọn.  Trò chơi KHÔNG hiện chủ đề ra màn hình.
+
+   CÂU HỎI
+   - Phải tự đứng được một mình, người chơi đọc là hiểu ngay phải đoán gì,
+     không cần biết chủ đề.  Nên kết thúc bằng dấu hỏi.
+
+   THÊM CÂU MỚI
+   Chỉ cần chép thêm một dòng vào bất kỳ khối push() nào bên dưới, nhớ dấu
+   phẩy ở cuối dòng trước.  Không cần khai báo gì thêm ở nơi khác.
+   ========================================================================= */
+
+/* ---------- PHẦN 1 — THÀNH NGỮ, TỤC NGỮ, CA DAO ---------- */
+(window.QBANK=window.QBANK||[]).push(
+["ĂN QUẢ NHỚ KẺ TRỒNG CÂY","Tục ngữ","Câu tục ngữ nào dạy ta phải biết ơn người đã tạo ra thành quả cho mình hưởng?"],
+["UỐNG NƯỚC NHỚ NGUỒN","Tục ngữ","Câu tục ngữ bốn chữ nào nhắc ta luôn nhớ về cội nguồn của mình?"],
+["CÓ CÔNG MÀI SẮT CÓ NGÀY NÊN KIM","Tục ngữ","Câu tục ngữ nào lấy hình ảnh mài một thanh sắt để nói về lòng kiên trì?"],
+["GẦN MỰC THÌ ĐEN GẦN ĐÈN THÌ SÁNG","Tục ngữ","Câu tục ngữ nào nói môi trường sống ảnh hưởng đến tính cách con người?"],
+["MỘT CÂY LÀM CHẲNG NÊN NON","Ca dao","Vế đầu của câu ca dao kết thúc bằng ba cây chụm lại nên hòn núi cao là gì?"],
+["LÁ LÀNH ĐÙM LÁ RÁCH","Tục ngữ","Câu tục ngữ nào kêu gọi người khá giả giúp đỡ người khó khăn?"],
+["ĐI MỘT NGÀY ĐÀNG HỌC MỘT SÀNG KHÔN","Tục ngữ","Câu tục ngữ nào khuyên đi đây đi đó để mở mang hiểu biết?"],
+["THẤT BẠI LÀ MẸ THÀNH CÔNG","Tục ngữ","Câu nói nào coi mỗi lần vấp ngã là bước đệm để đi tới thành công?"],
+["CÁI KHÓ LÓ CÁI KHÔN","Tục ngữ","Câu tục ngữ nào nói hoàn cảnh ngặt nghèo lại làm nảy ra sáng kiến?"],
+["NƯỚC CHẢY ĐÁ MÒN","Thành ngữ","Thành ngữ bốn chữ nào nói việc bền bỉ lâu ngày rồi cũng có kết quả?"],
+["CHỚ THẤY SÓNG CẢ MÀ NGÃ TAY CHÈO","Tục ngữ","Câu tục ngữ nào lấy hình ảnh người chèo thuyền để khuyên đừng gặp khó đã bỏ cuộc?"],
+["ĂN CỖ ĐI TRƯỚC LỘI NƯỚC THEO SAU","Tục ngữ","Câu tục ngữ nào chê kẻ chỉ giành phần sướng còn việc khó thì lùi lại?"],
+["TRĂM HAY KHÔNG BẰNG TAY QUEN","Tục ngữ","Câu tục ngữ nào đề cao thực hành hơn là chỉ biết lý thuyết?"],
+["HỌC THẦY KHÔNG TÀY HỌC BẠN","Tục ngữ","Câu tục ngữ nào nói bạn bè cũng là người dạy ta nhiều điều?"],
+["KHÔNG THẦY ĐỐ MÀY LÀM NÊN","Tục ngữ","Câu tục ngữ nào khẳng định vai trò của người thầy với sự thành đạt?"],
+["MÔI HỞ RĂNG LẠNH","Thành ngữ","Thành ngữ nào lấy môi và răng để nói hai bên gắn bó thì ảnh hưởng lẫn nhau?"],
+["MÁU CHẢY RUỘT MỀM","Thành ngữ","Thành ngữ nào tả nỗi xót xa khi người ruột thịt gặp hoạn nạn?"],
+["BẦU ƠI THƯƠNG LẤY BÍ CÙNG","Ca dao","Vế đầu của câu ca dao kết thúc bằng tuy rằng khác giống nhưng chung một giàn là gì?"],
+["CHỊ NGÃ EM NÂNG","Tục ngữ","Câu tục ngữ bốn chữ nào nói anh chị em phải đỡ đần nhau?"],
+["ANH EM NHƯ THỂ TAY CHÂN","Ca dao","Câu ca dao nào ví tình ruột thịt với hai bộ phận trên cơ thể?"],
+["CÔNG CHA NHƯ NÚI THÁI SƠN","Ca dao","Vế đầu của bài ca dao về công ơn cha mẹ ví công cha với ngọn núi nào?"],
+["MỘT CON NGỰA ĐAU CẢ TÀU BỎ CỎ","Tục ngữ","Câu tục ngữ nào lấy hình ảnh đàn ngựa để nói về sự đồng cảm trong tập thể?"],
+["CHÓ TREO MÈO ĐẬY","Tục ngữ","Câu tục ngữ bốn chữ nào dạy cách cất thức ăn cho hợp với từng con vật hay ăn vụng?"],
+["ĐẦU VOI ĐUÔI CHUỘT","Thành ngữ","Thành ngữ nào chê việc khởi đầu rầm rộ mà kết thúc èo uột?"],
+["NƯỚC ĐỔ LÁ KHOAI","Thành ngữ","Thành ngữ nào nói khuyên bảo mãi mà người nghe chẳng thấm chút nào?"],
+["ĐÀN GẢY TAI TRÂU","Thành ngữ","Thành ngữ nào chỉ việc nói điều hay với người không đủ sức hiểu?"],
+["GIEO GIÓ GẶT BÃO","Thành ngữ","Thành ngữ nào nói làm điều xấu nhỏ sẽ nhận hậu quả lớn?"],
+["TRÁNH VỎ DƯA GẶP VỎ DỪA","Thành ngữ","Thành ngữ nào nói né được rắc rối này lại vướng ngay rắc rối khác?"],
+["ĐƯỢC VOI ĐÒI TIÊN","Thành ngữ","Thành ngữ nào chê kẻ đã có nhiều rồi mà vẫn tham thêm?"],
+["CHÁY NHÀ RA MẶT CHUỘT","Thành ngữ","Thành ngữ nào nói biến cố lớn làm lộ ra kẻ gian?"],
+["CÓ CHÍ THÌ NÊN","Tục ngữ","Câu tục ngữ bốn chữ nào khẳng định có ý chí thì việc gì cũng làm được?"],
+["KIẾN THA LÂU CŨNG ĐẦY TỔ","Tục ngữ","Câu tục ngữ nào mượn hình ảnh con kiến để nói về sự tích góp bền bỉ?"],
+["GÓP GIÓ THÀNH BÃO","Thành ngữ","Thành ngữ nào nói nhiều cái nhỏ hợp lại tạo nên sức mạnh lớn?"],
+["NHÀ SẠCH THÌ MÁT BÁT SẠCH NGON CƠM","Tục ngữ","Câu tục ngữ nào ca ngợi việc giữ nhà cửa bát đũa sạch sẽ?"],
+["ĐÓI CHO SẠCH RÁCH CHO THƠM","Tục ngữ","Câu tục ngữ nào dạy dù nghèo khổ vẫn phải giữ phẩm giá?"],
+["GIẤY RÁCH PHẢI GIỮ LẤY LỀ","Tục ngữ","Câu tục ngữ nào nói dù sa sút vẫn phải giữ nền nếp gia phong?"],
+["TỐT GỖ HƠN TỐT NƯỚC SƠN","Tục ngữ","Câu tục ngữ nào đề cao chất lượng bên trong hơn vẻ hào nhoáng bên ngoài?"],
+["CÁI NẾT ĐÁNH CHẾT CÁI ĐẸP","Tục ngữ","Câu tục ngữ nào nói tính nết quan trọng hơn nhan sắc?"],
+["LỜI NÓI CHẲNG MẤT TIỀN MUA","Ca dao","Vế đầu của câu ca dao kết thúc bằng lựa lời mà nói cho vừa lòng nhau là gì?"],
+["ĂN CÓ NHAI NÓI CÓ NGHĨ","Tục ngữ","Câu tục ngữ nào khuyên phải suy nghĩ kỹ trước khi nói?"],
+["HỌC ĂN HỌC NÓI HỌC GÓI HỌC MỞ","Tục ngữ","Câu tục ngữ nào kể ra bốn điều phải học trong cách ứng xử hằng ngày?"],
+["MỘT NỤ CƯỜI BẰNG MƯỜI THANG THUỐC BỔ","Tục ngữ","Câu tục ngữ nào ví tiếng cười với thuốc bổ?"],
+["TIÊN HỌC LỄ HẬU HỌC VĂN","Tục ngữ","Khẩu hiệu sáu chữ nào thường treo trang trọng trong các trường học Việt Nam?"],
+["CÓ THỰC MỚI VỰC ĐƯỢC ĐẠO","Tục ngữ","Câu tục ngữ nào nói phải no cái bụng rồi mới lo được việc lớn?"],
+["NO BỤNG ĐÓI CON MẮT","Thành ngữ","Thành ngữ nào chỉ người lấy thức ăn nhiều hơn mức mình ăn nổi?"],
+["GẬY ÔNG ĐẬP LƯNG ÔNG","Thành ngữ","Thành ngữ nào nói mưu kế của mình quay lại hại chính mình?"],
+["CHUỘT SA CHĨNH GẠO","Thành ngữ","Thành ngữ nào chỉ người may mắn rơi trúng nơi sung túc?"],
+["ĐỨNG NÚI NÀY TRÔNG NÚI NỌ","Thành ngữ","Thành ngữ nào chê người không bao giờ bằng lòng với cái mình đang có?"],
+["NGỰA QUEN ĐƯỜNG CŨ","Thành ngữ","Thành ngữ nào nói thói quen xấu rất khó bỏ?"],
+["CÁ LỚN NUỐT CÁ BÉ","Thành ngữ","Thành ngữ nào nói kẻ mạnh lấn át kẻ yếu?"],
+["BÁN ANH EM XA MUA LÁNG GIỀNG GẦN","Tục ngữ","Câu tục ngữ nào đề cao tình nghĩa hàng xóm hơn họ hàng ở xa?"],
+["THUẬN VỢ THUẬN CHỒNG TÁT BIỂN ĐÔNG CŨNG CẠN","Tục ngữ","Câu tục ngữ nào nói vợ chồng đồng lòng thì việc khó tới đâu cũng xong?"],
+["KHÉO ĂN THÌ NO KHÉO CO THÌ ẤM","Tục ngữ","Câu tục ngữ nào dạy cách chi tiêu liệu cơm gắp mắm?"],
+["LÀM KHI LÀNH ĐỂ DÀNH KHI ĐAU","Tục ngữ","Câu tục ngữ nào khuyên lúc khỏe phải tiết kiệm phòng lúc ốm?"],
+["TÍCH TIỂU THÀNH ĐẠI","Thành ngữ","Thành ngữ bốn chữ nào nói dành dụm từng chút rồi sẽ thành nhiều?"],
+["ĂN CHẮC MẶC BỀN","Thành ngữ","Thành ngữ nào chỉ lối sống giản dị thực tế không phô trương?"],
+["TRÂU CHẬM UỐNG NƯỚC ĐỤC","Tục ngữ","Câu tục ngữ nào mượn hình ảnh con trâu để nói ai chậm chân thì chịu thiệt?"],
+["CÓ BỘT MỚI GỘT NÊN HỒ","Tục ngữ","Câu tục ngữ nào nói phải có nền tảng sẵn thì mới làm nên việc?"],
+["MỘT MIẾNG KHI ĐÓI BẰNG MỘT GÓI KHI NO","Tục ngữ","Câu tục ngữ nào nói giúp đúng lúc hoạn nạn mới thật đáng quý?"],
+["THƯƠNG NGƯỜI NHƯ THỂ THƯƠNG THÂN","Tục ngữ","Câu tục ngữ nào dạy yêu thương người khác như yêu chính mình?"],
+["Ở HIỀN GẶP LÀNH","Tục ngữ","Câu tục ngữ bốn chữ nào nói sống tử tế rồi sẽ gặp điều tốt?"],
+["GIEO NHÂN NÀO GẶT QUẢ NẤY","Tục ngữ","Câu tục ngữ nào diễn đạt luật nhân quả bằng hình ảnh nhà nông?"],
+["CÓ QUA CÓ LẠI MỚI TOẠI LÒNG NHAU","Tục ngữ","Câu tục ngữ nào nói quan hệ phải có đi có lại mới bền?"],
+["ĂN CÂY NÀO RÀO CÂY ẤY","Tục ngữ","Câu tục ngữ nào nói hưởng lợi ở đâu thì phải giữ gìn nơi đó?"],
+["TRÔNG MẶT MÀ BẮT HÌNH DONG","Tục ngữ","Câu tục ngữ nào nói về thói nhìn bề ngoài mà đoán tính người?"],
+["NGƯỜI ĐẸP VÌ LỤA LÚA TỐT VÌ PHÂN","Tục ngữ","Câu tục ngữ nào nói vai trò của quần áo với vẻ ngoài con người?"],
+["NÓI CÓ SÁCH MÁCH CÓ CHỨNG","Tục ngữ","Câu tục ngữ nào đòi hỏi nói điều gì cũng phải có bằng chứng?"],
+["MỘT SỰ NHỊN CHÍN SỰ LÀNH","Tục ngữ","Câu tục ngữ nào khuyên nhường nhịn để giữ hòa khí?"],
+["DỤC TỐC BẤT ĐẠT","Thành ngữ","Thành ngữ Hán Việt bốn chữ nào nói vội vàng quá thì hỏng việc?"],
+["ĂN KHÔNG NGỒI RỒI","Thành ngữ","Thành ngữ nào chỉ kẻ lười nhác chẳng chịu làm gì?"],
+["TAY LÀM HÀM NHAI","Tục ngữ","Vế đầu của câu tục ngữ kết thúc bằng tay quai miệng trễ là gì?"],
+["CÓ LÀM THÌ MỚI CÓ ĂN","Ca dao","Vế đầu của câu ca dao kết thúc bằng không dưng ai dễ đem phần đến cho là gì?"],
+["MỘT NGHỀ CHO CHÍN CÒN HƠN CHÍN NGHỀ","Tục ngữ","Câu tục ngữ nào chơi chữ với số chín để nói nên giỏi một việc?"],
+["NHẤT NGHỆ TINH NHẤT THÂN VINH","Tục ngữ","Câu tục ngữ Hán Việt nào nói thạo một nghề thì đời sung túc?"],
+["ĐẤT LÀNH CHIM ĐẬU","Thành ngữ","Thành ngữ nào nói nơi yên ổn thì người kéo về sinh sống?"],
+["RỪNG VÀNG BIỂN BẠC","Thành ngữ","Thành ngữ nào ca ngợi tài nguyên thiên nhiên giàu có của đất nước?"],
+["NON XANH NƯỚC BIẾC","Thành ngữ","Thành ngữ bốn chữ nào tả cảnh thiên nhiên núi sông tươi đẹp?"],
+["TRÊN KÍNH DƯỚI NHƯỜNG","Thành ngữ","Thành ngữ nào nói cách cư xử với người trên và người dưới trong nhà?"],
+["ĂN VÓC HỌC HAY","Tục ngữ","Câu tục ngữ bốn chữ nào nói ăn để lớn còn học để khôn?"],
+["CÔNG THÀNH DANH TOẠI","Thành ngữ","Thành ngữ nào chỉ lúc sự nghiệp và tiếng tăm đều viên mãn?"],
+["CHÂN CỨNG ĐÁ MỀM","Thành ngữ","Thành ngữ nào thường dùng để chúc người sắp đi xa được vững vàng?"],
+["THẮNG KHÔNG KIÊU BẠI KHÔNG NẢN","Tục ngữ","Câu nói nào về tinh thần thi đấu đẹp dù thắng hay thua?"],
+["ĐOÀN KẾT LÀ SỨC MẠNH","Tục ngữ","Câu nói nào khẳng định cùng nhau thì mạnh hơn làm một mình?"],
+["NHẤT CẬN THỊ NHỊ CẬN GIANG","Tục ngữ","Câu tục ngữ nào nêu kinh nghiệm chọn chỗ ở gần chợ rồi tới gần sông?"],
+["BUÔN CÓ BẠN BÁN CÓ PHƯỜNG","Tục ngữ","Câu tục ngữ nào nói làm ăn buôn bán cần có bạn có hội?"],
+["ĐI HỎI GIÀ VỀ NHÀ HỎI TRẺ","Tục ngữ","Câu tục ngữ nào dạy hỏi người già khi đi xa và hỏi trẻ con khi về nhà?"],
+["ÁO GẤM ĐI ĐÊM","Thành ngữ","Thành ngữ bốn chữ nào nói có cái hay mà chẳng ai nhìn thấy?"],
+["NƯỚC XA KHÔNG CỨU ĐƯỢC LỬA GẦN","Tục ngữ","Câu tục ngữ nào nói sự giúp đỡ phải kịp thời mới có ích?"],
+["CHẬM MÀ CHẮC","Thành ngữ","Thành ngữ ba chữ nào nói làm từ tốn nhưng vững vàng?"],
+["MƯA DẦM THẤM LÂU","Thành ngữ","Thành ngữ nào nói tác động nhẹ nhàng nhưng bền bỉ lại hiệu quả nhất?"]
+);
+
+/* ---------- PHẦN 2 — ĐỊA DANH, LỊCH SỬ, VĂN HÓA, VĂN HỌC VIỆT NAM ---------- */
+(window.QBANK=window.QBANK||[]).push(
+["VỊNH HẠ LONG","Địa danh Việt Nam","Di sản thiên nhiên thế giới ở Quảng Ninh nổi tiếng với hàng nghìn hòn đảo đá vôi tên là gì?"],
+["PHONG NHA KẺ BÀNG","Địa danh Việt Nam","Vườn quốc gia nào ở Quảng Bình nổi tiếng với hệ thống hang động kỳ vĩ?"],
+["CỐ ĐÔ HUẾ","Địa danh Việt Nam","Kinh đô cuối cùng của triều Nguyễn nay được gọi bằng tên nào?"],
+["PHỐ CỔ HỘI AN","Địa danh Việt Nam","Thương cảng cổ nào ở Quảng Nam nổi tiếng với những dãy nhà vàng và đèn lồng?"],
+["THÁNH ĐỊA MỸ SƠN","Địa danh Việt Nam","Quần thể đền tháp Chăm ở Quảng Nam được gọi là gì?"],
+["HOÀNG THÀNH THĂNG LONG","Di sản","Di tích nào ở Hà Nội từng là trung tâm quyền lực suốt nhiều triều đại?"],
+["THÀNH NHÀ HỒ","Di sản","Tòa thành xây toàn bằng đá ở Thanh Hóa có tên là gì?"],
+["QUẦN THỂ TRÀNG AN","Di sản","Danh thắng núi đá và sông nước ở Ninh Bình được thế giới công nhận tên là gì?"],
+["CHÙA MỘT CỘT","Di tích","Ngôi chùa nào ở Hà Nội được dựng trên một trụ đá giữa hồ nước?"],
+["VĂN MIẾU QUỐC TỬ GIÁM","Di tích","Nơi nào ở Hà Nội được coi là trường đại học đầu tiên của nước ta?"],
+["HỒ HOÀN KIẾM","Địa danh Việt Nam","Hồ nào ở Hà Nội gắn với sự tích vua Lê trả gươm cho rùa thần?"],
+["CẦU LONG BIÊN","Di tích","Cây cầu thép cổ nào bắc qua sông Hồng ở Hà Nội?"],
+["CHỢ BẾN THÀNH","Địa danh Việt Nam","Khu chợ nào có tháp đồng hồ và được coi là biểu tượng của Sài Gòn?"],
+["DINH ĐỘC LẬP","Di tích","Công trình lịch sử nào nằm giữa trung tâm Thành phố Hồ Chí Minh?"],
+["NHÀ THỜ ĐỨC BÀ","Di tích","Nhà thờ xây bằng gạch đỏ nổi tiếng ở trung tâm Sài Gòn tên là gì?"],
+["ĐỒNG BẰNG SÔNG CỬU LONG","Địa lý","Vùng nào được coi là vựa lúa lớn nhất nước ta?"],
+["SÔNG HỒNG","Địa lý","Con sông nào bồi đắp nên đồng bằng Bắc Bộ?"],
+["SÔNG MÊ KÔNG","Địa lý","Dòng sông lớn nào chảy qua sáu quốc gia rồi đổ vào miền Tây nước ta?"],
+["ĐỈNH PHAN XI PĂNG","Địa lý","Ngọn núi cao nhất Việt Nam được mệnh danh nóc nhà Đông Dương tên là gì?"],
+["CAO NGUYÊN ĐÁ ĐỒNG VĂN","Địa danh Việt Nam","Công viên địa chất toàn cầu ở Hà Giang có tên là gì?"],
+["RUỘNG BẬC THANG MÙ CANG CHẢI","Địa danh Việt Nam","Thắng cảnh nào ở Yên Bái đẹp nhất vào mùa lúa chín?"],
+["ĐẢO PHÚ QUỐC","Địa lý","Hòn đảo lớn nhất Việt Nam tên là gì?"],
+["QUẦN ĐẢO TRƯỜNG SA","Địa lý","Quần đảo nào của Việt Nam thuộc tỉnh Khánh Hòa?"],
+["QUẦN ĐẢO HOÀNG SA","Địa lý","Quần đảo nào của Việt Nam thuộc thành phố Đà Nẵng?"],
+["ĐẢO LÝ SƠN","Địa danh Việt Nam","Hòn đảo nào ở Quảng Ngãi được gọi là vương quốc tỏi?"],
+["VỊNH NHA TRANG","Địa danh Việt Nam","Vịnh biển đẹp nổi tiếng của tỉnh Khánh Hòa tên là gì?"],
+["BÃI BIỂN MỸ KHÊ","Địa danh Việt Nam","Bãi biển nổi tiếng nhất của thành phố Đà Nẵng tên là gì?"],
+["ĐÈO HẢI VÂN","Địa lý","Con đèo nào nằm giữa Huế và Đà Nẵng được gọi là thiên hạ đệ nhất hùng quan?"],
+["HANG SƠN ĐOÒNG","Địa danh Việt Nam","Hang động tự nhiên lớn nhất thế giới nằm ở Quảng Bình tên là gì?"],
+["THÁC BẢN GIỐC","Địa danh Việt Nam","Thác nước hùng vĩ nào nằm ở tỉnh Cao Bằng?"],
+["HỒ BA BỂ","Địa danh Việt Nam","Hồ nước ngọt tự nhiên lớn nằm giữa núi rừng Bắc Kạn tên là gì?"],
+["RỪNG CÚC PHƯƠNG","Địa danh Việt Nam","Vườn quốc gia đầu tiên của Việt Nam tên là gì?"],
+["MŨI CÀ MAU","Địa lý","Điểm cực nam của phần đất liền nước ta có tên là gì?"],
+["ĐỊA ĐẠO CỦ CHI","Di tích","Hệ thống đường hầm nổi tiếng thời chiến ở ngoại thành Sài Gòn tên là gì?"],
+["THÀNH PHỐ ĐÀ LẠT","Địa danh Việt Nam","Thành phố nào được gọi là xứ sương mù và thành phố ngàn hoa?"],
+["THỊ XÃ SA PA","Địa danh Việt Nam","Nơi nghỉ mát trên núi nổi tiếng của tỉnh Lào Cai tên là gì?"],
+["THÀNH PHỐ CẦN THƠ","Địa danh Việt Nam","Thành phố nào được mệnh danh là Tây Đô của miền sông nước?"],
+["THÀNH PHỐ HẢI PHÒNG","Địa danh Việt Nam","Thành phố cảng nào được gọi là thành phố hoa phượng đỏ?"],
+["CHIẾN THẮNG ĐIỆN BIÊN PHỦ","Lịch sử","Chiến thắng năm 1954 được ca ngợi là lừng lẫy năm châu chấn động địa cầu tên là gì?"],
+["KHỞI NGHĨA HAI BÀ TRƯNG","Lịch sử","Cuộc khởi nghĩa nào do hai chị em Trưng Trắc và Trưng Nhị lãnh đạo?"],
+["TRẦN HƯNG ĐẠO","Lịch sử","Vị tướng nào ba lần chỉ huy quân dân Đại Việt đánh tan quân Nguyên Mông?"],
+["LÝ THƯỜNG KIỆT","Lịch sử","Ai được xem là tác giả bài thơ Nam quốc sơn hà?"],
+["NGÔ QUYỀN","Lịch sử","Ai đánh tan quân Nam Hán trên sông Bạch Đằng năm 938?"],
+["QUANG TRUNG NGUYỄN HUỆ","Lịch sử","Vị vua áo vải nào đại phá quân Thanh trong mùa xuân năm Kỷ Dậu?"],
+["LÊ LỢI","Lịch sử","Ai là người lãnh đạo cuộc khởi nghĩa Lam Sơn chống quân Minh?"],
+["NGUYỄN TRÃI","Lịch sử","Ai là tác giả của áng thiên cổ hùng văn Bình Ngô đại cáo?"],
+["VÕ NGUYÊN GIÁP","Lịch sử","Vị đại tướng nào chỉ huy chiến dịch Điện Biên Phủ?"],
+["TRẬN BẠCH ĐẰNG","Lịch sử","Trận thủy chiến nào nổi tiếng với trận địa cọc ngầm dưới lòng sông?"],
+["KHỞI NGHĨA LAM SƠN","Lịch sử","Cuộc kháng chiến mười năm chống quân Minh mang tên gì?"],
+["TRUYỆN KIỀU","Văn học","Kiệt tác thơ Nôm kể về cuộc đời nàng Thúy Kiều có tên là gì?"],
+["NGUYỄN DU","Văn học","Ai được tôn là đại thi hào dân tộc của Việt Nam?"],
+["HỒ XUÂN HƯƠNG","Văn học","Nữ sĩ nào được mệnh danh là bà chúa thơ Nôm?"],
+["DẾ MÈN PHIÊU LƯU KÝ","Văn học","Tác phẩm thiếu nhi nổi tiếng nào của nhà văn Tô Hoài kể chuyện một chú dế?"],
+["LÃO HẠC","Văn học","Truyện ngắn nào của Nam Cao kể về ông lão nghèo phải bán con chó vàng?"],
+["CHÍ PHÈO","Văn học","Nhân vật nổi tiếng nào của Nam Cao sống ở làng Vũ Đại?"],
+["TẮT ĐÈN","Văn học","Tiểu thuyết nào của Ngô Tất Tố kể về chị Dậu?"],
+["SƠN TINH THỦY TINH","Truyện dân gian","Truyền thuyết nào giải thích vì sao năm nào nước ta cũng có lũ lụt?"],
+["THÁNH GIÓNG","Truyện dân gian","Cậu bé nào vươn vai thành tráng sĩ cưỡi ngựa sắt đi đánh giặc Ân?"],
+["SỰ TÍCH TRẦU CAU","Truyện dân gian","Câu chuyện nào giải thích tục ăn trầu của người Việt?"],
+["BÁNH CHƯNG BÁNH GIẦY","Truyện dân gian","Hoàng tử Lang Liêu đã dâng vua Hùng hai thứ bánh nào?"],
+["TẤM CÁM","Truyện dân gian","Truyện cổ tích nào có cô gái hiền lành đánh rơi chiếc hài khi đi hội?"],
+["CÂY TRE TRĂM ĐỐT","Truyện dân gian","Truyện cổ tích nào có câu thần chú khắc nhập khắc xuất?"],
+["THẠCH SANH","Truyện dân gian","Chàng trai nào chém chằn tinh cứu công chúa rồi bị Lý Thông cướp công?"],
+["ÁO DÀI","Văn hóa","Trang phục truyền thống nào được coi là biểu tượng của phụ nữ Việt Nam?"],
+["NÓN LÁ","Văn hóa","Vật hình chóp nào người Việt đội để che nắng che mưa?"],
+["ĐÀN BẦU","Văn hóa","Nhạc cụ truyền thống nào của Việt Nam chỉ có duy nhất một dây?"],
+["ĐÀN TRANH","Văn hóa","Nhạc cụ dây gảy truyền thống có mười sáu dây tên là gì?"],
+["CỒNG CHIÊNG TÂY NGUYÊN","Văn hóa","Không gian văn hóa nào của vùng cao nguyên được thế giới vinh danh?"],
+["DÂN CA QUAN HỌ BẮC NINH","Văn hóa","Lối hát đối đáp của các liền anh liền chị vùng Kinh Bắc tên là gì?"],
+["NHÃ NHẠC CUNG ĐÌNH HUẾ","Văn hóa","Loại âm nhạc bác học nào từng được biểu diễn trong triều đình nhà Nguyễn?"],
+["CA TRÙ","Văn hóa","Lối hát ả đào với tiếng phách và đàn đáy có tên là gì?"],
+["ĐỜN CA TÀI TỬ","Văn hóa","Loại hình âm nhạc dân gian đặc trưng của Nam Bộ tên là gì?"],
+["HÁT XOAN","Văn hóa","Lối hát thờ ở vùng đất Tổ Phú Thọ có tên là gì?"],
+["MÚA RỐI NƯỚC","Văn hóa","Nghệ thuật sân khấu độc đáo nào của người Việt diễn ngay trên mặt ao làng?"],
+["TẾT NGUYÊN ĐÁN","Văn hóa","Ngày lễ lớn nhất của người Việt vào đầu năm âm lịch tên là gì?"],
+["TẾT TRUNG THU","Văn hóa","Đêm rằm tháng tám với đèn ông sao và múa lân gọi là gì?"],
+["GIỖ TỔ HÙNG VƯƠNG","Văn hóa","Ngày mùng mười tháng ba âm lịch cả nước tưởng nhớ ai?"],
+["LỄ HỘI CHÙA HƯƠNG","Văn hóa","Lễ hội mùa xuân nào ở huyện Mỹ Đức kéo dài suốt ba tháng?"],
+["TRỐNG ĐỒNG ĐÔNG SƠN","Lịch sử","Hiện vật nào tiêu biểu nhất cho nền văn minh của người Việt cổ?"],
+["THÀNH CỔ LOA","Di tích","Tòa thành hình xoáy trôn ốc do An Dương Vương xây có tên là gì?"],
+["VUA HÙNG","Lịch sử","Các vị vua nào đã dựng nên nhà nước Văn Lang?"],
+["NƯỚC VĂN LANG","Lịch sử","Nhà nước đầu tiên trong lịch sử người Việt tên là gì?"],
+["NƯỚC ÂU LẠC","Lịch sử","Nhà nước do An Dương Vương lập ra tên là gì?"],
+["BÀ TRIỆU","Lịch sử","Nữ anh hùng nào cưỡi voi ra trận đánh quân Ngô?"],
+["ĐINH BỘ LĨNH","Lịch sử","Ai đã dẹp loạn mười hai sứ quân rồi lên ngôi hoàng đế?"],
+["LÝ THÁI TỔ","Lịch sử","Vị vua nào dời đô từ Hoa Lư về Thăng Long?"],
+["CHIẾU DỜI ĐÔ","Lịch sử","Văn kiện nổi tiếng nào bàn việc dời kinh đô ra thành Đại La?"],
+["HỘI NGHỊ DIÊN HỒNG","Lịch sử","Hội nghị nào hỏi ý các bô lão cả nước nên hòa hay nên đánh?"],
+["SÔNG BẠCH ĐẰNG","Địa lý","Dòng sông nào ba lần ghi chiến công chống quân xâm lược phương Bắc?"],
+["CHÙA THIÊN MỤ","Di tích","Ngôi chùa cổ nào soi bóng bên dòng sông Hương?"],
+["CẦU RỒNG ĐÀ NẴNG","Địa danh Việt Nam","Cây cầu nào phun lửa và phun nước vào mỗi tối cuối tuần?"]
+);
+
+/* ---------- PHẦN 3 — PHIM ẢNH, ÂM NHẠC, THỂ THAO, ĐỜI SỐNG, ĐỒ VẬT ---------- */
+(window.QBANK=window.QBANK||[]).push(
+["ĐIỆN THOẠI THÔNG MINH","Đời sống","Thiết bị nào vừa nghe gọi vừa chụp ảnh lướt mạng mà ai cũng cầm trên tay mỗi ngày?"],
+["MÁY TÍNH BẢNG","Đời sống","Thiết bị màn hình phẳng lớn hơn điện thoại nhưng không có bàn phím rời gọi là gì?"],
+["MẠNG XÃ HỘI","Đời sống","Nơi nào trên internet để mọi người kết bạn đăng ảnh và bình luận?"],
+["TRÒ CHƠI ĐIỆN TỬ","Giải trí","Thú vui trên máy tính và máy chơi game cầm tay gọi là gì?"],
+["RẠP CHIẾU PHIM","Giải trí","Nơi nào có màn ảnh rộng ghế ngả và mùi bỏng ngô?"],
+["ĐẠO DIỄN PHIM","Điện ảnh","Người chỉ huy toàn bộ đoàn làm phim và quyết định từng cảnh quay gọi là gì?"],
+["DIỄN VIÊN ĐIỆN ẢNH","Điện ảnh","Người hóa thân thành nhân vật trên màn ảnh gọi là gì?"],
+["GIẢI THƯỞNG OSCAR","Điện ảnh","Giải thưởng điện ảnh danh giá nhất của Mỹ với bức tượng vàng tên là gì?"],
+["LIÊN HOAN PHIM CANNES","Điện ảnh","Sự kiện điện ảnh nào ở Pháp trao giải Cành cọ vàng?"],
+["PHIM HOẠT HÌNH","Giải trí","Thể loại phim được vẽ tay hoặc dựng bằng máy tính gọi là gì?"],
+["PHIM TÀI LIỆU","Điện ảnh","Thể loại phim ghi lại những chuyện có thật gọi là gì?"],
+["KỊCH BẢN PHIM","Điện ảnh","Bản viết ghi toàn bộ lời thoại và cảnh quay của một bộ phim gọi là gì?"],
+["NHẠC PHIM","Giải trí","Phần âm nhạc đi kèm câu chuyện trên màn ảnh gọi là gì?"],
+["BAN NHẠC RỐC","Âm nhạc","Nhóm nhạc gồm trống ghi ta và ghi ta bát chơi thể loại mạnh mẽ gọi là gì?"],
+["ĐÀN GHI TA","Âm nhạc","Nhạc cụ sáu dây nào hay được ôm gảy quanh đống lửa trại?"],
+["DÀN NHẠC GIAO HƯỞNG","Âm nhạc","Tập thể hàng chục nhạc công chơi cùng nhau trên sân khấu lớn gọi là gì?"],
+["NHẠC TRƯỞNG","Âm nhạc","Người cầm chiếc đũa nhỏ đứng chỉ huy cả dàn nhạc gọi là gì?"],
+["CA SĨ","Âm nhạc","Người lấy giọng hát của mình làm nghề gọi là gì?"],
+["KARAOKE","Giải trí","Hình thức giải trí hát theo nhạc nền với lời chạy trên màn hình gọi là gì?"],
+["MÁY ẢNH KỸ THUẬT SỐ","Đời sống","Thiết bị chụp ảnh lưu vào thẻ nhớ thay cho cuộn phim gọi là gì?"],
+["NHIẾP ẢNH GIA","Nghề nghiệp","Người sống bằng nghề chụp ảnh gọi là gì?"],
+["BÓNG ĐÁ","Thể thao","Môn thể thao nào được cả thế giới gọi là môn thể thao vua?"],
+["CÚP THẾ GIỚI","Thể thao","Giải bóng đá lớn nhất hành tinh tổ chức bốn năm một lần tên là gì?"],
+["THẾ VẬN HỘI","Thể thao","Đại hội thể thao nào có biểu tượng năm vòng tròn lồng vào nhau?"],
+["HUY CHƯƠNG VÀNG","Thể thao","Phần thưởng nào dành cho vận động viên về nhất?"],
+["TRỌNG TÀI","Thể thao","Người cầm còi và rút thẻ phạt trên sân bóng gọi là gì?"],
+["THỦ MÔN","Thể thao","Cầu thủ duy nhất nào được dùng tay bắt bóng trong vòng cấm?"],
+["QUẢ BÓNG VÀNG","Thể thao","Danh hiệu nào trao cho cầu thủ xuất sắc nhất trong năm?"],
+["BÓNG RỔ","Thể thao","Môn thể thao nào ghi điểm bằng cách ném bóng vào chiếc rổ treo cao?"],
+["CẦU LÔNG","Thể thao","Môn thể thao nào dùng vợt đánh quả cầu có gắn lông vũ?"],
+["BÓNG CHUYỀN","Thể thao","Môn thể thao nào chuyền bóng qua tấm lưới cao giữa sân?"],
+["BƠI LỘI","Thể thao","Môn thi đấu nào diễn ra hoàn toàn dưới nước?"],
+["ĐIỀN KINH","Thể thao","Nhóm môn thể thao gồm chạy nhảy và ném gọi chung là gì?"],
+["CỜ VUA","Thể thao","Trò chơi trí tuệ nào có các quân vua hậu xe mã tượng tốt?"],
+["VÕ THUẬT","Thể thao","Nghệ thuật chiến đấu dùng để rèn luyện thân thể và tinh thần gọi là gì?"],
+["CHẠY MA RA TÔNG","Thể thao","Cuộc chạy bộ dài hơn bốn mươi hai cây số có tên gọi là gì?"],
+["XE ĐẠP ĐỊA HÌNH","Thể thao","Loại xe đạp bánh gai chuyên chạy đường rừng núi gọi là gì?"],
+["SÂN VẬN ĐỘNG","Thể thao","Công trình nào chứa được hàng vạn người tới xem thi đấu?"],
+["CỔ ĐỘNG VIÊN","Thể thao","Người mặc áo đội nhà và hò reo trên khán đài gọi là gì?"],
+["HUẤN LUYỆN VIÊN","Thể thao","Người đứng ngoài đường biên chỉ đạo chiến thuật cho đội bóng gọi là gì?"],
+["DU LỊCH BỤI","Đời sống","Cách đi chơi tự túc với chiếc ba lô trên vai gọi là gì?"],
+["VÉ MÁY BAY","Đời sống","Thứ gì bắt buộc phải có trước khi bước lên một chuyến bay?"],
+["HỘ CHIẾU","Đời sống","Giấy tờ nào cần có để đi ra nước ngoài?"],
+["HÀNH LÝ XÁCH TAY","Đời sống","Túi đồ được mang thẳng lên khoang máy bay gọi là gì?"],
+["SÂN BAY QUỐC TẾ","Đời sống","Nơi nào có đường băng và cửa khẩu xuất nhập cảnh?"],
+["TÀU ĐIỆN NGẦM","Đời sống","Phương tiện công cộng nào chạy dưới lòng thành phố?"],
+["XE BUÝT","Đời sống","Phương tiện công cộng nào chạy theo tuyến và dừng ở từng trạm?"],
+["ĐÈN GIAO THÔNG","Đời sống","Cột đèn ba màu xanh vàng đỏ đặt ở ngã tư gọi là gì?"],
+["MŨ BẢO HIỂM","Đời sống","Vật gì bắt buộc phải đội khi đi xe máy?"],
+["BẰNG LÁI XE","Đời sống","Giấy phép nào cho bạn được ngồi sau vô lăng?"],
+["SIÊU THỊ","Đời sống","Nơi mua sắm nào để khách tự chọn hàng rồi ra quầy tính tiền?"],
+["THẺ NGÂN HÀNG","Đời sống","Tấm thẻ nhỏ nào dùng để rút tiền và thanh toán thay tiền mặt?"],
+["HÓA ĐƠN TIỀN ĐIỆN","Đời sống","Tờ giấy nào mỗi tháng báo bạn phải trả bao nhiêu cho việc thắp sáng?"],
+["MÁY GIẶT","Đồ vật","Thiết bị nào quay lồng để làm sạch quần áo?"],
+["TỦ LẠNH","Đồ vật","Đồ vật nào trong bếp giữ cho thức ăn luôn mát?"],
+["LÒ VI SÓNG","Đồ vật","Thiết bị nào hâm nóng thức ăn chỉ trong vài phút?"],
+["ĐIỀU HÒA KHÔNG KHÍ","Đồ vật","Thiết bị nào làm mát cả căn phòng trong ngày hè?"],
+["MÁY HÚT BỤI","Đồ vật","Thiết bị dọn nhà nào kêu ù ù và hút sạch bụi trên sàn?"],
+["NỒI CƠM ĐIỆN","Đồ vật","Đồ vật nào nấu chín món ăn chính của người Việt mỗi bữa?"],
+["QUẠT TRẦN","Đồ vật","Loại quạt nào được gắn trên cao giữa phòng?"],
+["THƯ VIỆN","Đời sống","Nơi nào yên tĩnh và có rất nhiều sách để mượn về đọc?"],
+["BỆNH VIỆN","Đời sống","Nơi nào có phòng khám giường bệnh và bác sĩ trực suốt ngày đêm?"],
+["TRẠM XĂNG","Đời sống","Nơi nào xe cộ ghé vào để đổ nhiên liệu?"],
+["CÔNG VIÊN","Đời sống","Nơi nào có ghế đá cây xanh và người tập thể dục buổi sáng?"],
+["SỞ THÚ","Giải trí","Nơi nào nuôi nhốt các loài thú để mọi người tới tham quan?"],
+["BẢO TÀNG","Đời sống","Nơi nào trưng bày hiện vật quý để người xem tìm hiểu lịch sử?"],
+["NHÀ HÁT LỚN","Giải trí","Công trình sang trọng nào dành riêng cho các buổi biểu diễn nghệ thuật?"],
+["QUÁN CÀ PHÊ","Đời sống","Nơi nào người ta hay ngồi nhâm nhi và trò chuyện hàng giờ?"],
+["TIỆM BÁNH MÌ","Đời sống","Cửa hàng nào bán ổ bánh kẹp thịt cho bữa sáng của người Việt?"],
+["CHỢ ĐÊM","Đời sống","Phiên chợ nào chỉ họp khi trời đã tối?"],
+["LỚP HỌC TRỰC TUYẾN","Đời sống","Buổi học qua màn hình máy tính và micro gọi là gì?"],
+["HỘP THƯ ĐIỆN TỬ","Đời sống","Nơi nào trên mạng để nhận và gửi thư?"],
+["MẬT KHẨU","Đời sống","Chuỗi ký tự bí mật nào dùng để đăng nhập vào tài khoản?"],
+["PIN DỰ PHÒNG","Đồ vật","Vật gì cứu nguy khi điện thoại sắp hết pin giữa đường?"],
+["TAI NGHE KHÔNG DÂY","Đồ vật","Vật nhỏ nào đeo vào tai để nghe nhạc mà không vướng dây?"]
+);
+
+/* ---------- PHẦN 4 — THIÊN VĂN, KHOA HỌC, Y HỌC, ĐỘNG VẬT, THIÊN NHIÊN ---------- */
+(window.QBANK=window.QBANK||[]).push(
+["HỆ MẶT TRỜI","Thiên văn","Gia đình gồm một ngôi sao và tám hành tinh quay quanh nó gọi là gì?"],
+["TRÁI ĐẤT","Thiên văn","Hành tinh duy nhất mà ta biết có sự sống tên là gì?"],
+["MẶT TRĂNG","Thiên văn","Vệ tinh tự nhiên duy nhất của Trái Đất tên là gì?"],
+["SAO HỎA","Thiên văn","Hành tinh đỏ nào được con người gửi nhiều tàu thăm dò tới nhất?"],
+["SAO MỘC","Thiên văn","Hành tinh nào lớn nhất trong hệ Mặt Trời?"],
+["SAO THỔ","Thiên văn","Hành tinh nào nổi tiếng với vành đai rực rỡ bao quanh?"],
+["DẢI NGÂN HÀ","Thiên văn","Thiên hà chứa hệ Mặt Trời của chúng ta tên là gì?"],
+["LỖ ĐEN","Thiên văn","Vùng không gian nào có lực hút mạnh tới mức ánh sáng cũng không thoát ra được?"],
+["TRẠM VŨ TRỤ QUỐC TẾ","Thiên văn","Phòng thí nghiệm nào của loài người đang bay vòng quanh Trái Đất?"],
+["PHI HÀNH GIA","Nghề nghiệp","Người mặc bộ đồ trắng cồng kềnh bay ra ngoài vũ trụ gọi là gì?"],
+["KÍNH THIÊN VĂN","Khoa học","Dụng cụ nào giúp ta nhìn rõ các thiên thể ở rất xa?"],
+["NHẬT THỰC","Thiên văn","Hiện tượng Mặt Trăng che khuất Mặt Trời giữa ban ngày gọi là gì?"],
+["NGUYỆT THỰC","Thiên văn","Hiện tượng Trái Đất che bóng lên Mặt Trăng gọi là gì?"],
+["SAO BĂNG","Thiên văn","Vệt sáng vụt qua bầu trời đêm mà người ta hay ước nguyện gọi là gì?"],
+["TRỌNG LỰC","Khoa học","Lực nào khiến quả táo rụng xuống đất chứ không bay lên trời?"],
+["THUYẾT TƯƠNG ĐỐI","Khoa học","Lý thuyết nổi tiếng nào do nhà bác học Anh xtanh xây dựng?"],
+["BẢNG TUẦN HOÀN","Khoa học","Bảng nào sắp xếp toàn bộ các nguyên tố hóa học theo thứ tự?"],
+["NGUYÊN TỬ","Khoa học","Hạt nào gồm một hạt nhân ở giữa và các electron quay quanh?"],
+["PHÂN TỬ NƯỚC","Khoa học","Phân tử gồm hai nguyên tử hiđrô gắn với một nguyên tử oxi là gì?"],
+["KHÍ OXI","Khoa học","Chất khí nào con người hít vào để duy trì sự sống?"],
+["KHÍ CACBONIC","Khoa học","Chất khí nào ta thở ra và cây xanh hấp thụ để quang hợp?"],
+["QUANG HỢP","Sinh học","Quá trình nào giúp lá cây tạo ra chất dinh dưỡng nhờ ánh sáng mặt trời?"],
+["TẾ BÀO","Sinh học","Đơn vị nhỏ nhất cấu tạo nên mọi cơ thể sống gọi là gì?"],
+["VI KHUẨN","Sinh học","Sinh vật đơn bào nào chỉ nhìn thấy được qua kính hiển vi?"],
+["VI RÚT","Sinh học","Tác nhân nào gây ra bệnh cúm và nhiều đại dịch trên thế giới?"],
+["VẮC XIN","Y học","Chế phẩm nào được tiêm vào cơ thể để phòng bệnh trước khi mắc?"],
+["KHÁNG SINH","Y học","Loại thuốc nào diệt vi khuẩn nhưng tuyệt đối không được lạm dụng?"],
+["HỆ MIỄN DỊCH","Y học","Hệ thống nào trong cơ thể đóng vai trò đội quân chống lại mầm bệnh?"],
+["HỒNG CẦU","Y học","Tế bào máu nào làm nhiệm vụ mang oxi đi khắp cơ thể?"],
+["BẠCH CẦU","Y học","Tế bào máu nào chuyên chống lại nhiễm trùng?"],
+["BỘ NÃO","Y học","Cơ quan nào điều khiển toàn bộ hoạt động của cơ thể?"],
+["XƯƠNG SỐNG","Y học","Cột trụ nào nâng đỡ tấm lưng của con người?"],
+["LÁ PHỔI","Y học","Cơ quan nào trong lồng ngực làm nhiệm vụ trao đổi khí?"],
+["DẠ DÀY","Y học","Cơ quan nào nhào trộn và tiêu hóa thức ăn sau khi ta nuốt?"],
+["DÂY THẦN KINH","Y học","Đường truyền tín hiệu nào đưa mệnh lệnh từ não đi khắp cơ thể?"],
+["DI TRUYỀN HỌC","Sinh học","Ngành khoa học nào nghiên cứu vì sao con cái giống cha mẹ?"],
+["TIẾN HÓA","Sinh học","Quá trình nào khiến các loài thay đổi dần qua hàng triệu năm?"],
+["KHỦNG LONG","Động vật","Loài bò sát khổng lồ nào đã tuyệt chủng cách đây sáu mươi lăm triệu năm?"],
+["HÓA THẠCH","Khoa học","Dấu vết của sinh vật cổ còn lưu lại trong đá gọi là gì?"],
+["CHIM CÁNH CỤT","Động vật","Loài chim nào bơi rất giỏi nhưng hoàn toàn không biết bay?"],
+["GẤU BẮC CỰC","Động vật","Loài gấu trắng nào sống trên các tảng băng ở vùng cực?"],
+["CÁ VOI XANH","Động vật","Loài động vật nào lớn nhất từng tồn tại trên Trái Đất?"],
+["CÁ HEO","Động vật","Loài vật biển thông minh nào hay nhảy vọt lên trên mặt sóng?"],
+["RÙA BIỂN","Động vật","Loài bò sát nào bơi ngoài đại dương nhưng phải lên bãi cát để đẻ trứng?"],
+["SAO BIỂN","Động vật","Sinh vật biển nào có hình năm cánh như ngôi sao?"],
+["BẠCH TUỘC","Động vật","Sinh vật biển nào có tám xúc tu và biết phun mực?"],
+["CÁ MẬP","Động vật","Kẻ săn mồi nào dưới biển nổi tiếng với hàm răng sắc nhọn?"],
+["SƯ TỬ","Động vật","Loài vật nào được gọi là chúa tể của thảo nguyên châu Phi?"],
+["HỔ ĐÔNG DƯƠNG","Động vật","Loài mèo lớn có vằn nào từng sống nhiều trong rừng nước ta?"],
+["VOI CHÂU Á","Động vật","Loài voi nào có tai nhỏ hơn họ hàng của nó ở châu Phi?"],
+["HƯƠU CAO CỔ","Động vật","Loài thú nào cao nhất thế giới?"],
+["TÊ GIÁC","Động vật","Loài thú da dày nào có sừng mọc ngay trên mũi?"],
+["HÀ MÃ","Động vật","Loài thú to lớn nào thích ngâm mình cả ngày dưới sông ở châu Phi?"],
+["CHUỘT TÚI","Động vật","Loài thú nào ở Úc di chuyển bằng cách nhảy và có túi trước bụng?"],
+["GẤU TRÚC","Động vật","Loài gấu đen trắng nào chỉ ăn tre trúc và là biểu tượng của Trung Quốc?"],
+["KHỈ ĐỘT","Động vật","Loài linh trưởng to lớn nào sống trong rừng châu Phi?"],
+["ĐẠI BÀNG","Động vật","Loài chim săn mồi nào mắt rất tinh và bay lượn ở độ cao lớn?"],
+["CHIM BỒ CÂU","Động vật","Loài chim nào được chọn làm biểu tượng của hòa bình?"],
+["CON ONG MẬT","Động vật","Loài côn trùng nào vừa làm ra mật vừa giúp hoa thụ phấn?"],
+["CON KIẾN","Động vật","Loài côn trùng nào sống theo đàn và nổi tiếng chăm chỉ tha mồi?"],
+["CHUỒN CHUỒN","Động vật","Loài côn trùng nào mà dân gian nói bay thấp thì mưa bay cao thì nắng?"],
+["ẾCH ĐỒNG","Động vật","Loài lưỡng cư nào kêu ộp oạp ngoài đồng sau mỗi cơn mưa?"],
+["TẮC KÈ HOA","Động vật","Loài bò sát nào đổi màu da theo môi trường xung quanh?"],
+["CÂY XƯƠNG RỒNG","Thực vật","Loài cây có gai nào sống được giữa sa mạc khô cằn?"],
+["HOA HƯỚNG DƯƠNG","Thực vật","Loài hoa nào luôn quay bông về phía Mặt Trời?"],
+["HOA SEN","Thực vật","Loài hoa nào được ca ngợi là gần bùn mà chẳng hôi tanh mùi bùn?"],
+["CÂY TRE","Thực vật","Loài cây thân đốt rỗng nào gắn liền với lũy làng Việt Nam?"],
+["RỪNG NHIỆT ĐỚI","Thiên nhiên","Kiểu rừng nào nóng ẩm quanh năm và có nhiều tầng tán cây?"],
+["SA MẠC SA HA RA","Địa lý","Hoang mạc nóng lớn nhất thế giới nằm ở Bắc Phi tên là gì?"],
+["NÚI LỬA","Thiên nhiên","Ngọn núi nào có thể phun trào dung nham nóng chảy?"],
+["ĐỘNG ĐẤT","Thiên nhiên","Hiện tượng mặt đất rung chuyển do các mảng kiến tạo dịch chuyển gọi là gì?"],
+["SÓNG THẦN","Thiên nhiên","Con sóng khổng lồ sinh ra sau trận động đất ngoài khơi gọi là gì?"],
+["CẦU VỒNG","Thiên nhiên","Dải bảy sắc nào hiện lên trên trời sau cơn mưa?"],
+["BIẾN ĐỔI KHÍ HẬU","Khoa học","Vấn đề toàn cầu nào khiến Trái Đất ngày càng nóng lên?"],
+["NĂNG LƯỢNG MẶT TRỜI","Khoa học","Nguồn điện nào được tạo ra từ những tấm pin đặt trên mái nhà?"],
+["TUA BIN GIÓ","Khoa học","Cột cánh quạt khổng lồ nào được dựng để phát điện từ sức gió?"],
+["TRÍ TUỆ NHÂN TẠO","Khoa học","Công nghệ nào giúp máy móc tự học và tự đưa ra quyết định?"],
+["RÔ BỐT CÔNG NGHIỆP","Khoa học","Cánh tay máy nào thay con người lắp ráp trong nhà xưởng?"],
+["MÁY IN BA CHIỀU","Khoa học","Thiết bị nào in ra được vật thể thật từ một bản vẽ trên máy tính?"],
+["KÍNH HIỂN VI","Khoa học","Dụng cụ nào giúp ta nhìn thấy những vật quá nhỏ với mắt thường?"],
+["NAM CHÂM","Khoa học","Vật nào hút được sắt và luôn có hai cực bắc nam?"],
+["ÁNH SÁNG TRẮNG","Khoa học","Thứ gì khi đi qua lăng kính sẽ tách ra thành bảy màu?"],
+["ÂM THANH","Khoa học","Thứ gì truyền được trong không khí nhưng không truyền được trong chân không?"],
+["ĐIỆN XOAY CHIỀU","Khoa học","Loại dòng điện nào đang chạy trong ổ cắm ở nhà bạn?"]
+);
+
+/* ---------- PHẦN 5 — TIẾNG ANH (từ vựng, câu giao tiếp, thành ngữ) ---------- */
+(window.QBANK=window.QBANK||[]).push(
+["GOOD MORNING","Tiếng Anh","Người Anh chào nhau buổi sáng bằng hai từ nào?"],
+["THANK YOU VERY MUCH","Tiếng Anh","Câu tiếng Anh nào nghĩa là cảm ơn bạn rất nhiều?"],
+["NICE TO MEET YOU","Tiếng Anh","Câu tiếng Anh nào nói khi lần đầu gặp một người?"],
+["SEE YOU TOMORROW","Tiếng Anh","Câu tiếng Anh nào nghĩa là hẹn gặp lại bạn ngày mai?"],
+["HAPPY BIRTHDAY","Tiếng Anh","Câu tiếng Anh nào mọi người hát khi thổi nến trên bánh kem?"],
+["MERRY CHRISTMAS","Tiếng Anh","Lời chúc tiếng Anh nào dành cho ngày hai mươi lăm tháng mười hai?"],
+["HAPPY NEW YEAR","Tiếng Anh","Lời chúc tiếng Anh nào dành cho dịp đầu năm mới?"],
+["BEST FRIEND FOREVER","Tiếng Anh","Cụm tiếng Anh nào nghĩa là bạn thân mãi mãi?"],
+["PRACTICE MAKES PERFECT","Thành ngữ Anh","Thành ngữ tiếng Anh nào tương đương với có công mài sắt có ngày nên kim?"],
+["BETTER LATE THAN NEVER","Thành ngữ Anh","Thành ngữ tiếng Anh nào nghĩa là muộn còn hơn không?"],
+["ACTIONS SPEAK LOUDER THAN WORDS","Thành ngữ Anh","Thành ngữ tiếng Anh nào nói việc làm có sức nặng hơn lời nói?"],
+["EVERY CLOUD HAS A SILVER LINING","Thành ngữ Anh","Thành ngữ tiếng Anh nào tương đương với trong cái rủi có cái may?"],
+["THE EARLY BIRD CATCHES THE WORM","Thành ngữ Anh","Thành ngữ tiếng Anh nào nói ai dậy sớm thì được phần hơn?"],
+["NO PAIN NO GAIN","Thành ngữ Anh","Thành ngữ tiếng Anh nào nói không khổ luyện thì không có thành quả?"],
+["TIME IS MONEY","Thành ngữ Anh","Thành ngữ tiếng Anh nào coi thời gian quý như tiền bạc?"],
+["KNOWLEDGE IS POWER","Thành ngữ Anh","Câu tiếng Anh nào khẳng định tri thức chính là sức mạnh?"],
+["HOME SWEET HOME","Thành ngữ Anh","Cụm tiếng Anh nào nói không đâu bằng nhà mình?"],
+["PIECE OF CAKE","Thành ngữ Anh","Thành ngữ tiếng Anh nào chỉ việc dễ như trở bàn tay?"],
+["BREAK A LEG","Thành ngữ Anh","Người Anh chúc nhau may mắn trước khi lên sân khấu bằng câu lạ lùng nào?"],
+["UNDER THE WEATHER","Thành ngữ Anh","Thành ngữ tiếng Anh nào nghĩa là đang thấy trong người không khỏe?"],
+["ONCE IN A BLUE MOON","Thành ngữ Anh","Thành ngữ tiếng Anh nào chỉ việc họa hoằn lắm mới xảy ra?"],
+["SPILL THE BEANS","Thành ngữ Anh","Thành ngữ tiếng Anh nào chỉ việc lỡ miệng làm lộ bí mật?"],
+["COMPUTER SCIENCE","Tiếng Anh","Ngành khoa học máy tính trong tiếng Anh gọi là gì?"],
+["ARTIFICIAL INTELLIGENCE","Tiếng Anh","Trí tuệ nhân tạo trong tiếng Anh gọi là gì?"],
+["CLIMATE CHANGE","Tiếng Anh","Biến đổi khí hậu trong tiếng Anh gọi là gì?"],
+["RENEWABLE ENERGY","Tiếng Anh","Năng lượng tái tạo trong tiếng Anh gọi là gì?"],
+["SOLAR SYSTEM","Tiếng Anh","Hệ Mặt Trời trong tiếng Anh gọi là gì?"],
+["PACIFIC OCEAN","Tiếng Anh","Đại dương lớn nhất thế giới trong tiếng Anh gọi là gì?"],
+["MOUNT EVEREST","Tiếng Anh","Ngọn núi cao nhất thế giới có tên tiếng Anh là gì?"],
+["AMAZON RAINFOREST","Tiếng Anh","Khu rừng được gọi là lá phổi xanh của hành tinh có tên tiếng Anh là gì?"],
+["GREAT BARRIER REEF","Tiếng Anh","Rạn san hô lớn nhất thế giới ngoài khơi nước Úc tên tiếng Anh là gì?"],
+["STATUE OF LIBERTY","Tiếng Anh","Tượng Nữ thần Tự do ở New York có tên tiếng Anh là gì?"],
+["EIFFEL TOWER","Tiếng Anh","Tháp sắt biểu tượng của thủ đô nước Pháp tên tiếng Anh là gì?"],
+["GREAT WALL OF CHINA","Tiếng Anh","Vạn Lý Trường Thành trong tiếng Anh gọi là gì?"],
+["UNITED KINGDOM","Tiếng Anh","Vương quốc Anh trong tiếng Anh gọi là gì?"],
+["NEW ZEALAND","Tiếng Anh","Quốc đảo nào ở nam bán cầu nổi tiếng có nhiều cừu hơn người?"],
+["SOUTH AFRICA","Tiếng Anh","Quốc gia nằm ở cực nam châu Phi có tên tiếng Anh là gì?"],
+["UNITED STATES","Tiếng Anh","Hợp chúng quốc Hoa Kỳ trong tiếng Anh gọi là gì?"],
+["ELEPHANT","Tiếng Anh","Con voi trong tiếng Anh gọi là gì?"],
+["BUTTERFLY","Tiếng Anh","Con bướm trong tiếng Anh gọi là gì?"],
+["CROCODILE","Tiếng Anh","Con cá sấu trong tiếng Anh gọi là gì?"],
+["KANGAROO","Tiếng Anh","Con chuột túi của nước Úc trong tiếng Anh gọi là gì?"],
+["PENGUIN","Tiếng Anh","Chim cánh cụt trong tiếng Anh gọi là gì?"],
+["DOLPHIN","Tiếng Anh","Con cá heo trong tiếng Anh gọi là gì?"],
+["SQUIRREL","Tiếng Anh","Con sóc trong tiếng Anh gọi là gì?"],
+["SUNFLOWER","Tiếng Anh","Hoa hướng dương trong tiếng Anh gọi là gì?"],
+["STRAWBERRY","Tiếng Anh","Quả dâu tây trong tiếng Anh gọi là gì?"],
+["WATERMELON","Tiếng Anh","Quả dưa hấu trong tiếng Anh gọi là gì?"],
+["PINEAPPLE","Tiếng Anh","Quả dứa trong tiếng Anh gọi là gì?"],
+["CHOCOLATE CAKE","Tiếng Anh","Bánh kem sô cô la trong tiếng Anh gọi là gì?"],
+["ICE CREAM","Tiếng Anh","Món kem lạnh trong tiếng Anh gọi là gì?"],
+["BREAKFAST","Tiếng Anh","Bữa ăn sáng trong tiếng Anh gọi là gì?"],
+["LIBRARY","Tiếng Anh","Thư viện trong tiếng Anh gọi là gì?"],
+["HOSPITAL","Tiếng Anh","Bệnh viện trong tiếng Anh gọi là gì?"],
+["AIRPORT","Tiếng Anh","Sân bay trong tiếng Anh gọi là gì?"],
+["SUPERMARKET","Tiếng Anh","Siêu thị trong tiếng Anh gọi là gì?"],
+["RESTAURANT","Tiếng Anh","Nhà hàng trong tiếng Anh gọi là gì?"],
+["FOOTBALL MATCH","Tiếng Anh","Trận đấu bóng đá trong tiếng Anh gọi là gì?"],
+["SWIMMING POOL","Tiếng Anh","Bể bơi trong tiếng Anh gọi là gì?"],
+["MOUNTAIN BIKE","Tiếng Anh","Xe đạp địa hình trong tiếng Anh gọi là gì?"],
+["RAINBOW","Tiếng Anh","Cầu vồng trong tiếng Anh gọi là gì?"],
+["THUNDERSTORM","Tiếng Anh","Cơn giông có sấm sét trong tiếng Anh gọi là gì?"],
+["SNOWFLAKE","Tiếng Anh","Bông tuyết trong tiếng Anh gọi là gì?"],
+["TELESCOPE","Tiếng Anh","Kính thiên văn trong tiếng Anh gọi là gì?"],
+["MICROSCOPE","Tiếng Anh","Kính hiển vi trong tiếng Anh gọi là gì?"],
+["KEYBOARD","Tiếng Anh","Bàn phím máy tính trong tiếng Anh gọi là gì?"],
+["HEADPHONES","Tiếng Anh","Tai nghe chụp đầu trong tiếng Anh gọi là gì?"],
+["SMARTPHONE","Tiếng Anh","Điện thoại thông minh trong tiếng Anh gọi là gì?"],
+["PHOTOGRAPH","Tiếng Anh","Tấm ảnh chụp trong tiếng Anh gọi là gì?"],
+["DICTIONARY","Tiếng Anh","Quyển từ điển trong tiếng Anh gọi là gì?"],
+["HOMEWORK","Tiếng Anh","Bài tập về nhà trong tiếng Anh gọi là gì?"],
+["TEACHER","Tiếng Anh","Giáo viên trong tiếng Anh gọi là gì?"],
+["ENGINEER","Tiếng Anh","Kỹ sư trong tiếng Anh gọi là gì?"],
+["FIREFIGHTER","Tiếng Anh","Lính cứu hỏa trong tiếng Anh gọi là gì?"],
+["ASTRONAUT","Tiếng Anh","Phi hành gia trong tiếng Anh gọi là gì?"],
+["JOURNALIST","Tiếng Anh","Nhà báo trong tiếng Anh gọi là gì?"],
+["MUSICIAN","Tiếng Anh","Nhạc sĩ hoặc nhạc công trong tiếng Anh gọi là gì?"],
+["ARCHITECT","Tiếng Anh","Kiến trúc sư trong tiếng Anh gọi là gì?"],
+["VETERINARIAN","Tiếng Anh","Bác sĩ thú y trong tiếng Anh gọi là gì?"],
+["BIRTHDAY PARTY","Tiếng Anh","Bữa tiệc sinh nhật trong tiếng Anh gọi là gì?"],
+["SUMMER HOLIDAY","Tiếng Anh","Kỳ nghỉ hè trong tiếng Anh gọi là gì?"],
+["GOOD LUCK TO YOU","Tiếng Anh","Câu tiếng Anh nào nghĩa là chúc bạn may mắn?"],
+["WHERE ARE YOU FROM","Tiếng Anh","Câu tiếng Anh nào dùng để hỏi ai đó đến từ đâu?"],
+["HOW OLD ARE YOU","Tiếng Anh","Câu tiếng Anh nào dùng để hỏi tuổi của một người?"],
+["MY FAVOURITE SONG","Tiếng Anh","Cụm tiếng Anh nào nghĩa là bài hát tôi thích nhất?"],
+["A CUP OF COFFEE","Tiếng Anh","Một tách cà phê trong tiếng Anh nói thế nào?"],
+["THE SKY IS BLUE","Tiếng Anh","Câu tiếng Anh nào nghĩa là bầu trời màu xanh?"]
+);
+
+/* ---------- PHẦN 6 — ẨM THỰC, TRƯỜNG HỌC, NGHỀ NGHIỆP ---------- */
+(window.QBANK=window.QBANK||[]).push(
+["PHỞ BÒ HÀ NỘI","Ẩm thực","Món nước nào có bánh phở thịt bò tái và được coi là quốc hồn quốc túy của thủ đô?"],
+["BÚN CHẢ","Ẩm thực","Món bún nào ăn kèm chả viên và chả miếng nướng trên than hoa?"],
+["BÁNH MÌ THỊT","Ẩm thực","Món ăn sáng nào là ổ bánh giòn kẹp pa tê thịt nguội và rau thơm?"],
+["GỎI CUỐN","Ẩm thực","Món cuốn bằng bánh tráng có tôm thịt và bún chấm tương gọi là gì?"],
+["BÁNH XÈO","Ẩm thực","Món bánh nào được đổ vào chảo nóng kêu xèo xèo rồi cuốn với rau sống?"],
+["CƠM TẤM SƯỜN","Ẩm thực","Món cơm nấu từ hạt gạo vỡ ăn với sườn nướng là đặc sản của Sài Gòn tên là gì?"],
+["BÚN BÒ HUẾ","Ẩm thực","Món bún nào cay nồng và là đặc sản của xứ kinh kỳ miền Trung?"],
+["MÌ QUẢNG","Ẩm thực","Món mì nào chan rất ít nước và ăn kèm bánh tráng nướng?"],
+["CAO LẦU","Ẩm thực","Món mì đặc sản nào tương truyền chỉ ngon khi nấu bằng nước giếng ở Hội An?"],
+["CHẢ CÁ LÃ VỌNG","Ẩm thực","Món cá nướng nào của Hà Nội ăn với thì là hành lá và mắm tôm?"],
+["NEM RÁN","Ẩm thực","Món cuốn nào được chiên vàng giòn và không thể thiếu trong mâm cỗ Tết miền Bắc?"],
+["CANH CHUA CÁ LÓC","Ẩm thực","Món canh miền Tây nào nấu với me bạc hà và đậu bắp?"],
+["BÁNH CUỐN","Ẩm thực","Món bánh tráng mỏng hấp trên nồi hơi rồi cuốn nhân thịt mộc nhĩ tên là gì?"],
+["XÔI GẤC","Ẩm thực","Món xôi màu đỏ cam nào hay xuất hiện trong mâm cỗ cưới hỏi?"],
+["CHÈ ĐẬU XANH","Ẩm thực","Món chè nào nấu từ loại hạt đậu nhỏ màu xanh?"],
+["CÀ PHÊ SỮA ĐÁ","Ẩm thực","Thức uống nâu đậm pha sữa đặc và đá viên đặc trưng của người Việt gọi là gì?"],
+["TRÀ ĐÁ VỈA HÈ","Đời sống","Thức uống rẻ nhất ở quán cóc ven đường là gì?"],
+["NƯỚC MẮM PHÚ QUỐC","Ẩm thực","Loại gia vị đặc sản nào được ủ từ cá cơm trên hòn đảo lớn nhất nước ta?"],
+["BÁNH TRUNG THU","Ẩm thực","Loại bánh nào chỉ bán rộ vào dịp rằm tháng tám?"],
+["MỨT TẾT","Ẩm thực","Món ngọt nào được bày trong khay bánh kẹo ngày xuân?"],
+["DƯA HẤU","Ẩm thực","Quả nào vỏ xanh ruột đỏ và có nhiều hạt đen?"],
+["THANH LONG","Ẩm thực","Quả nào vỏ hồng có vảy còn ruột trắng lấm tấm hạt đen?"],
+["SẦU RIÊNG","Ẩm thực","Quả nào đầy gai mùi rất nồng và được gọi là vua của các loại trái cây?"],
+["VẢI THIỀU","Ẩm thực","Quả đặc sản mùa hè nào nổi tiếng nhất ở vùng Lục Ngạn Bắc Giang?"],
+["XOÀI CÁT","Ẩm thực","Loại xoài vàng ngọt nào nổi tiếng với tên gọi gắn liền vùng Hòa Lộc?"],
+["MĂNG CỤT","Ẩm thực","Quả nào vỏ tím dày còn ruột trắng chia múi như tép bưởi?"],
+["CHÔM CHÔM","Ẩm thực","Quả nào ở miền Nam có vỏ đỏ phủ đầy râu?"],
+["BƯỞI DA XANH","Ẩm thực","Giống bưởi nào của Bến Tre có vỏ xanh và ruột hồng?"],
+["BÁNH TÉT","Ẩm thực","Loại bánh đòn dài gói lá chuối trong dịp Tết miền Nam tên là gì?"],
+["HỦ TIẾU NAM VANG","Ẩm thực","Món sợi nhỏ nấu nước trong nào phổ biến ở miền Nam?"],
+["BÚN RIÊU CUA","Ẩm thực","Món bún nào có gạch cua đóng tảng và nước dùng nấu với cà chua?"],
+["BÁNH BÈO","Ẩm thực","Món bánh nhỏ nào được hấp trong từng chén và rắc tôm chấy lên trên?"],
+["BẢNG ĐEN PHẤN TRẮNG","Trường học","Hình ảnh nào quen thuộc nhất trong lớp học ngày xưa?"],
+["CẶP SÁCH HỌC SINH","Trường học","Vật gì học trò đeo trên vai để đựng sách vở tới trường?"],
+["BÚT BI","Trường học","Loại bút nào có một viên bi nhỏ xíu ở đầu ngòi?"],
+["THƯỚC KẺ","Trường học","Vật gì dùng để gạch một đường thật thẳng?"],
+["CỤC TẨY","Trường học","Vật gì dùng để xóa đi vết bút chì viết sai?"],
+["MÁY TÍNH CẦM TAY","Trường học","Vật gì học sinh không thể thiếu trong mỗi giờ kiểm tra toán?"],
+["GIÁO VIÊN CHỦ NHIỆM","Trường học","Thầy cô nào phụ trách chung mọi việc của một lớp?"],
+["LỚP TRƯỞNG","Trường học","Học sinh nào đứng đầu lớp về mặt quản lý?"],
+["KỲ THI TỐT NGHIỆP","Trường học","Cuộc thi nào diễn ra vào cuối lớp mười hai?"],
+["GIẢNG ĐƯỜNG ĐẠI HỌC","Trường học","Phòng học lớn có ghế xếp theo bậc thang gọi là gì?"],
+["LUẬN VĂN TỐT NGHIỆP","Trường học","Công trình nào sinh viên phải bảo vệ trước hội đồng trước khi ra trường?"],
+["HỌC BỔNG","Trường học","Khoản hỗ trợ nào dành cho sinh viên có thành tích học tập tốt?"],
+["SÂN TRƯỜNG","Trường học","Nơi nào học sinh chào cờ đầu tuần và chơi đùa giờ ra chơi?"],
+["TIẾNG TRỐNG TRƯỜNG","Trường học","Âm thanh nào báo hiệu giờ vào lớp và giờ tan học?"],
+["NGÀY KHAI GIẢNG","Trường học","Buổi lễ nào mở đầu cho một năm học mới?"],
+["NGÀY NHÀ GIÁO VIỆT NAM","Trường học","Ngày hai mươi tháng mười một hằng năm là ngày gì?"],
+["BÁC SĨ THÚ Y","Nghề nghiệp","Người làm nghề gì chuyên chữa bệnh cho động vật?"],
+["KỸ SƯ XÂY DỰNG","Nghề nghiệp","Người đội mũ bảo hộ và giám sát bản vẽ ở công trường làm nghề gì?"],
+["THỢ MỘC","Nghề nghiệp","Người làm ra bàn ghế tủ giường từ gỗ gọi là gì?"],
+["THỢ ĐIỆN","Nghề nghiệp","Người trèo lên cột để đấu nối đường dây làm nghề gì?"],
+["NGƯ DÂN","Nghề nghiệp","Người ra khơi đánh bắt cá tôm gọi là gì?"],
+["NÔNG DÂN","Nghề nghiệp","Người một nắng hai sương làm ra hạt lúa gọi là gì?"],
+["PHI CÔNG","Nghề nghiệp","Người ngồi trong buồng lái điều khiển máy bay gọi là gì?"],
+["TIẾP VIÊN HÀNG KHÔNG","Nghề nghiệp","Người phục vụ hành khách trên mỗi chuyến bay gọi là gì?"],
+["LÍNH CỨU HỎA","Nghề nghiệp","Người cầm vòi rồng lao vào đám cháy để cứu người gọi là gì?"],
+["CẢNH SÁT GIAO THÔNG","Nghề nghiệp","Người đứng ở ngã tư điều khiển xe cộ làm nghề gì?"],
+["NHÀ BÁO","Nghề nghiệp","Người đi lấy tin và viết bài cho báo đài gọi là gì?"],
+["ĐẦU BẾP","Nghề nghiệp","Người đội chiếc mũ trắng cao đứng nấu ăn trong gian bếp nhà hàng gọi là gì?"],
+["THỢ CẮT TÓC","Nghề nghiệp","Người cầm kéo và tông đơ làm đẹp cho mái tóc gọi là gì?"],
+["LẬP TRÌNH VIÊN","Nghề nghiệp","Người viết mã lệnh cho máy tính làm nghề gì?"],
+["HƯỚNG DẪN VIÊN DU LỊCH","Nghề nghiệp","Người cầm cờ nhỏ dẫn cả đoàn đi tham quan làm nghề gì?"],
+["DƯỢC SĨ","Nghề nghiệp","Người đứng quầy thuốc tư vấn và bán thuốc gọi là gì?"],
+["Y TÁ","Nghề nghiệp","Người chăm sóc bệnh nhân và tiêm thuốc cùng bác sĩ gọi là gì?"],
+["THỢ MAY","Nghề nghiệp","Người đo vải cắt và may quần áo theo số đo gọi là gì?"],
+["HỌA SĨ","Nghề nghiệp","Người cầm cọ vẽ nên những bức tranh gọi là gì?"],
+["VẬN ĐỘNG VIÊN","Nghề nghiệp","Người thi đấu thể thao chuyên nghiệp gọi là gì?"],
+["THỦ THƯ","Nghề nghiệp","Người trông coi kho sách và cho bạn đọc mượn sách gọi là gì?"]
+);
+
+</script>
+<script>
+/* =========================================================================
+   NGÂN HÀNG CÂU ĐỐ PHỤ — dùng cho ô THỬ THÁCH trên vòng quay
+   -------------------------------------------------------------------------
+   Mỗi dòng: ["Câu hỏi", ["đáp án ĐÚNG", "đáp án sai", "đáp án sai"]]
+
+   ĐÁP ÁN ĐÚNG LUÔN ĐỨNG ĐẦU trong mảng. Trò chơi tự xáo trộn thứ tự khi hiện
+   lên màn hình, nên bạn không cần tự đảo.
+
+   Câu hỏi nên ngắn, trả lời được trong 15 giây.
+   ========================================================================= */
+
+(window.QUIZBANK = window.QUIZBANK || []).push(
+["Một năm có bao nhiêu tháng có 31 ngày?", ["Bảy tháng", "Sáu tháng", "Năm tháng"]],
+["Thủ đô của Nhật Bản là thành phố nào?", ["Tokyo", "Osaka", "Kyoto"]],
+["Nước nào có diện tích lớn nhất thế giới?", ["Nga", "Canada", "Trung Quốc"]],
+["Đại dương nào lớn nhất hành tinh?", ["Thái Bình Dương", "Đại Tây Dương", "Ấn Độ Dương"]],
+["Kim loại nào ở thể lỏng trong điều kiện thường?", ["Thủy ngân", "Chì", "Nhôm"]],
+["Loài vật nào ngủ đứng?", ["Ngựa", "Chó", "Mèo"]],
+["Trái Đất quay quanh Mặt Trời hết bao lâu?", ["Khoảng 365 ngày", "Khoảng 30 ngày", "Khoảng 24 giờ"]],
+["Bộ phận nào bơm máu đi khắp cơ thể?", ["Tim", "Phổi", "Gan"]],
+["Chất khí nào cây xanh hút vào để quang hợp?", ["Cacbonic", "Oxi", "Nitơ"]],
+["Việt Nam có bao nhiêu tỉnh thành giáp biển Đông?", ["Hai mươi tám", "Mười lăm", "Bốn mươi"]],
+["Sông nào dài nhất Việt Nam?", ["Sông Đồng Nai", "Sông Hồng", "Sông Hương"]],
+["Tỉnh nào là cực bắc của Việt Nam?", ["Hà Giang", "Lào Cai", "Cao Bằng"]],
+["Ai là tác giả Truyện Kiều?", ["Nguyễn Du", "Nguyễn Trãi", "Hồ Xuân Hương"]],
+["Thành phố nào được gọi là thành phố ngàn hoa?", ["Đà Lạt", "Sa Pa", "Huế"]],
+["Một giờ có bao nhiêu giây?", ["Ba nghìn sáu trăm", "Sáu mươi", "Sáu trăm"]],
+["Hình tam giác có tổng ba góc bằng bao nhiêu?", ["180 độ", "360 độ", "90 độ"]],
+["Số nào là số nguyên tố?", ["Mười bảy", "Hai mươi mốt", "Mười lăm"]],
+["Nửa của một phần tư là bao nhiêu?", ["Một phần tám", "Một phần hai", "Một phần sáu"]],
+["Loài chim nào chạy nhanh nhất?", ["Đà điểu", "Chim cánh cụt", "Bồ câu"]],
+["Loài vật nào có cổ dài nhất?", ["Hươu cao cổ", "Lạc đà", "Ngựa vằn"]],
+["Con vật nào có thể sống không cần uống nước nhiều ngày?", ["Lạc đà", "Trâu", "Chó"]],
+["Cá voi thuộc nhóm động vật nào?", ["Động vật có vú", "Loài cá", "Loài bò sát"]],
+["Ong chúa trong tổ ong làm nhiệm vụ gì?", ["Đẻ trứng", "Lấy mật", "Canh cửa tổ"]],
+["Loài nào là côn trùng?", ["Con bướm", "Con nhện", "Con giun"]],
+["Nước sôi ở bao nhiêu độ C trong điều kiện thường?", ["100 độ", "50 độ", "150 độ"]],
+["Nước đóng băng ở bao nhiêu độ C?", ["0 độ", "10 độ", "Âm 20 độ"]],
+["Ánh sáng đi nhanh hơn hay âm thanh nhanh hơn?", ["Ánh sáng", "Âm thanh", "Bằng nhau"]],
+["Vì sao ta thấy chớp trước khi nghe sấm?", ["Ánh sáng truyền nhanh hơn âm thanh", "Sấm xảy ra sau chớp", "Tai người phản ứng chậm"]],
+["Hành tinh nào gần Mặt Trời nhất?", ["Sao Thủy", "Sao Kim", "Trái Đất"]],
+["Mặt Trăng quay quanh thiên thể nào?", ["Trái Đất", "Mặt Trời", "Sao Hỏa"]],
+["Người đầu tiên bay vào vũ trụ là ai?", ["Yuri Gagarin", "Neil Armstrong", "Buzz Aldrin"]],
+["Bộ phận nào của cây hút nước từ đất?", ["Rễ", "Lá", "Hoa"]],
+["Loài cây nào lớn nhanh nhất thế giới?", ["Tre", "Thông", "Bàng"]],
+["Quả nào có nhiều vitamin C nổi tiếng?", ["Cam", "Chuối", "Dưa hấu"]],
+["Gạo được làm ra từ cây gì?", ["Cây lúa", "Cây ngô", "Cây khoai"]],
+["Bánh chưng thường gói bằng lá gì?", ["Lá dong", "Lá chuối", "Lá sen"]],
+["Nước mắm truyền thống làm từ nguyên liệu chính nào?", ["Cá cơm", "Đậu nành", "Tôm khô"]],
+["Phở bò thường ăn kèm rau thơm nào?", ["Hành lá", "Rau muống", "Cải bắp"]],
+["Tết Trung Thu diễn ra vào rằm tháng mấy âm lịch?", ["Tháng tám", "Tháng bảy", "Tháng chín"]],
+["Áo dài Việt Nam thường xẻ tà ở đâu?", ["Hai bên hông", "Phía sau lưng", "Phía trước ngực"]],
+["Nhạc cụ nào chỉ có một dây?", ["Đàn bầu", "Đàn tranh", "Đàn nhị"]],
+["Múa rối nước biểu diễn ở đâu?", ["Trên mặt nước", "Trên sân khấu gỗ", "Trong hang động"]],
+["Ai đánh tan quân Nam Hán trên sông Bạch Đằng năm 938?", ["Ngô Quyền", "Lê Lợi", "Trần Hưng Đạo"]],
+["Hai Bà Trưng khởi nghĩa chống quân xâm lược nào?", ["Quân Hán", "Quân Minh", "Quân Nguyên"]],
+["Kinh đô Thăng Long nay là thành phố nào?", ["Hà Nội", "Huế", "Ninh Bình"]],
+["Vạn Lý Trường Thành nằm ở nước nào?", ["Trung Quốc", "Ấn Độ", "Mông Cổ"]],
+["Tháp Eiffel nằm ở thành phố nào?", ["Paris", "Rome", "Madrid"]],
+["Kim tự tháp nổi tiếng nằm ở nước nào?", ["Ai Cập", "Hy Lạp", "Peru"]],
+["Nước nào có hình dạng giống chiếc ủng?", ["Ý", "Tây Ban Nha", "Hy Lạp"]],
+["Đồng tiền của nước Nhật gọi là gì?", ["Yên", "Nhân dân tệ", "Won"]],
+["Ngôn ngữ nào được nói nhiều nhất thế giới?", ["Tiếng Anh", "Tiếng Pháp", "Tiếng Đức"]],
+["Từ tiếng Anh nào nghĩa là cảm ơn?", ["Thank you", "Sorry", "Please"]],
+["Từ Monday trong tiếng Anh là thứ mấy?", ["Thứ hai", "Chủ nhật", "Thứ ba"]],
+["Từ tiếng Anh nào nghĩa là quả táo?", ["Apple", "Orange", "Banana"]],
+["Từ tiếng Anh nào nghĩa là bác sĩ?", ["Doctor", "Teacher", "Driver"]],
+["Số twelve trong tiếng Anh là số mấy?", ["Mười hai", "Hai mươi", "Hai"]],
+["Màu nào tạo ra khi trộn xanh dương và vàng?", ["Xanh lá", "Tím", "Cam"]],
+["Màu nào tạo ra khi trộn đỏ và trắng?", ["Hồng", "Nâu", "Tím"]],
+["Cầu vồng có bao nhiêu màu cơ bản?", ["Bảy", "Năm", "Chín"]],
+["Bàn cờ vua có bao nhiêu ô?", ["Sáu mươi tư", "Bốn mươi chín", "Tám mươi mốt"]],
+["Một đội bóng đá ra sân có bao nhiêu cầu thủ?", ["Mười một", "Chín", "Mười ba"]],
+["Môn thể thao nào dùng quả cầu có lông vũ?", ["Cầu lông", "Tennis", "Bóng bàn"]],
+["Cúp bóng đá thế giới tổ chức mấy năm một lần?", ["Bốn năm", "Hai năm", "Năm năm"]],
+["Thế vận hội có biểu tượng mấy vòng tròn?", ["Năm", "Bốn", "Sáu"]],
+["Môn nào thi đấu hoàn toàn dưới nước?", ["Bơi lội", "Điền kinh", "Đua xe đạp"]],
+["Xe máy bắt buộc phải có gì khi tham gia giao thông?", ["Mũ bảo hiểm", "Còi to", "Gương ba chiều"]],
+["Đèn giao thông màu vàng có nghĩa gì?", ["Chuẩn bị dừng", "Đi nhanh lên", "Rẽ phải"]],
+["Bên nào ở Việt Nam xe chạy theo luật?", ["Bên phải", "Bên trái", "Tùy đường"]],
+["Máy bay cất cánh và hạ cánh ở đâu?", ["Đường băng", "Bến cảng", "Ga tàu"]],
+["Vật nào giúp định hướng bằng kim chỉ nam?", ["La bàn", "Đồng hồ", "Kính lúp"]],
+["Thiết bị nào đo nhiệt độ cơ thể?", ["Nhiệt kế", "Cân", "Thước dây"]],
+["Máy tính lưu dữ liệu tạm thời ở đâu?", ["Bộ nhớ RAM", "Màn hình", "Bàn phím"]],
+["Chữ WWW trên internet viết tắt của gì?", ["World Wide Web", "World Web Working", "Wide World Wire"]],
+["Email là cách gửi gì?", ["Thư điện tử", "Bưu phẩm", "Tiền"]],
+["Mật khẩu mạnh nên có gì?", ["Chữ hoa chữ thường và số", "Toàn số 0", "Tên của mình"]],
+["Pin điện thoại đo bằng đơn vị nào?", ["mAh", "Kilogram", "Mét"]],
+["Ai được coi là cha đẻ của bóng đèn sợi đốt phổ biến?", ["Thomas Edison", "Isaac Newton", "Albert Einstein"]],
+["Định luật vạn vật hấp dẫn gắn với tên ai?", ["Isaac Newton", "Galileo", "Nikola Tesla"]],
+["Thuyết tương đối do ai xây dựng?", ["Albert Einstein", "Marie Curie", "Charles Darwin"]],
+["Ai đưa ra thuyết tiến hóa?", ["Charles Darwin", "Louis Pasteur", "Gregor Mendel"]],
+["Nhà khoa học nữ nào từng hai lần đoạt giải Nobel?", ["Marie Curie", "Ada Lovelace", "Rosalind Franklin"]],
+["Cơ thể người có bao nhiêu chiếc răng khi trưởng thành đầy đủ?", ["Ba mươi hai", "Hai mươi", "Bốn mươi"]],
+["Xương nào dài nhất cơ thể người?", ["Xương đùi", "Xương sống", "Xương cánh tay"]],
+["Cơ quan nào lọc máu trong cơ thể?", ["Thận", "Dạ dày", "Phổi"]],
+["Người lớn bình thường có bao nhiêu lít máu?", ["Khoảng 5 lít", "Khoảng 1 lít", "Khoảng 15 lít"]],
+["Nên uống bao nhiêu nước mỗi ngày là hợp lý?", ["Khoảng 2 lít", "Khoảng 100 ml", "Khoảng 10 lít"]],
+["Vitamin nào cơ thể tổng hợp được nhờ ánh nắng?", ["Vitamin D", "Vitamin C", "Vitamin B12"]],
+["Loại thuốc nào không được tự ý dùng bừa bãi?", ["Kháng sinh", "Nước muối sinh lý", "Vitamin C"]],
+["Hiện tượng Mặt Trăng che khuất Mặt Trời gọi là gì?", ["Nhật thực", "Nguyệt thực", "Sao băng"]],
+["Sóng thần thường sinh ra sau hiện tượng nào?", ["Động đất ngoài khơi", "Mưa lớn", "Gió mùa"]],
+["Bão ở Việt Nam thường đến vào mùa nào?", ["Mùa hè và mùa thu", "Mùa đông", "Mùa xuân"]],
+["Khí nhà kính làm Trái Đất thế nào?", ["Nóng lên", "Lạnh đi", "Không đổi"]],
+["Nguồn năng lượng nào là tái tạo?", ["Năng lượng mặt trời", "Than đá", "Dầu mỏ"]],
+["Rác nào nên bỏ vào thùng tái chế?", ["Chai nhựa sạch", "Thức ăn thừa", "Pin cũ"]],
+["Loài nào giúp thụ phấn cho hoa nhiều nhất?", ["Ong", "Kiến", "Gián"]],
+["Rừng ngập mặn có vai trò gì với bờ biển?", ["Chắn sóng và giữ đất", "Làm nước mặn hơn", "Ngăn mưa"]],
+["Con vật nào biến thái hoàn toàn từ nòng nọc?", ["Ếch", "Rắn", "Thằn lằn"]],
+["Bướm phát triển từ giai đoạn nào?", ["Sâu bướm", "Trứng cá", "Nòng nọc"]],
+["Loài nào đổi màu da theo môi trường?", ["Tắc kè hoa", "Chuột đồng", "Thỏ rừng"]],
+["Con vật nào được mệnh danh chúa sơn lâm?", ["Hổ", "Sư tử", "Gấu"]],
+["Động vật lớn nhất hành tinh hiện nay là gì?", ["Cá voi xanh", "Voi châu Phi", "Cá mập trắng"]],
+["Trống đồng Đông Sơn là hiện vật của nền văn hóa nào?", ["Văn hóa Việt cổ", "Văn hóa Chăm", "Văn hóa Khmer"]],
+["Chùa Một Cột được dựng trên mấy trụ đá?", ["Một trụ", "Hai trụ", "Bốn trụ"]],
+["Vịnh Hạ Long thuộc tỉnh nào?", ["Quảng Ninh", "Hải Phòng", "Nam Định"]],
+["Hang Sơn Đoòng nằm ở tỉnh nào?", ["Quảng Bình", "Quảng Trị", "Nghệ An"]],
+["Đảo lớn nhất Việt Nam là đảo nào?", ["Phú Quốc", "Cát Bà", "Côn Đảo"]],
+["Đỉnh núi cao nhất Việt Nam tên là gì?", ["Phan Xi Păng", "Bạch Mã", "Tản Viên"]],
+["Cà phê Việt Nam trồng nhiều nhất ở vùng nào?", ["Tây Nguyên", "Đồng bằng sông Hồng", "Duyên hải Bắc Bộ"]],
+["Vùng nào là vựa lúa lớn nhất nước ta?", ["Đồng bằng sông Cửu Long", "Tây Bắc", "Bắc Trung Bộ"]],
+["Ngày Nhà giáo Việt Nam là ngày nào?", ["20 tháng 11", "8 tháng 3", "1 tháng 6"]],
+["Ngày Quốc tế Thiếu nhi là ngày nào?", ["1 tháng 6", "20 tháng 10", "2 tháng 9"]],
+["Một thập kỷ là bao nhiêu năm?", ["Mười năm", "Một trăm năm", "Năm năm"]],
+["Một thế kỷ là bao nhiêu năm?", ["Một trăm năm", "Mười năm", "Một nghìn năm"]],
+["Tháng hai năm nhuận có bao nhiêu ngày?", ["Hai mươi chín", "Hai mươi tám", "Ba mươi"]],
+["Chữ số La Mã X là số mấy?", ["Mười", "Năm", "Một trăm"]],
+["Một tá bằng bao nhiêu?", ["Mười hai", "Mười", "Hai mươi"]],
+["Một ki lô gam bằng bao nhiêu gam?", ["Một nghìn gam", "Một trăm gam", "Mười gam"]],
+["Một mét bằng bao nhiêu xăng ti mét?", ["Một trăm", "Mười", "Một nghìn"]],
+["Hình nào có bốn cạnh bằng nhau và bốn góc vuông?", ["Hình vuông", "Hình thoi", "Hình chữ nhật"]],
+["Số 0 là số chẵn hay số lẻ?", ["Số chẵn", "Số lẻ", "Không phải cả hai"]]
+);
+</script>
+<script>
+/* Chiếc Nón Kỳ Diệu — game engine */
+(function () {
+  'use strict';
+
+  /* ---------------- bảng chữ cái tiếng Việt ---------------- */
+  const GROUPS = {
+    'A': 'AÁÀẢÃẠ', 'Ă': 'ĂẮẰẲẴẶ', 'Â': 'ÂẤẦẨẪẬ',
+    'E': 'EÉÈẺẼẸ', 'Ê': 'ÊẾỀỂỄỆ',
+    'I': 'IÍÌỈĨỊ',
+    'O': 'OÓÒỎÕỌ', 'Ô': 'ÔỐỒỔỖỘ', 'Ơ': 'ƠỚỜỞỠỢ',
+    'U': 'UÚÙỦŨỤ', 'Ư': 'ƯỨỪỬỮỰ',
+    'Y': 'YÝỲỶỸỴ',
+    'Đ': 'Đ'
+  };
+  const ALPHABET = ['A','Ă','Â','B','C','D','Đ','E','Ê','F','G','H','I','J','K','L','M','N','O','Ô','Ơ','P','Q','R','S','T','U','Ư','V','W','X','Y','Z'];
+  const BASE = {};
+  for (const k in GROUPS) for (const ch of GROUPS[k]) BASE[ch] = k;
+  for (const L of ALPHABET) if (!BASE[L]) BASE[L] = L;
+  const baseOf = ch => BASE[ch] || null;
+
+  const FLAT = { 'Ă':'A','Â':'A','Ê':'E','Ô':'O','Ơ':'O','Ư':'U','Đ':'D' };
+  function loose(s) {
+    let out = '';
+    for (const ch of (s || '').toUpperCase()) {
+      const b = baseOf(ch);
+      if (b) out += (FLAT[b] || b);
+      else if (/[A-Z0-9]/.test(ch)) out += ch;
+    }
+    return out;
+  }
+
+  /* ---------------- các ô trên vòng quay ---------------- */
+  const SEGS = [
+    { t:'pts', v:200 },
+    { t:'lose',   l:'MẤT LƯỢT' },
+    { t:'pts', v:400 },
+    { t:'double', l:'GẤP ĐÔI' },
+    { t:'pts', v:300 },
+    { t:'lucky',  l:'MAY MẮN' },
+    { t:'pts', v:500 },
+    { t:'half',   l:'CHIA ĐÔI' },
+    { t:'pts', v:200 },
+    { t:'life',   l:'THÊM MẠNG' },
+    { t:'pts', v:600 },
+    { t:'zero',   l:'MẤT ĐIỂM' },
+    { t:'pts', v:300 },
+    { t:'quiz',   l:'THỬ THÁCH' },
+    { t:'pts', v:400 },
+    { t:'bet',    l:'CƯỢC ĐÔI' },
+    { t:'pts', v:800 },
+    { t:'danger', l:'CÚN GẶP NGUY' },
+    { t:'pts', v:300 },
+    { t:'unlucky', l:'XUI RỒI' },
+    { t:'pts', v:500 },
+    { t:'life',   l:'CỨU TRỢ' },
+    { t:'pts', v:1000 },
+    { t:'gift',   l:'CHÚC MỪNG' }
+  ];
+  const COLORS = {
+    lose:   ['#3D1226', '#FFE2B8'],
+    double: ['#2FBE9F', '#04271F'],
+    half:   ['#2C7E93', '#EAFBFF'],
+    life:   ['#5FB94F', '#092C05'],
+    lucky:  ['#9B6BFF', '#1B0A3A'],
+    quiz:    ['#6E4BD8', '#F2E9FF'],
+    unlucky: ['#A8471B', '#FFE8DC'],
+    bet:    ['#E06AA6', '#320A20'],
+    danger: ['#D62828', '#FFE6E1'],
+    zero:   ['#2A2A33', '#D8D8E4'],
+    gift:   ['#F5822B', '#311000']
+  };
+  const PTS_A = ['#8E0E24', '#FFE2B8'];
+  const PTS_B = ['#F2B33C', '#42130A'];
+
+  /* ---------------- âm thanh ---------------- */
+  const A = { ctx:null, master:null, musicGain:null, sfxGain:null, on:false, timer:null, step:0, next:0, noise:null };
+  const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+
+  function audioInit() {
+    if (A.ctx) { if (A.ctx.state === 'suspended') A.ctx.resume(); return true; }
+    try {
+      const C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return false;
+      A.ctx = new C();
+      A.master = A.ctx.createGain(); A.master.gain.value = 0.85; A.master.connect(A.ctx.destination);
+      A.musicGain = A.ctx.createGain(); A.musicGain.gain.value = 0; A.musicGain.connect(A.master);
+      A.sfxGain = A.ctx.createGain(); A.sfxGain.gain.value = 0.85; A.sfxGain.connect(A.master);
+      const len = A.ctx.sampleRate * 1.4, buf = A.ctx.createBuffer(1, len, A.ctx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+      A.noise = buf;
+      return true;
+    } catch (e) { return false; }
+  }
+  function tone(freq, t0, dur, type, gain, dest) {
+    if (!A.ctx) return;
+    const o = A.ctx.createOscillator(), g = A.ctx.createGain();
+    o.type = type || 'triangle'; o.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, gain), t0 + 0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(dest || A.sfxGain);
+    o.start(t0); o.stop(t0 + dur + 0.06);
+  }
+  function noiseHit(t0, dur, gain, hp, dest) {
+    if (!A.ctx || !A.noise) return;
+    const s = A.ctx.createBufferSource(); s.buffer = A.noise;
+    const f = A.ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = hp || 2000;
+    const g = A.ctx.createGain();
+    g.gain.setValueAtTime(gain, t0);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    s.connect(f); f.connect(g); g.connect(dest || A.sfxGain);
+    s.start(t0); s.stop(t0 + dur + 0.02);
+  }
+  const now = () => (A.ctx ? A.ctx.currentTime : 0);
+  let tensionNodes = null;
+
+  const sfx = {
+    tick() { if (A.ctx) tone(1500, now(), 0.035, 'square', 0.09); },
+    click() { if (A.ctx) tone(760, now(), 0.07, 'triangle', 0.12); },
+
+    /* 🎡 bấm QUAY — tiếng gió rít quét lên */
+    whoosh() {
+      if (!A.ctx || !A.noise) return;
+      const t = now();
+      const s = A.ctx.createBufferSource(); s.buffer = A.noise;
+      const f = A.ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.4;
+      f.frequency.setValueAtTime(260, t);
+      f.frequency.exponentialRampToValueAtTime(3600, t + 0.42);
+      f.frequency.exponentialRampToValueAtTime(700, t + 0.85);
+      const gg = A.ctx.createGain();
+      gg.gain.setValueAtTime(0.0001, t);
+      gg.gain.exponentialRampToValueAtTime(0.17, t + 0.12);
+      gg.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+      s.connect(f); f.connect(gg); gg.connect(A.sfxGain);
+      s.start(t); s.stop(t + 0.95);
+    },
+
+    /* ✨ tiếng lấp lánh */
+    sparkle(t0) {
+      if (!A.ctx) return; const t = t0 || now();
+      [1568, 2093, 2637, 3136].forEach((f, i) => tone(f, t + i * 0.045, 0.45, 'sine', 0.085));
+    },
+
+    /* ✅ đoán đúng chữ — ting kèm lấp lánh */
+    good() {
+      if (!A.ctx) return; const t = now();
+      [659, 831, 988].forEach((f, i) => tone(f, t + i * 0.06, 0.24, 'triangle', 0.18));
+      sfx.sparkle(t + 0.1);
+    },
+
+    /* 🐶 cún kêu ư ử */
+    whimper(t0) {
+      if (!A.ctx) return; const t = t0 || now();
+      const o = A.ctx.createOscillator(), gg = A.ctx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(760, t);
+      o.frequency.exponentialRampToValueAtTime(430, t + 0.2);
+      o.frequency.exponentialRampToValueAtTime(640, t + 0.3);
+      o.frequency.exponentialRampToValueAtTime(320, t + 0.58);
+      gg.gain.setValueAtTime(0.0001, t);
+      gg.gain.exponentialRampToValueAtTime(0.12, t + 0.05);
+      gg.gain.exponentialRampToValueAtTime(0.0001, t + 0.62);
+      o.connect(gg); gg.connect(A.sfxGain); o.start(t); o.stop(t + 0.68);
+    },
+
+    /* ❌ đoán sai — còi báo lỗi rồi cún kêu */
+    bad() {
+      if (!A.ctx) return; const t = now();
+      const o = A.ctx.createOscillator(), gg = A.ctx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(320, t); o.frequency.exponentialRampToValueAtTime(90, t + 0.4);
+      gg.gain.setValueAtTime(0.18, t); gg.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+      o.connect(gg); gg.connect(A.sfxGain); o.start(t); o.stop(t + 0.5);
+      sfx.whimper(t + 0.34);
+    },
+
+    /* ❤️ mất mạng — hai tiếng bíp cảnh báo */
+    alarm() {
+      if (!A.ctx) return; const t = now();
+      for (let i = 0; i < 2; i++) {
+        tone(932, t + i * 0.2, 0.12, 'square', 0.12);
+        tone(699, t + i * 0.2 + 0.09, 0.13, 'square', 0.1);
+      }
+      noiseHit(t, 0.26, 0.05, 180);
+    },
+
+    /* 🎯 nhạc căng thẳng khi mở bảng đoán đáp án */
+    tensionStart() {
+      if (!A.ctx || tensionNodes) return;
+      const t = now();
+      const o = A.ctx.createOscillator(), gg = A.ctx.createGain();
+      const f = A.ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 340;
+      const lfo = A.ctx.createOscillator(), lg = A.ctx.createGain();
+      o.type = 'sawtooth'; o.frequency.value = 55;
+      lfo.type = 'sine'; lfo.frequency.value = 5.5; lg.gain.value = 7;
+      lfo.connect(lg); lg.connect(o.frequency);
+      gg.gain.setValueAtTime(0.0001, t);
+      gg.gain.exponentialRampToValueAtTime(0.075, t + 0.5);
+      o.connect(f); f.connect(gg); gg.connect(A.sfxGain);
+      o.start(t); lfo.start(t);
+      const iv = setInterval(() => {
+        if (!A.ctx) return; const tt = now();
+        tone(72, tt, 0.13, 'sine', 0.17);
+        tone(58, tt + 0.17, 0.17, 'sine', 0.12);
+      }, 780);
+      tensionNodes = { o: o, g: gg, lfo: lfo, iv: iv };
+    },
+    tensionStop() {
+      if (!tensionNodes) return;
+      const n = tensionNodes; tensionNodes = null;
+      clearInterval(n.iv);
+      try {
+        const t = now();
+        n.g.gain.cancelScheduledValues(t);
+        n.g.gain.setValueAtTime(n.g.gain.value, t);
+        n.g.gain.exponentialRampToValueAtTime(0.0001, t + 0.28);
+        n.o.stop(t + 0.34); n.lfo.stop(t + 0.34);
+      } catch (e) { /* bỏ qua */ }
+    },
+
+    /* 🏆 nhạc chiến thắng */
+    victory() {
+      if (!A.ctx) return; const t = now();
+      [[523, 0], [659, .12], [784, .24], [1047, .36], [784, .52], [1047, .62], [1319, .74]]
+        .forEach(function (x) { tone(x[0], t + x[1], 0.45, 'square', 0.095); tone(x[0] * 2, t + x[1], 0.3, 'sine', 0.045); });
+      [131, 165, 196, 262].forEach((f, i) => tone(f, t + i * 0.12, 0.5, 'triangle', 0.13));
+      sfx.sparkle(t + 0.8);
+    },
+
+    /* 💀 thua đau */
+    dramaticFail() {
+      if (!A.ctx) return; const t = now();
+      [392, 370, 349, 330].forEach((f, i) => {
+        tone(f, t + i * 0.19, 0.5, 'sawtooth', 0.1);
+        tone(f / 2, t + i * 0.19, 0.55, 'triangle', 0.12);
+      });
+      tone(62, t + 0.78, 1.1, 'sine', 0.22);
+      noiseHit(t + 0.78, 0.8, 0.13, 80);
+      sfx.whimper(t + 1.1);
+    },
+
+    fail() { sfx.dramaticFail(); },
+    big() { sfx.victory(); },
+    life() { if (!A.ctx) return; const t = now(); [523, 784, 1047].forEach((f, i) => tone(f, t + i * 0.06, 0.25, 'sine', 0.2)); }
+  };
+
+  const CHORDS = [[60,64,67],[57,60,64],[53,57,60],[55,59,62],[60,64,67],[57,60,64],[53,57,60],[55,59,62]];
+  const MEL = [
+    [72,74,76, 0,76,74,72, 0],
+    [72,71,69, 0,69,71,72, 0],
+    [69,71,72, 0,74, 0,72, 0],
+    [71, 0,74, 0,71,69,67, 0],
+    [76, 0,79, 0,76,74,72, 0],
+    [74, 0,76, 0,74,72,71, 0],
+    [72,74,76, 0,77, 0,76, 0],
+    [74, 0,71, 0,67, 0, 0, 0]
+  ];
+  const BPM = 116, STEP = (60 / BPM) / 4;
+
+  function scheduleStep(s, t) {
+    const bar = Math.floor(s / 16) % 8, p = s % 16, ch = CHORDS[bar];
+    if (p % 2 === 0) {
+      const m = MEL[bar][p / 2];
+      if (m) tone(mtof(m), t, 0.26, 'triangle', 0.09, A.musicGain);
+    }
+    if (p === 0 || p === 6 || p === 8) tone(mtof(ch[0] - 24), t, 0.3, 'sine', 0.17, A.musicGain);
+    if (p % 4 === 2) tone(mtof(ch[(((p - 2) / 4) % 3)] + 12), t, 0.14, 'square', 0.028, A.musicGain);
+    if (p % 2 === 0) noiseHit(t, 0.03, 0.02, 6000, A.musicGain);
+    if (p === 4 || p === 12) noiseHit(t, 0.12, 0.05, 1400, A.musicGain);
+  }
+  function musicStart() {
+    if (!A.ctx || A.timer) return;
+    A.next = A.ctx.currentTime + 0.1;
+    A.timer = setInterval(() => {
+      if (!A.ctx) return;
+      while (A.next < A.ctx.currentTime + 0.18) { scheduleStep(A.step, A.next); A.step++; A.next += STEP; }
+    }, 28);
+  }
+  function musicStop() { if (A.timer) { clearInterval(A.timer); A.timer = null; } }
+  function setMusic(on) {
+    A.on = on;
+    const btn = $('btnMusic');
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.textContent = on ? '♪ Nhạc nền: bật' : '♪ Nhạc nền: tắt';
+    if (!audioInit()) return;
+    const g = A.musicGain.gain, t = A.ctx.currentTime;
+    g.cancelScheduledValues(t); g.setValueAtTime(g.value, t);
+    g.linearRampToValueAtTime(on ? 0.2 : 0.0001, t + 0.6);
+    if (on) musicStart(); else setTimeout(musicStop, 700);
+  }
+
+  /* ---------------- tiện ích DOM ---------------- */
+  const $ = id => document.getElementById(id);
+  const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt != null) n.textContent = txt; return n; };
+  const fmt = n => n.toLocaleString('vi-VN');
+
+  /* ---------------- trạng thái ---------------- */
+  const S = {
+    started: false, mode: 'solo', players: [], cur: 0,
+    round: 1, maxRounds: Infinity,
+    answer: '', cat: '', question: '',
+    revealed: [], used: [],
+    pending: null, mult: 1, betting: false,
+    spinning: false, canSpin: true,
+    pool: [], solvedCount: 0, angle: 0
+  };
+  const MAX_LIVES = 8, START_LIVES = 5;
+
+  /* ---------------- ngân hàng câu hỏi ---------------- */
+  function freshPool() {
+    const b = (window.QBANK || []).slice();
+    for (let i = b.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [b[i], b[j]] = [b[j], b[i]]; }
+    return b;
+  }
+  function nextPuzzle() {
+    if (!S.pool.length) S.pool = freshPool();
+    const q = S.pool.pop() || ['CHIẾC NÓN KỲ DIỆU', 'Trò chơi', 'Trò chơi bạn đang chơi tên là gì?'];
+    S.answer = q[0]; S.cat = q[1]; S.question = q[2];
+    S.revealed = []; S.used = []; S.pending = null; S.mult = 1; S.betting = false;
+  }
+
+  const shuffleArr = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; const t = a[i]; a[i] = a[j]; a[j] = t; } return a; };
+  const gainLives = (p, n) => { p.lives = Math.min(MAX_LIVES, p.lives + n); };
+
+  function revealRandom(n) {
+    let c = 0;
+    for (let k = 0; k < n; k++) {
+      const hid = [...letterSet()].filter(L => S.revealed.indexOf(L) < 0);
+      if (!hid.length) break;
+      const L = hid[Math.random() * hid.length | 0];
+      S.revealed.push(L);
+      if (S.used.indexOf(L) < 0) S.used.push(L);
+      c++;
+    }
+    if (c) renderBoard();
+    return c;
+  }
+
+  /* pháo giấy khi giải được ô chữ */
+  function confetti() {
+    const cv = $('confetti'); if (!cv || !cv.getContext) return;
+    const c = cv.getContext('2d');
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    const W = window.innerWidth, H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const cols = ['#FFD166', '#FF5B41', '#3ECFAE', '#A981FF', '#FFF4DC', '#5FB0FF'];
+    const P = [];
+    for (let i = 0; i < 160; i++) P.push({
+      x: Math.random() * W, y: -20 - Math.random() * H * 0.5,
+      vx: (Math.random() - 0.5) * 2.6, vy: 2 + Math.random() * 3.6,
+      w: 5 + Math.random() * 7, h: 8 + Math.random() * 10,
+      r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.26,
+      col: cols[i % cols.length]
+    });
+    let last = performance.now();
+    (function frame(t) {
+      const dt = Math.min(34, t - last); last = t;
+      c.clearRect(0, 0, W, H);
+      let alive = 0;
+      for (const p of P) {
+        p.x += p.vx * dt / 16; p.y += p.vy * dt / 16; p.r += p.vr; p.vy += 0.022;
+        if (p.y < H + 40) alive++;
+        c.save(); c.translate(p.x, p.y); c.rotate(p.r);
+        c.fillStyle = p.col; c.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); c.restore();
+      }
+      if (alive) requestAnimationFrame(frame); else c.clearRect(0, 0, W, H);
+    })(last);
+  }
+
+  const letterSet = () => {
+    const s = new Set();
+    for (const ch of S.answer) { const b = baseOf(ch); if (b) s.add(b); }
+    return s;
+  };
+  const hiddenCount = () => {
+    let n = 0;
+    for (const ch of S.answer) { const b = baseOf(ch); if (b && S.revealed.indexOf(b) < 0) n++; }
+    return n;
+  };
+  const isSolved = () => hiddenCount() === 0;
+
+  /* ---------------- vòng quay ---------------- */
+  const cv = $('wheel'), ctx = cv.getContext('2d');
+  const R = 400, CX = 420, CY = 420, STEP_ANG = (Math.PI * 2) / SEGS.length;
+
+  function drawWheel(rot) {
+    S.angle = rot;
+    ctx.clearRect(0, 0, 840, 840);
+    ctx.save(); ctx.translate(CX, CY);
+    ctx.beginPath(); ctx.arc(0, 0, R + 14, 0, Math.PI * 2);
+    ctx.fillStyle = '#4A2A06'; ctx.fill();
+    ctx.save(); ctx.rotate(rot);
+    let ptsIdx = 0;
+    SEGS.forEach((seg, i) => {
+      const a0 = i * STEP_ANG, a1 = a0 + STEP_ANG;
+      let pair;
+      if (seg.t === 'pts') { pair = (ptsIdx % 2 === 0) ? PTS_A : PTS_B; ptsIdx++; }
+      else pair = COLORS[seg.t] || PTS_A;
+      ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, R, a0, a1); ctx.closePath();
+      ctx.fillStyle = pair[0]; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,225,170,.55)'; ctx.lineWidth = 2.5; ctx.stroke();
+
+      const label = seg.t === 'pts' ? String(seg.v) : seg.l;
+      ctx.save(); ctx.rotate(a0 + STEP_ANG / 2);
+      ctx.fillStyle = pair[1]; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      let size = seg.t === 'pts' ? 60 : 36;
+      ctx.font = size + 'px Anton, Impact, sans-serif';
+      while (ctx.measureText(label).width > R - 130 && size > 16) {
+        size -= 2; ctx.font = size + 'px Anton, Impact, sans-serif';
+      }
+      ctx.fillText(label, R - 26, 0);
+      ctx.restore();
+    });
+    ctx.restore();
+    // vành ngoài + bóng đèn
+    ctx.beginPath(); ctx.arc(0, 0, R + 7, 0, Math.PI * 2);
+    ctx.lineWidth = 14; ctx.strokeStyle = '#8E5711'; ctx.stroke();
+    for (let i = 0; i < SEGS.length; i++) {
+      const a = rot + i * STEP_ANG;
+      const x = Math.cos(a) * (R + 7), y = Math.sin(a) * (R + 7);
+      ctx.beginPath(); ctx.arc(x, y, 6.5, 0, Math.PI * 2);
+      ctx.fillStyle = (Math.floor(Date.now() / 260) + i) % 2 ? '#FFE9A8' : '#C88A2A';
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  let blink = null;
+  function startBlink() { if (!blink) blink = setInterval(() => { if (!S.spinning) drawWheel(S.angle); }, 260); }
+
+  function spin() {
+    if (S.spinning || !S.canSpin || !S.started) return;
+    audioInit(); sfx.whoosh();
+    S.spinning = true; S.canSpin = false;
+    updateControls();
+    setMsg('Nón đang quay...', '');
+    $('hubText').innerHTML = '...';
+
+    const idx = Math.random() * SEGS.length | 0;
+    const center = (idx + 0.5) * STEP_ANG;
+    const jitter = (Math.random() - 0.5) * STEP_ANG * 0.6;
+    const target = -Math.PI / 2 - center - jitter;
+    const turns = 6 + Math.floor(Math.random() * 3);
+    let from = S.angle % (Math.PI * 2);
+    let to = target;
+    while (to < from + turns * Math.PI * 2) to += Math.PI * 2;
+
+    const dur = 4300, t0 = performance.now();
+    let lastSeg = -1;
+    (function frame(t) {
+      const p = Math.min(1, (t - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 4);
+      const ang = from + (to - from) * e;
+      drawWheel(ang);
+      const segNow = Math.floor(((-Math.PI / 2 - ang) / STEP_ANG) % SEGS.length);
+      if (segNow !== lastSeg) { lastSeg = segNow; if (p < 0.98) sfx.tick(); }
+      if (p < 1) requestAnimationFrame(frame);
+      else { S.spinning = false; land(SEGS[idx]); }
+    })(t0);
+  }
+
+  /* ---------------- kết quả ô quay ---------------- */
+  function land(seg) {
+    const p = S.players[S.cur];
+    const nm = p.name;
+    if (seg.t === 'pts') {
+      S.pending = seg.v;
+      $('hubText').innerHTML = fmt(seg.v);
+      setMsg('Quay trúng <b>' + fmt(seg.v) + ' điểm</b> mỗi chữ cái. ' + nm + ' hãy chọn một chữ cái!', 'gold');
+      sfx.click(); S.canSpin = false; updateControls(); return;
+    }
+    $('hubText').innerHTML = seg.l.replace(' ', '<br>');
+    switch (seg.t) {
+      case 'lose':
+        sfx.bad(); loseLives(p, 1); renderAll();
+        if (!p.alive) return void setTimeout(() => afterDeath(p), 900);
+        setMsg(multi()
+          ? '<b>MẤT LƯỢT!</b> Cún của ' + nm + ' mất một mạng, còn ' + p.lives + '. Nhường nón cho người kế tiếp.'
+          : '<b>MẤT LƯỢT!</b> Kẻ bắt cún tiến thêm một bước, cún của bạn còn ' + p.lives + ' mạng.', 'bad');
+        return void setTimeout(passTurn, 1400);
+      case 'double':
+        p.score *= 2; sfx.big();
+        setMsg('<b>GẤP ĐÔI!</b> Điểm của ' + nm + ' nhân đôi thành ' + fmt(p.score) + '. Quay tiếp nào!', 'good');
+        break;
+      case 'half':
+        p.score = Math.floor(p.score / 2); sfx.bad();
+        setMsg('<b>CHIA ĐÔI.</b> Điểm của ' + nm + ' còn ' + fmt(p.score) + '. Vẫn được quay tiếp.', 'bad');
+        break;
+      case 'life':
+        gainLives(p, 1); sfx.life();
+        setMsg('<b>THÊM MẠNG!</b> Cún của ' + nm + ' được tiếp sức, hiện còn ' + p.lives + ' mạng.', 'good');
+        break;
+      case 'lucky':
+        sfx.sparkle(); return void boxPick(true);
+      case 'quiz':
+        sfx.click(); return void openChallenge();
+      case 'unlucky':
+        sfx.bad(); return void boxPick(false);
+      case 'gift':
+        p.score += 1000; sfx.big();
+        setMsg('<b>CHÚC MỪNG!</b> ' + nm + ' được tặng thẳng 1.000 điểm.', 'good');
+        break;
+      case 'zero':
+        p.score = 0; sfx.bad(); loseLives(p, 1); renderAll();
+        if (!p.alive) return void setTimeout(() => afterDeath(p), 900);
+        setMsg('<b>MẤT ĐIỂM.</b> Điểm của ' + nm + ' về 0 và cún mất một mạng, còn ' + p.lives + '.' + TL(), 'bad');
+        return void setTimeout(passTurn, 1400);
+      case 'danger':
+        sfx.fail(); loseLives(p, 1);
+        if (!p.alive) { renderAll(); return void setTimeout(() => afterDeath(p), 900); }
+        setMsg('<b>CÚN GẶP NGUY!</b> Cún của ' + nm + ' mất một mạng, chỉ còn ' + p.lives + '.' + TL(), 'bad');
+        renderAll(); return void setTimeout(passTurn, 1400);
+      case 'bet':
+        S.pending = 400; S.mult = 1; S.betting = false; sfx.click();
+        setMsg('<b>CƯỢC ĐÔI!</b> ' + nm + ' chọn đi: nhận cược thì mỗi chữ đúng được <b>1.200 điểm</b> nhưng sai là cún mất <b>2 mạng</b>; bỏ qua thì ăn <b>400 điểm</b> mỗi chữ như thường.' +
+          '<span class="minis"><button class="mini yes" type="button" data-bet="yes">NHẬN CƯỢC</button><button class="mini" type="button" data-bet="no">BỎ QUA</button></span>', 'gold');
+        S.canSpin = false; renderAll(); return;
+    }
+    S.canSpin = true; renderAll();
+  }
+
+  /* ---------------- đoán chữ cái ---------------- */
+  function guess(L) {
+    if (S.pending == null || S.spinning) return;
+    if (S.used.indexOf(L) >= 0) return;
+    const p = S.players[S.cur];
+    S.used.push(L);
+    const set = letterSet();
+    const pts = S.pending, mult = S.mult, wasBet = S.betting;
+    S.pending = null; S.mult = 1; S.betting = false;
+
+    if (set.has(L)) {
+      S.revealed.push(L);
+      let count = 0;
+      for (const ch of S.answer) if (baseOf(ch) === L) count++;
+      const gain = pts * count * mult;
+      p.score += gain;
+      sfx.good();
+      setMsg('Chính xác! Có <b>' + count + '</b> chữ <b>' + L + '</b> — ' + p.name + ' được <b>' + fmt(gain) + ' điểm</b>.', 'good');
+      renderBoard(L); renderAll();
+      if (isSolved()) return void setTimeout(() => finishRound(p, 0, 'mở hết chữ cái'), 900);
+      S.canSpin = true; updateControls();
+    } else {
+      const cost = wasBet ? 2 : 1;
+      sfx.bad(); loseLives(p, cost);
+      renderAll();
+      if (!p.alive) {
+        setMsg('Không có chữ <b>' + L + '</b> trong ô chữ...', 'bad');
+        return void setTimeout(() => afterDeath(p), 1100);
+      }
+      setMsg('Không có chữ <b>' + L + '</b>. Cún của ' + p.name + ' mất ' + cost + ' mạng, còn ' + p.lives + '.' + TL(), 'bad');
+      setTimeout(passTurn, 1500);
+    }
+  }
+
+  function loseLives(p, n) {
+    if (n <= 0) return;
+    p.lives = Math.max(0, p.lives - n);
+    if (p.lives === 0) p.alive = false;
+    shakeScene();
+    setTimeout(() => sfx.alarm(), 330);
+  }
+
+  function afterDeath(p) {
+    sfx.fail();
+    setMsg('<b>Chụp lưới rồi!</b> Cún của ' + p.name + ' đã bị bắt, ' + p.name + ' dừng cuộc chơi.', 'bad');
+    renderAll();
+    setTimeout(passTurn, 1200);
+  }
+
+  /* ---------------- hộp quà, hộp phạt, thử thách ---------------- */
+  let modalDone = null;
+
+  const GIFTS = [
+    { t: 'Thêm 1.500 điểm',            run: p => { p.score += 1500; return 'được thưởng 1.500 điểm'; } },
+    { t: 'Thêm 800 điểm',              run: p => { p.score += 800;  return 'được thưởng 800 điểm'; } },
+    { t: 'Thêm một trái tim',          run: p => { gainLives(p, 1); return 'được thêm một trái tim'; } },
+    { t: 'Đẩy lùi kẻ bắt cún 2 bước',  run: p => { gainLives(p, 2); return 'đẩy lùi kẻ bắt cún hai bước'; } },
+    { t: 'Mở miễn phí 2 chữ cái',      run: () => { const n = revealRandom(2); return n ? 'được mở miễn phí ' + n + ' chữ cái' : 'được mở chữ nhưng ô chữ đã lộ hết'; } },
+    { t: 'Nhân đôi số điểm',           run: p => { p.score *= 2; return 'được nhân đôi điểm, giờ có ' + fmt(p.score); } },
+    { t: 'Mở 1 chữ cái và thêm 600 điểm', run: p => { revealRandom(1); p.score += 600; return 'được mở một chữ cái và thêm 600 điểm'; } }
+  ];
+
+  const CURSES = [
+    { t: 'Mất một trái tim',      run: p => { loseLives(p, 1); return 'mất một trái tim'; } },
+    { t: 'Mất hai trái tim',      run: p => { loseLives(p, 2); return 'mất luôn hai trái tim'; } },
+    { t: 'Mất nửa số điểm',       run: p => { p.score = Math.floor(p.score / 2); return 'mất nửa số điểm, còn ' + fmt(p.score); } },
+    { t: 'Trừ 1.000 điểm',        run: p => { p.score = Math.max(0, p.score - 1000); return 'bị trừ 1.000 điểm, còn ' + fmt(p.score); } },
+    { t: 'Điểm về 0',             run: p => { p.score = 0; return 'mất sạch điểm'; } },
+    { t: 'Mất một tim và 500 điểm', run: p => { loseLives(p, 1); p.score = Math.max(0, p.score - 500); return 'mất một trái tim và 500 điểm'; } }
+  ];
+
+  function boxPick(lucky) {
+    const p = S.players[S.cur];
+    const items = shuffleArr((lucky ? GIFTS : CURSES).slice()).slice(0, 3);
+    S.canSpin = false; S.pending = null; updateControls();
+
+    openModal(
+      '<h3>' + (lucky ? 'MAY MẮN!' : 'XUI RỒI!') + '</h3>' +
+      '<p id="bpMsg">' + (lucky ? 'Ba phần quà đang mở ra. ' : 'Ba phần phạt đang mở ra. ') +
+      'Nhìn thật kỹ rồi nhớ lấy vị trí nhé!</p>' +
+      '<div class="boxrow" id="bpRow"></div>' +
+      '<div class="btns" id="bpBtns"></div>'
+    );
+
+    const row = $('bpRow');
+    const nodes = items.map((it, i) => {
+      const d = el('button', 'gbox' + (lucky ? '' : ' curse'));
+      d.type = 'button';
+      d.style.setProperty('--slot', i);
+      d.innerHTML = '<span class="face">' + esc(it.t) + '</span><span class="back">?</span>';
+      d.dataset.idx = String(i);
+      row.appendChild(d);
+      return d;
+    });
+
+    let picked = false;
+    function onPick(e) {
+      if (picked) return;
+      picked = true;
+      const n = e.currentTarget;
+      const it = items[+n.dataset.idx];
+      nodes.forEach(x => { x.classList.remove('pickable'); if (x !== n) x.classList.add('dim'); });
+      n.classList.remove('down'); n.classList.add('chosen');
+      setTimeout(() => nodes.forEach(x => x.classList.remove('down')), 550);
+
+      const what = it.run(p);
+      if (lucky) sfx.sparkle(); else sfx.bad();
+      renderAll();
+      $('bpMsg').innerHTML = '<b>' + esc(p.name) + '</b> ' + what + '.';
+      $('bpBtns').innerHTML = '<button class="cta" data-act="done">TIẾP TỤC</button>';
+
+      modalDone = () => {
+        renderAll();
+        if (!p.alive) return afterDeath(p);
+        if (lucky) {
+          if (isSolved()) return finishRound(p, 0, 'mở hết chữ cái');
+          S.canSpin = true; updateControls();
+          setMsg('<b>' + esc(p.name) + '</b> ' + what + '. Quay tiếp nào!', 'good');
+        } else {
+          setMsg('<b>' + esc(p.name) + '</b> ' + what + '.' + TL(), 'bad');
+          setTimeout(passTurn, 800);
+        }
+      };
+    }
+
+    setTimeout(() => {
+      if ($('modal').hidden) return;
+      nodes.forEach(n => n.classList.add('down'));
+      const m = $('bpMsg'); if (m) m.textContent = 'Đang xáo trộn...';
+      let step = 0;
+      const iv = setInterval(() => {
+        if ($('modal').hidden) { clearInterval(iv); return; }
+        const perm = shuffleArr([0, 1, 2]);
+        nodes.forEach((n, i) => n.style.setProperty('--slot', perm[i]));
+        sfx.tick();
+        if (++step >= 5) {
+          clearInterval(iv);
+          const mm = $('bpMsg');
+          if (mm) mm.textContent = lucky ? 'Chọn một hộp để nhận quà!' : 'Chọn một hộp — lần này thì không tránh được đâu.';
+          nodes.forEach(n => { n.classList.add('pickable'); n.addEventListener('click', onPick); });
+        }
+      }, 440);
+    }, 1800);
+  }
+
+  function openChallenge() {
+    const p = S.players[S.cur];
+    S.canSpin = false; S.pending = null; updateControls();
+    const bank = window.QUIZBANK || [];
+    const q = bank.length ? bank[Math.random() * bank.length | 0]
+                          : ['Một tuần có bao nhiêu ngày?', ['Bảy', 'Sáu', 'Tám']];
+    const opts = shuffleArr(q[1].map((t, i) => ({ t: t, ok: i === 0 })));
+
+    openModal(
+      '<h3>THỬ THÁCH!</h3>' +
+      '<p>Trả lời đúng trong <b>15 giây</b>: được <b>1.000 điểm</b>, mở thêm một chữ cái và được quay tiếp. ' +
+      'Sai hoặc hết giờ thì cún mất một trái tim và mất lượt.</p>' +
+      '<div class="qbar"><i id="qzBar"></i></div>' +
+      '<div class="qq">' + esc(q[0]) + '</div>' +
+      '<div class="qopts" id="qzOpts"></div>' +
+      '<div class="btns" id="qzBtns"></div>'
+    );
+
+    const bar = $('qzBar'), box = $('qzOpts');
+    bar.style.transition = 'none'; bar.style.width = '100%';
+    requestAnimationFrame(() => {
+      bar.style.transition = 'width 15s linear';
+      bar.style.width = '0%';
+    });
+
+    let done = false;
+    const to = setTimeout(() => finish(null, null), 15000);
+    sfx.tensionStart();
+
+    const btns = opts.map(o => {
+      const b = el('button', 'qopt', o.t);
+      b.type = 'button';
+      b.addEventListener('click', () => finish(o, b));
+      box.appendChild(b);
+      return b;
+    });
+
+    function finish(o, btn) {
+      if (done) return;
+      done = true;
+      clearTimeout(to);
+      sfx.tensionStop();
+      bar.style.transition = 'none';
+      bar.style.width = getComputedStyle(bar).width;
+      btns.forEach((b, i) => { b.disabled = true; if (opts[i].ok) b.classList.add('right'); });
+      if (btn && !(o && o.ok)) btn.classList.add('wrong');
+
+      const ok = !!(o && o.ok);
+      let msg;
+      if (ok) {
+        p.score += 1000; revealRandom(1); sfx.victory();
+        msg = '<b>Chính xác!</b> ' + esc(p.name) + ' được 1.000 điểm và mở thêm một chữ cái.';
+      } else {
+        loseLives(p, 1); sfx.bad();
+        msg = (o ? '<b>Sai mất rồi.</b>' : '<b>Hết giờ!</b>') + ' Cún của ' + esc(p.name) + ' mất một trái tim.';
+      }
+      renderAll();
+      $('qzBtns').innerHTML = '<button class="cta" data-act="done">TIẾP TỤC</button>';
+
+      modalDone = () => {
+        renderAll();
+        if (!p.alive) return afterDeath(p);
+        if (ok) {
+          if (isSolved()) return finishRound(p, 0, 'mở hết chữ cái');
+          S.canSpin = true; updateControls();
+          setMsg(msg + ' Quay tiếp nào!', 'good');
+        } else {
+          setMsg(msg + TL(), 'bad');
+          setTimeout(passTurn, 800);
+        }
+      };
+    }
+  }
+
+  /* ---------------- đoán đáp án ---------------- */
+  function openSolve() {
+    if (S.spinning || !S.started) return;
+    sfx.tensionStart();
+    const hid = hiddenCount(), bonus = 300 + hid * 150;
+    openModal(
+      '<h3>Đoán đáp án</h3>' +
+      '<div class="qq">' + esc(S.question) + '</div>' +
+      '<p>Ô chữ có <b>' + S.answer.replace(/ /g, '').length + '</b> chữ cái, còn <b>' + hid + '</b> chữ đang ẩn.</p>' +
+      '<input class="guessinput" id="solveInput" placeholder="Nhập đáp án..." autocomplete="off" spellcheck="false">' +
+      '<div class="warn">Đúng thì được thưởng thêm <b>' + fmt(bonus) + ' điểm</b>. Sai thì cún bị bắt ngay và ' + esc(S.players[S.cur].name) + ' mất hẳn lượt chơi.</div>' +
+      '<p style="font-size:12.5px;opacity:.75;margin-bottom:14px">Không cần gõ dấu — nhập không dấu vẫn được tính đúng.</p>' +
+      '<div class="btns"><button class="ghost" data-act="close">Quay lại</button><button class="solve" data-act="confirm">CHỐT ĐÁP ÁN</button></div>'
+    );
+    const inp = $('solveInput');
+    inp.focus();
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doSolve(inp.value); } });
+  }
+
+  function doSolve(text) {
+    const p = S.players[S.cur];
+    const hid = hiddenCount(), bonus = 300 + hid * 150;
+    closeModal();
+    if (loose(text) && loose(text) === loose(S.answer)) {
+      p.score += bonus;
+      S.revealed = [...letterSet()];
+      renderBoard(); renderAll();
+      finishRound(p, bonus, 'đoán đúng đáp án');
+    } else {
+      p.lives = 0; p.alive = false;
+      sfx.dramaticFail(); renderAll();
+      setMsg('<b>Sai rồi!</b> Đáp án đúng là <b>' + esc(S.answer) + '</b>. Cún của ' + p.name + ' bị bắt.', 'bad');
+      setTimeout(passTurn, 1500);
+    }
+  }
+
+  /* ---------------- luân chuyển lượt ---------------- */
+  function passTurn() {
+    const alive = S.players.filter(p => p.alive);
+    if (!alive.length) return void gameOver();
+    let i = S.cur;
+    for (let k = 0; k < S.players.length; k++) {
+      i = (i + 1) % S.players.length;
+      if (S.players[i].alive) break;
+    }
+    S.cur = i;
+    S.pending = null; S.mult = 1; S.betting = false; S.canSpin = true;
+    $('hubText').innerHTML = 'QUAY<br>ĐI!';
+    renderAll();
+    if (S.players.length > 1)
+      setMsg('Đến lượt <b>' + S.players[S.cur].name + '</b>. Bấm QUAY NÓN hoặc đoán thẳng đáp án.', 'gold');
+    else
+      setMsg('Bấm <b>QUAY NÓN</b> để quay tiếp, hoặc đoán thẳng đáp án.', '');
+  }
+
+  function finishRound(winner, bonus, how) {
+    S.solvedCount++;
+    sfx.victory(); confetti();
+    S.revealed = [...letterSet()]; renderBoard(); renderAll();
+    const last = S.round >= S.maxRounds;
+    const body =
+      '<h3>' + esc(winner.name) + ' giải được ô chữ!</h3>' +
+      '<div class="qq">' + esc(S.question) + '</div>' +
+      '<div class="reveal">' + esc(S.answer) + '</div>' +
+      '<p>' + esc(winner.name) + ' ' + how + (bonus ? ' và nhận thêm <b>' + fmt(bonus) + ' điểm thưởng</b>' : '') +
+      '. Tổng điểm hiện tại: <b>' + fmt(winner.score) + '</b>.</p>' +
+      '<p style="font-size:12.5px;opacity:.8">Kẻ bắt cún đành bỏ cuộc — cún con an toàn trong ván này.</p>' +
+      '<div class="btns"><button class="cta" data-act="' + (last ? 'over' : 'next') + '">' + (last ? 'XEM KẾT QUẢ' : 'VÁN TIẾP THEO') + '</button></div>';
+    openModal(body);
+  }
+
+  function nextRound() {
+    closeModal();
+    S.round++;
+    S.players.forEach(p => { if (p.alive) p.lives = Math.min(MAX_LIVES, p.lives + 1); });
+    nextPuzzle();
+    S.canSpin = true;
+    $('hubText').innerHTML = 'QUAY<br>ĐI!';
+    renderAll(); renderBoard();
+    setMsg('<b>Ván ' + S.round + '</b> bắt đầu. Lượt của <b>' + S.players[S.cur].name + '</b>.', 'gold');
+  }
+
+  function gameOver() {
+    const rank = S.players.slice().sort((a, b) => b.score - a.score);
+    let html = '<h3>' + (S.mode === 'solo' ? 'Cún bị bắt mất rồi!' : 'Kết quả chung cuộc') + '</h3>';
+    if (S.mode === 'solo') {
+      html += '<p>Bạn đã giải được <b>' + S.solvedCount + '</b> ô chữ và ghi được <b>' + fmt(S.players[0].score) + '</b> điểm trước khi cún bị chụp lưới.</p>';
+      html += '<div class="qq">' + esc(S.question) + '</div>';
+      html += '<div class="reveal">' + esc(S.answer) + '</div>';
+      html += '<p style="font-size:13px">Đó là đáp án của ô chữ cuối cùng.</p>';
+    } else {
+      html += '<div class="rank">' + rank.map((p, i) =>
+        '<div class="' + (i === 0 ? 'first' : '') + '"><span class="pos">' + (i + 1) + '</span><span>' + esc(p.name) +
+        (p.alive ? '' : ' <small style="opacity:.6">(cún bị bắt)</small>') + '</span><span class="pts">' + fmt(p.score) + '</span></div>'
+      ).join('') + '</div>';
+      html += '<p><b>' + esc(rank[0].name) + '</b> giành chiến thắng chung cuộc!</p>';
+    }
+    html += '<div class="btns"><button class="cta" data-act="restart">CHƠI LẠI</button></div>';
+    openModal(html);
+    if (S.mode === 'solo') sfx.dramaticFail(); else { sfx.victory(); confetti(); }
+  }
+
+  /* ---------------- hiển thị ---------------- */
+  const multi = () => S.players.length > 1;
+  const TL = () => multi() ? ' Mất lượt.' : '';
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function setMsg(html, kind) { const m = $('msg'); m.innerHTML = html; m.className = 'msgline' + (kind ? ' ' + kind : ''); }
+
+  function renderBoard(justLetter) {
+    const board = $('board'); board.innerHTML = '';
+    S.answer.split(' ').forEach(word => {
+      const w = el('div', 'word');
+      for (const ch of word) {
+        const b = baseOf(ch);
+        const t = el('div', 'tile');
+        if (!b) { t.textContent = ch; }
+        else if (S.revealed.indexOf(b) >= 0) { t.textContent = ch; if (justLetter && b === justLetter) t.classList.add('just'); }
+        else { t.classList.add('blank'); t.textContent = '•'; }
+        w.appendChild(t);
+      }
+      board.appendChild(w);
+    });
+    fitBoard();
+    renderQuestion();
+    $('chipRound').textContent = S.mode === 'solo' ? 'Ô chữ số ' + S.round : 'Ván ' + S.round + '/' + S.maxRounds;
+    $('chipLen').textContent = S.answer.replace(/ /g, '').length + ' chữ cái';
+  }
+
+  function fitBoard() {
+    const board = $('board');
+    const avail = Math.max(180, board.clientWidth - 30);
+    const words = S.answer.split(' ');
+    const longest = Math.max(1, ...words.map(w => w.length));
+    const total = S.answer.replace(/ /g, '').length;
+    let t = Math.floor((avail - 5 * (longest - 1)) / longest);
+    const rows = Math.ceil(total / Math.max(1, Math.floor(avail / (t + 5))));
+    const perRow = Math.max(1, Math.floor(avail / 30));
+    if (total > perRow * 4) t = Math.min(t, 26);
+    t = Math.max(15, Math.min(rows <= 1 ? 52 : 42, t));
+    board.style.setProperty('--t', t + 'px');
+  }
+  let rzT = null;
+  window.addEventListener('resize', () => { clearTimeout(rzT); rzT = setTimeout(() => { if (S.started) fitBoard(); }, 150); });
+
+  function renderQuestion() {
+    $('qtext').textContent = S.question;
+  }
+
+  function renderScene() {
+    const p = S.players[S.cur]; if (!p) return;
+    $('scene').dataset.danger = String(Math.max(0, Math.min(5, START_LIVES - p.lives)));
+    $('hudName').textContent = p.name;
+    $('hudScore').textContent = fmt(p.score);
+
+    const hb = $('hudHearts'); hb.innerHTML = '';
+    for (let k = 0; k < START_LIVES; k++) hb.appendChild(heart(k >= p.lives));
+    if (p.lives > START_LIVES) {
+      const s = el('span', 'plus', '+' + (p.lives - START_LIVES));
+      hb.appendChild(s);
+    }
+
+    const rv = $('hudRivals'); rv.innerHTML = '';
+    if (multi()) S.players.forEach((q, i) => {
+      if (i === S.cur) return;
+      const d = el('div', 'rival' + (q.alive ? '' : ' out'));
+      d.appendChild(document.createTextNode(q.name));
+      d.appendChild(heart(false));
+      d.appendChild(document.createTextNode(String(q.lives)));
+      const bb = el('b', null, fmt(q.score));
+      d.appendChild(bb);
+      rv.appendChild(d);
+    });
+  }
+
+  function heart(off) {
+    const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const u = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    u.setAttribute('href', '#ic-heart'); s.appendChild(u);
+    if (off) s.setAttribute('class', 'off');
+    return s;
+  }
+
+  function shakeScene() {
+    const sc = $('scene');
+    sc.classList.remove('hit');
+    void sc.offsetWidth;
+    sc.classList.add('hit');
+    setTimeout(() => sc.classList.remove('hit'), 520);
+  }
+
+  function renderKeys() {
+    const box = $('keys');
+    if (!box.childElementCount) {
+      ALPHABET.forEach(L => {
+        const b = el('button', 'key', L);
+        b.dataset.letter = L; b.type = 'button';
+        b.addEventListener('click', () => { audioInit(); guess(L); });
+        box.appendChild(b);
+      });
+    }
+    const set = letterSet(), open = S.pending != null && !S.spinning;
+    [...box.children].forEach(b => {
+      const L = b.dataset.letter;
+      const used = S.used.indexOf(L) >= 0;
+      b.className = 'key' + (used ? (set.has(L) ? ' hit' : ' miss') : (open ? '' : ' locked'));
+      b.disabled = used || !open;
+    });
+  }
+
+  function updateControls() {
+    $('btnSpin').disabled = !S.canSpin || S.spinning || !S.started;
+    $('btnSolve').disabled = S.spinning || !S.started;
+    $('btnSpin').textContent = S.spinning ? 'ĐANG QUAY...' : (S.pending != null ? 'CHỌN CHỮ CÁI' : 'QUAY NÓN');
+    renderKeys();
+  }
+
+  function renderAll() { renderScene(); updateControls(); }
+
+  /* ---------------- modal ---------------- */
+  function openModal(html) { $('sheet').innerHTML = html; $('modal').hidden = false; }
+  function closeModal() { sfx.tensionStop(); $('modal').hidden = true; $('sheet').innerHTML = ''; }
+
+  $('msg').addEventListener('click', e => {
+    const b = e.target.closest('[data-bet]');
+    if (!b || S.pending == null) return;
+    audioInit(); sfx.click();
+    if (b.dataset.bet === 'yes') {
+      S.mult = 3; S.betting = true;
+      setMsg('<b>Đã nhận cược!</b> Mỗi chữ cái đúng được <b>1.200 điểm</b>, nhưng đoán sai là cún mất <b>2 mạng</b>. Chọn chữ cái đi!', 'gold');
+    } else {
+      S.mult = 1; S.betting = false;
+      setMsg('Bỏ qua cược. Mỗi chữ cái đúng được <b>400 điểm</b> — chọn chữ cái nào!', 'gold');
+    }
+  });
+
+  $('modal').addEventListener('click', e => {
+    const act = e.target.closest('[data-act]');
+    if (!act) { if (e.target.id === 'modal') { /* giữ modal */ } return; }
+    audioInit();
+    const a = act.dataset.act;
+    if (a === 'close') closeModal();
+    else if (a === 'confirm') doSolve(($('solveInput') || {}).value || '');
+    else if (a === 'next') nextRound();
+    else if (a === 'over') { closeModal(); gameOver(); }
+    else if (a === 'restart') { closeModal(); toStart(); }
+    else if (a === 'exit') { closeModal(); toStart(); }
+    else if (a === 'done') { closeModal(); const f = modalDone; modalDone = null; if (f) f(); }
+  });
+
+  const RULES =
+    '<h3>Luật chơi</h3>' +
+    '<ul>' +
+    '<li>Mỗi ván có một <b>câu hỏi hiện sẵn</b> phía trên ô chữ. Đáp án của câu hỏi chính là ô chữ phải mở.</li>' +
+    '<li>Quay nón rồi chọn một chữ cái. Mỗi chữ cái xuất hiện trong ô chữ được cộng đúng số điểm vừa quay.</li>' +
+    '<li>Bảng chữ cái phân biệt rõ <b>A — Ă — Â</b>, <b>E — Ê</b>, <b>O — Ô — Ơ</b>, <b>U — Ư</b> và <b>D — Đ</b>. Chọn đúng nguyên âm sẽ mở mọi dấu thanh của nguyên âm đó.</li>' +
+    '<li>Mỗi người có <b>5 mạng</b>, hiện thành 5 trái tim trên khung cún. Đoán sai chữ cái, hoặc quay vào ô phạt <b>MẤT LƯỢT</b>, <b>MẤT ĐIỂM</b>, <b>CÚN GẶP NGUY</b>, <b>XUI RỒI</b>, <b>THỬ THÁCH</b> hỏng đều mất tim.</li>' +
+    '<li>Càng ít mạng thì kẻ bắt cún càng tiến sát và cún càng hoảng sợ. Hết 5 mạng là cún bị chụp lưới.</li>' +
+    '<li><b>ĐOÁN ĐÁP ÁN</b> dùng được bất cứ lúc nào. Càng nhiều chữ còn ẩn thì thưởng càng lớn, nhưng sai là cún bị bắt ngay.</li>' +
+    '</ul>' +
+    '<h3 style="font-size:19px;margin-top:4px">Các ô trên vòng quay</h3>' +
+    '<ul>' +
+    '<li><b>Điểm</b> — từ 200 đến 1.000 cho mỗi chữ cái đoán đúng.</li>' +
+    '<li><b>MẤT LƯỢT</b> — mất một mạng và nhường nón cho người kế tiếp.</li>' +
+    '<li><b>GẤP ĐÔI</b> / <b>CHIA ĐÔI</b> — điểm hiện có nhân đôi hoặc chia đôi.</li>' +
+    '<li><b>THÊM MẠNG</b> và <b>CỨU TRỢ</b> — được thêm một trái tim, kẻ bắt cún lùi lại một bước.</li>' +
+    '<li><b>MAY MẮN</b> — ba phần quà hiện ra cho bạn xem, rồi úp xuống và xáo trộn. Bạn chọn một hộp để nhận quà, xong vẫn được quay tiếp.</li>' +
+    '<li><b>XUI RỒI</b> — y hệt MAY MẮN nhưng là ba phần phạt. Chọn xong thì mất lượt.</li>' +
+    '<li><b>THỬ THÁCH</b> — một câu đố phụ có ba lựa chọn, giới hạn 15 giây. Đúng thì được 1.000 điểm, mở thêm một chữ cái và quay tiếp; sai hoặc hết giờ thì mất một trái tim và mất lượt.</li>' +
+    '<li><b>CHÚC MỪNG</b> — tặng thẳng 1.000 điểm.</li>' +
+    '<li><b>MẤT ĐIỂM</b> — điểm về 0, mất một mạng và mất lượt.</li>' +
+    '<li><b>CÚN GẶP NGUY</b> — mất ngay một mạng và mất lượt.</li>' +
+    '<li><b>CƯỢC ĐÔI</b> — bạn tự chọn: nhận cược thì đúng được gấp ba điểm, sai mất hai mạng; bỏ qua thì ăn điểm như thường.</li>' +
+    '</ul>' +
+    '<div class="btns"><button class="cta" data-act="close">ĐÃ HIỂU</button></div>';
+
+  /* ---------------- màn hình bắt đầu ---------------- */
+  function buildNameFields() {
+    const n = S.mode === 'solo' ? 1 : parseInt($('numPlayers').value, 10);
+    const box = $('nameFields');
+    const old = [...box.querySelectorAll('input')].map(i => i.value);
+    box.innerHTML = '';
+    for (let i = 0; i < n; i++) {
+      const f = el('div', 'field');
+      const lab = el('label', null, n === 1 ? 'Tên của bạn' : 'Người chơi ' + (i + 1));
+      lab.setAttribute('for', 'pn' + i);
+      const inp = el('input');
+      inp.id = 'pn' + i; inp.maxLength = 14; inp.autocomplete = 'off';
+      inp.placeholder = n === 1 ? 'Bạn' : 'Người chơi ' + (i + 1);
+      inp.value = old[i] || '';
+      f.append(lab, inp); box.appendChild(f);
+    }
+  }
+
+  function setMode(m) {
+    S.mode = m;
+    $('modeSolo').setAttribute('aria-pressed', m === 'solo');
+    $('modeParty').setAttribute('aria-pressed', m === 'party');
+    $('partyOpts').hidden = m !== 'party';
+    buildNameFields();
+  }
+
+  function startGame() {
+    audioInit();
+    const inputs = [...$('nameFields').querySelectorAll('input')];
+    S.players = inputs.map((inp, i) => ({
+      name: (inp.value || '').trim().slice(0, 14) || (inputs.length === 1 ? 'Bạn' : 'Người chơi ' + (i + 1)),
+      score: 0, lives: START_LIVES, alive: true
+    }));
+    S.maxRounds = S.mode === 'solo' ? Infinity : parseInt($('numRounds').value, 10);
+    S.cur = 0; S.round = 1; S.solvedCount = 0; S.pool = freshPool();
+    S.started = true; S.canSpin = true;
+    nextPuzzle();
+    $('screenStart').hidden = true;
+    $('screenGame').hidden = false;
+    $('btnExit').hidden = false;
+    $('hubText').innerHTML = 'QUAY<br>ĐI!';
+    renderBoard(); renderAll();
+    setMsg(S.players.length > 1
+      ? 'Đọc câu hỏi phía trên đi. Lượt đầu tiên thuộc về <b>' + S.players[0].name + '</b>.'
+      : 'Đọc câu hỏi phía trên, rồi bấm <b>QUAY NÓN</b> để bắt đầu giải cứu cún con.', 'gold');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toStart() {
+    S.started = false;
+    modalDone = null;
+    sfx.tensionStop();
+    $('btnExit').hidden = true;
+    $('screenGame').hidden = true;
+    $('screenStart').hidden = false;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ---------------- gắn sự kiện ---------------- */
+  $('modeSolo').addEventListener('click', () => { audioInit(); setMode('solo'); });
+  $('modeParty').addEventListener('click', () => { audioInit(); setMode('party'); });
+  $('numPlayers').addEventListener('change', buildNameFields);
+  $('btnStart').addEventListener('click', startGame);
+  $('btnSpin').addEventListener('click', spin);
+  $('btnSolve').addEventListener('click', () => { audioInit(); openSolve(); });
+  $('btnRules').addEventListener('click', () => { audioInit(); openModal(RULES); });
+  $('btnMusic').addEventListener('click', () => setMusic(!A.on));
+  $('btnExit').addEventListener('click', () => {
+    audioInit(); sfx.click();
+    openModal(
+      '<h3>Thoát ván đang chơi?</h3>' +
+      '<p>Toàn bộ điểm và số tim của ván này sẽ mất, bạn sẽ quay về màn hình chọn cách chơi.</p>' +
+      '<div class="btns"><button class="ghost" data-act="close">CHƠI TIẾP</button>' +
+      '<button class="cta" data-act="exit">THOÁT RA</button></div>'
+    );
+  });
+
+  document.addEventListener('keydown', e => {
+    const tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+    if (!S.started || !$('modal').hidden) return;
+    if (e.key === 'Enter' || e.key === ' ') {
+      if (!$('btnSpin').disabled) { e.preventDefault(); spin(); }
+      return;
+    }
+    const ch = (e.key || '').toUpperCase();
+    if (ch.length !== 1) return;
+    const b = baseOf(ch);
+    if (b && S.pending != null && S.used.indexOf(b) < 0) { e.preventDefault(); guess(b); }
+  });
+
+  /* ---------------- khởi động ---------------- */
+  function boot(data) {
+    setMode('solo');
+    buildNameFields();
+    drawWheel(-Math.PI / 2);
+    startBlink();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawWheel(S.angle));
+    try {
+      if (data && data.v === 1 && data.S) {
+        Object.assign(S, data.S);
+        if (S.started) {
+          $('screenStart').hidden = true; $('screenGame').hidden = false; $('btnExit').hidden = false;
+          S.spinning = false; renderBoard(); renderAll();
+          setMsg('Ván chơi được khôi phục. Bấm <b>QUAY NÓN</b> để tiếp tục.', 'gold');
+        }
+      }
+    } catch (err) { /* bắt đầu ván mới */ }
+  }
+  boot({});
+})();
+</script>
+</body>
+</html>

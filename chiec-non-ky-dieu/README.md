@@ -8,9 +8,19 @@ phải mở. Bên cạnh vòng quay là **cảnh cún con đang bị vây bắt*
 dưới đếm số mạng còn lại, và cứ mất một tim là kẻ bắt cún lại tiến sát thêm một bước,
 trời tối thêm một mức, cún run và hoảng sợ hơn. Hết 5 tim là cún bị chụp lưới.
 
-Mất một tim khi: đoán sai chữ cái, hoặc quay trúng **MẤT LƯỢT**, **MẤT ĐIỂM**,
-**CÚN GẶP NGUY**, bốc trúng hộp phạt ở **XUI RỒI**, hoặc trả lời hỏng ô **THỬ THÁCH**.
-Riêng **CƯỢC ĐÔI** nếu nhận cược mà sai thì mất hai tim.
+Mất một tim khi: đoán sai chữ cái, hoặc quay trúng **MẤT LƯỢT**, **CÚN GẶP NGUY**,
+bốc trúng hộp phạt ở **XUI RỒI**, hoặc trả lời hỏng ô **THỬ THÁCH**.
+Riêng **CƯỢC ĐÔI** nếu nhận cược mà sai thì mất hai tim. Ô **MẤT ĐIỂM** chỉ trừ điểm,
+không trừ tim.
+
+**Quay vào ô nào cũng được đoán một chữ cái**, miễn là cún còn tim. Thưởng phạt của ô
+áp dụng trước, xong mới tới lượt đoán chữ — mấy ô không có số điểm riêng thì tính
+`SPECIAL_PTS` (mặc định 300) cho mỗi chữ đúng. Ngoại lệ duy nhất là ô **MẤT LƯỢT**:
+ô đó mất lượt thật, nhường nón cho người kế tiếp luôn.
+
+Đoán thẳng đáp án thì càng nhiều chữ còn ẩn càng thưởng cao. Liều nhất là **đoán mù**,
+tức chốt đáp án khi chưa mở một chữ cái nào: trúng thì ngoài điểm thưởng còn được
+**thêm một trái tim**. Đã mở chữ rồi mới đoán thì chỉ được điểm.
 
 Đang chơi dở muốn bỏ ngang thì bấm **Thoát ván** ở góc trên bên phải để quay về
 màn hình chọn cách chơi.
@@ -91,7 +101,7 @@ const SEGS = [
 Các loại `t` đang có: `pts` (điểm), `lose` (mất lượt, mất một tim),
 `double` (gấp đôi), `half` (chia đôi), `life` (thêm một tim),
 `lucky` (ba hộp quà), `unlucky` (ba hộp phạt), `quiz` (câu đố phụ THỬ THÁCH),
-`gift` (tặng 1000 điểm), `zero` (điểm về 0 và mất một tim),
+`gift` (tặng 1000 điểm), `zero` (tụt điểm xuống mốc liền dưới, không mất tim),
 `danger` (mất ngay một tim), `bet` (cược đôi — người chơi tự chọn nhận hay bỏ).
 
 - Đổi số điểm: sửa `v`.
@@ -100,7 +110,29 @@ Các loại `t` đang có: `pts` (điểm), `lose` (mất lượt, mất một t
 - Đổi màu ô: sửa bảng `COLORS` ngay bên dưới `SEGS`. Mỗi loại là một cặp
   `['màu nền', 'màu chữ']`.
 - Muốn thêm một loại ô hoàn toàn mới: thêm vào `SEGS`, thêm màu vào `COLORS`,
-  rồi thêm một nhánh `case` trong hàm `land()`.
+  rồi thêm một nhánh `case` trong hàm `land()`. Cuối nhánh nhớ gọi
+  `askLetter(p, SPECIAL_PTS, 'lời nhắn', 'good' hoặc 'bad')` để người chơi được
+  đoán chữ tiếp — trừ khi bạn cố ý muốn ô đó mất lượt như `case 'lose'`.
+
+### Điểm mỗi chữ cái sau ô thưởng/phạt — `game.js`
+
+```js
+const SPECIAL_PTS = 300;
+```
+
+Mấy ô đặc biệt (GẤP ĐÔI, MAY MẮN, THỬ THÁCH...) không có số điểm riêng, nên chữ cái
+đoán được ngay sau đó tính theo con số này. Muốn mấy ô đó "ngon" hơn thì tăng lên.
+
+### Mốc điểm của ô MẤT ĐIỂM — `game.js`
+
+```js
+const MILESTONES = ... // 0, 1.000, 2.000, 5.000, 10.000, 20.000, 50.000, ...
+```
+
+Ô MẤT ĐIỂM kéo điểm tụt xuống mốc **nhỏ hơn hẳn** điểm đang có: 12.400 thành 10.000,
+đúng 5.000 chẵn thì tụt xuống 2.000. Muốn dãy mốc khác thì sửa vòng lặp dựng
+`MILESTONES`, hoặc thay hẳn bằng một mảng viết tay — hàm `dropToMilestone()`
+không cần sửa gì.
 
 ### Số mạng của cún — `game.js`
 
@@ -122,6 +154,11 @@ const MAX_LIVES = 8, START_LIVES = 5;
 Tìm chuỗi `300 + hid * 150` (xuất hiện ở hai hàm `openSolve` và `doSolve`).
 `hid` là số chữ cái còn đang ẩn, nên đoán càng sớm thưởng càng cao.
 Sửa cả hai chỗ cho khớp nhau.
+
+Ngay cạnh đó là biến `blind = S.revealed.length === 0` — đúng khi chưa mở chữ cái nào.
+Trong `doSolve`, `if (blind) gainLives(p, 1);` là chỗ cộng thêm trái tim cho cú đoán mù.
+Muốn thưởng đậm hơn thì đổi số 1, muốn bỏ hẳn thì xóa dòng đó (nhớ sửa luôn câu chữ
+trong `openSolve` cho khớp).
 
 ### Màu sắc và phông chữ — `index.html`
 

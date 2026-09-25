@@ -134,6 +134,13 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 }
 .cta:hover{filter:brightness(1.06)}
 .cta:active{transform:translateY(4px);box-shadow:0 3px 0 #8E5711,0 8px 16px rgba(0,0,0,.4)}
+/* Nhấp nháy nhẹ để người chơi biết bấm được ngay, không phải ngồi chờ pháo giấy bay hết */
+.modal .cta{animation:ctaPulse 1.6s ease-in-out .35s infinite}
+.modal .cta:hover,.modal .cta:active{animation:none}
+@keyframes ctaPulse{
+  0%,100%{box-shadow:0 7px 0 #8E5711, 0 16px 30px rgba(0,0,0,.42), 0 0 0 0 rgba(255,209,102,.5)}
+  50%    {box-shadow:0 7px 0 #8E5711, 0 16px 30px rgba(0,0,0,.42), 0 0 0 11px rgba(255,209,102,0)}
+}
 
 /* ---------- arena ---------- */
 .arena{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:16px;align-items:start;
@@ -430,9 +437,6 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .foot{margin-top:26px;text-align:center;font-size:12px;color:var(--cream-dim);opacity:.6;line-height:1.7}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
-</head>
-<body>
-
 
 <div class="beams"></div>
 <div class="vignette"></div>

@@ -329,7 +329,17 @@
     pool: [], solvedCount: 0, angle: 0
   };
   const MAX_LIVES = 8, START_LIVES = 5;
-  const SCORE_STEP = 5000;   // mốc điểm mà ô MẤT ĐIỂM kéo tụt xuống
+  /* Các mốc điểm mà ô MẤT ĐIỂM kéo tụt xuống: 0, 1k, 2k, 5k, 10k, 20k, 50k... */
+  const MILESTONES = (() => {
+    const a = [0];
+    for (let e = 3; e <= 8; e++) for (const m of [1, 2, 5]) a.push(m * Math.pow(10, e));
+    return a;
+  })();
+  /* Luôn tụt xuống mốc NHỎ HƠN hẳn điểm hiện tại, để lần nào cũng là phạt thật */
+  const dropToMilestone = score => {
+    for (let i = MILESTONES.length - 1; i >= 0; i--) if (MILESTONES[i] < score) return MILESTONES[i];
+    return 0;
+  };
 
   /* ---------------- ngân hàng câu hỏi ---------------- */
   function freshPool() {
@@ -371,26 +381,31 @@
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     const cols = ['#FFD166', '#FF5B41', '#3ECFAE', '#A981FF', '#FFF4DC', '#5FB0FF'];
     const P = [];
-    for (let i = 0; i < 160; i++) P.push({
-      x: Math.random() * W, y: -20 - Math.random() * H * 0.5,
-      vx: (Math.random() - 0.5) * 2.6, vy: 2 + Math.random() * 3.6,
+    /* Cố tình để ngắn: bảng kết quả nằm dưới lớp pháo giấy này, mưa lâu quá
+       thì người chơi tưởng phải ngồi chờ mới bấm được nút. */
+    for (let i = 0; i < 100; i++) P.push({
+      x: Math.random() * W, y: -18 - Math.random() * 240,
+      vx: (Math.random() - 0.5) * 3.4, vy: 6 + Math.random() * 5,
       w: 5 + Math.random() * 7, h: 8 + Math.random() * 10,
-      r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.26,
+      r: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
       col: cols[i % cols.length]
     });
-    let last = performance.now();
+    const T0 = performance.now(), LIFE = 2200;
+    let last = T0;
     (function frame(t) {
       const dt = Math.min(34, t - last); last = t;
+      const age = t - T0;
       c.clearRect(0, 0, W, H);
-      let alive = 0;
+      if (age >= LIFE) return;
+      c.globalAlpha = age > LIFE - 500 ? Math.max(0, (LIFE - age) / 500) : 1;
       for (const p of P) {
-        p.x += p.vx * dt / 16; p.y += p.vy * dt / 16; p.r += p.vr; p.vy += 0.022;
-        if (p.y < H + 40) alive++;
+        p.x += p.vx * dt / 16; p.y += p.vy * dt / 16; p.r += p.vr; p.vy += 0.05;
         c.save(); c.translate(p.x, p.y); c.rotate(p.r);
         c.fillStyle = p.col; c.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); c.restore();
       }
-      if (alive) requestAnimationFrame(frame); else c.clearRect(0, 0, W, H);
-    })(last);
+      c.globalAlpha = 1;
+      requestAnimationFrame(frame);
+    })(T0);
   }
 
   const letterSet = () => {
@@ -486,6 +501,18 @@
   }
 
   /* ---------------- kết quả ô quay ---------------- */
+  /* Điểm mỗi chữ cái khi vừa ăn một ô thưởng/phạt (mấy ô đó không có số điểm riêng) */
+  const SPECIAL_PTS = 300;
+
+  /* Ăn xong hiệu ứng của ô là được đoán luôn một chữ cái, không phải quay lại từ đầu.
+     MẤT LƯỢT là ngoại lệ duy nhất, vì mất lượt chính là bản chất của ô đó. */
+  function askLetter(p, value, msg, kind) {
+    S.pending = value; S.mult = 1; S.betting = false; S.canSpin = false;
+    $('hubText').innerHTML = fmt(value);
+    renderAll();
+    setMsg(msg + ' Giờ chọn một chữ cái — mỗi chữ đúng được <b>' + fmt(value) + ' điểm</b>.', kind || 'gold');
+  }
+
   function land(seg) {
     const p = S.players[S.cur];
     const nm = p.name;
@@ -506,16 +533,16 @@
         return void setTimeout(passTurn, 1400);
       case 'double':
         p.score *= 2; sfx.big();
-        setMsg('<b>GẤP ĐÔI!</b> Điểm của ' + nm + ' nhân đôi thành ' + fmt(p.score) + '. Quay tiếp nào!', 'good');
-        break;
+        return void askLetter(p, SPECIAL_PTS,
+          '<b>GẤP ĐÔI!</b> Điểm của ' + nm + ' nhân đôi thành ' + fmt(p.score) + '.', 'good');
       case 'half':
         p.score = Math.floor(p.score / 2); sfx.bad();
-        setMsg('<b>CHIA ĐÔI.</b> Điểm của ' + nm + ' còn ' + fmt(p.score) + '. Vẫn được quay tiếp.', 'bad');
-        break;
+        return void askLetter(p, SPECIAL_PTS,
+          '<b>CHIA ĐÔI.</b> Điểm của ' + nm + ' còn ' + fmt(p.score) + '.', 'bad');
       case 'life':
         gainLives(p, 1); sfx.life();
-        setMsg('<b>THÊM MẠNG!</b> Cún của ' + nm + ' được tiếp sức, hiện còn ' + p.lives + ' mạng.', 'good');
-        break;
+        return void askLetter(p, SPECIAL_PTS,
+          '<b>THÊM MẠNG!</b> Cún của ' + nm + ' được tiếp sức, hiện còn ' + p.lives + ' mạng.', 'good');
       case 'lucky':
         sfx.sparkle(); return void boxPick(true);
       case 'quiz':
@@ -524,27 +551,23 @@
         sfx.bad(); return void boxPick(false);
       case 'gift':
         p.score += 1000; sfx.big();
-        setMsg('<b>CHÚC MỪNG!</b> ' + nm + ' được tặng thẳng 1.000 điểm.', 'good');
-        break;
+        return void askLetter(p, SPECIAL_PTS, '<b>CHÚC MỪNG!</b> ' + nm + ' được tặng thẳng 1.000 điểm.', 'good');
       case 'zero': {
-        /* Không xoá sạch điểm nữa: tụt xuống mốc 5.000 liền dưới.
-           Đang đúng mốc thì tụt thêm một bậc, để lần nào cũng là phạt thật. */
+        /* Không xoá sạch điểm nữa: tụt xuống mốc gần nhất bên dưới (0, 1k, 2k, 5k, 10k...) */
         const before = p.score;
-        let after = Math.floor(before / SCORE_STEP) * SCORE_STEP;
-        if (after === before) after = Math.max(0, before - SCORE_STEP);
+        const after = dropToMilestone(before);
         p.score = after;
         sfx.bad();
-        setMsg(before === after
-          ? '<b>MẤT ĐIỂM.</b> ' + nm + ' chưa có điểm nào để mất. Quay tiếp nào!'
+        return void askLetter(p, SPECIAL_PTS, before === after
+          ? '<b>MẤT ĐIỂM.</b> ' + nm + ' chưa có điểm nào để mất.'
           : '<b>MẤT ĐIỂM.</b> Điểm của ' + nm + ' tụt từ ' + fmt(before) + ' xuống mốc <b>' +
-            fmt(after) + '</b>, mất ' + fmt(before - after) + ' điểm. Vẫn được quay tiếp.', 'bad');
-        break;
+            fmt(after) + '</b>, mất ' + fmt(before - after) + ' điểm.', 'bad');
       }
       case 'danger':
         sfx.fail(); loseLives(p, 1);
         if (!p.alive) { renderAll(); return void setTimeout(() => afterDeath(p), 900); }
-        setMsg('<b>CÚN GẶP NGUY!</b> Cún của ' + nm + ' mất một mạng, chỉ còn ' + p.lives + '.' + TL(), 'bad');
-        renderAll(); return void setTimeout(passTurn, 1400);
+        return void askLetter(p, SPECIAL_PTS,
+          '<b>CÚN GẶP NGUY!</b> Cún của ' + nm + ' mất một mạng, chỉ còn ' + p.lives + '.', 'bad');
       case 'bet':
         S.pending = 400; S.mult = 1; S.betting = false; sfx.click();
         setMsg('<b>CƯỢC ĐÔI!</b> ' + nm + ' chọn đi: nhận cược thì mỗi chữ đúng được <b>1.200 điểm</b> nhưng sai là cún mất <b>2 mạng</b>; bỏ qua thì ăn <b>400 điểm</b> mỗi chữ như thường.' +
@@ -736,14 +759,8 @@
       modalDone = () => {
         renderAll();
         if (!p.alive) return afterDeath(p);
-        if (lucky) {
-          if (isSolved()) return finishRound(p, 0, 'mở hết chữ cái');
-          S.canSpin = true; updateControls();
-          setMsg('<b>' + esc(p.name) + '</b> ' + what + '. Quay tiếp nào!', 'good');
-        } else {
-          setMsg('<b>' + esc(p.name) + '</b> ' + what + '.' + TL(), 'bad');
-          setTimeout(passTurn, 800);
-        }
+        if (isSolved()) return finishRound(p, 0, 'mở hết chữ cái');
+        askLetter(p, SPECIAL_PTS, '<b>' + esc(p.name) + '</b> ' + what + '.', lucky ? 'good' : 'bad');
       };
     }
 
@@ -777,8 +794,8 @@
 
     openModal(
       '<h3>THỬ THÁCH!</h3>' +
-      '<p>Trả lời đúng trong <b>15 giây</b>: được <b>1.000 điểm</b>, mở thêm một chữ cái và được quay tiếp. ' +
-      'Sai hoặc hết giờ thì cún mất một trái tim và mất lượt.</p>' +
+      '<p>Trả lời đúng trong <b>15 giây</b>: được <b>1.000 điểm</b> và mở thêm một chữ cái. ' +
+      'Sai hoặc hết giờ thì cún mất một trái tim. Kiểu gì xong cũng được đoán tiếp một chữ.</p>' +
       '<div class="qbar"><i id="qzBar"></i></div>' +
       '<div class="qq">' + esc(q[0]) + '</div>' +
       '<div class="qopts" id="qzOpts"></div>' +
@@ -829,14 +846,8 @@
       modalDone = () => {
         renderAll();
         if (!p.alive) return afterDeath(p);
-        if (ok) {
-          if (isSolved()) return finishRound(p, 0, 'mở hết chữ cái');
-          S.canSpin = true; updateControls();
-          setMsg(msg + ' Quay tiếp nào!', 'good');
-        } else {
-          setMsg(msg + TL(), 'bad');
-          setTimeout(passTurn, 800);
-        }
+        if (isSolved()) return finishRound(p, 0, 'mở hết chữ cái');
+        askLetter(p, SPECIAL_PTS, msg, ok ? 'good' : 'bad');
       };
     }
   }
@@ -845,13 +856,15 @@
   function openSolve() {
     if (S.spinning || !S.started) return;
     sfx.tensionStart();
-    const hid = hiddenCount(), bonus = 300 + hid * 150;
+    const hid = hiddenCount(), blind = S.revealed.length === 0, bonus = 300 + hid * 150;
     openModal(
       '<h3>Đoán đáp án</h3>' +
       '<div class="qq">' + esc(S.question) + '</div>' +
       '<p>Ô chữ có <b>' + S.answer.replace(/ /g, '').length + '</b> chữ cái, còn <b>' + hid + '</b> chữ đang ẩn.</p>' +
       '<input class="guessinput" id="solveInput" placeholder="Nhập đáp án..." autocomplete="off" spellcheck="false">' +
-      '<div class="warn">Đúng thì được thưởng thêm <b>' + fmt(bonus) + ' điểm</b>. Sai thì cún bị bắt ngay và ' + esc(S.players[S.cur].name) + ' mất hẳn lượt chơi.</div>' +
+      '<div class="warn">Đúng thì được thưởng thêm <b>' + fmt(bonus) + ' điểm</b>' +
+        (blind ? ' <b>và một trái tim</b>, vì chưa mở chữ cái nào' : ' (đã mở chữ rồi nên không được thêm trái tim)') +
+        '. Sai thì cún bị bắt ngay và ' + esc(S.players[S.cur].name) + ' mất hẳn lượt chơi.</div>' +
       '<p style="font-size:12.5px;opacity:.75;margin-bottom:14px">Không cần gõ dấu — nhập không dấu vẫn được tính đúng.</p>' +
       '<div class="btns"><button class="ghost" data-act="close">Quay lại</button><button class="solve" data-act="confirm">CHỐT ĐÁP ÁN</button></div>'
     );
@@ -862,13 +875,16 @@
 
   function doSolve(text) {
     const p = S.players[S.cur];
-    const hid = hiddenCount(), bonus = 300 + hid * 150;
+    const hid = hiddenCount(), blind = S.revealed.length === 0, bonus = 300 + hid * 150;
     closeModal();
     if (loose(text) && loose(text) === loose(S.answer)) {
       p.score += bonus;
+      /* Chỉ đoán mù, chưa mở chữ nào, mới được thêm trái tim */
+      if (blind) gainLives(p, 1);
       S.revealed = [...letterSet()];
       renderBoard(); renderAll();
-      finishRound(p, bonus, 'đoán đúng đáp án');
+      finishRound(p, bonus, blind ? 'đoán đúng đáp án khi chưa mở chữ cái nào' : 'đoán đúng đáp án',
+        blind ? 'Đoán mù mà trúng — cún được tiếp thêm <b>một trái tim</b>, hiện còn ' + p.lives + '.' : '');
     } else {
       p.lives = 0; p.alive = false;
       sfx.dramaticFail(); renderAll();
@@ -896,7 +912,7 @@
       setMsg('Bấm <b>QUAY NÓN</b> để quay tiếp, hoặc đoán thẳng đáp án.', '');
   }
 
-  function finishRound(winner, bonus, how) {
+  function finishRound(winner, bonus, how, extra) {
     S.solvedCount++;
     sfx.victory(); confetti();
     S.revealed = [...letterSet()]; renderBoard(); renderAll();
@@ -907,6 +923,7 @@
       '<div class="reveal">' + esc(S.answer) + '</div>' +
       '<p>' + esc(winner.name) + ' ' + how + (bonus ? ' và nhận thêm <b>' + fmt(bonus) + ' điểm thưởng</b>' : '') +
       '. Tổng điểm hiện tại: <b>' + fmt(winner.score) + '</b>.</p>' +
+      (extra ? '<p>' + extra + '</p>' : '') +
       '<p style="font-size:12.5px;opacity:.8">Kẻ bắt cún đành bỏ cuộc — cún con an toàn trong ván này.</p>' +
       '<div class="btns"><button class="cta" data-act="' + (last ? 'over' : 'next') + '">' + (last ? 'XEM KẾT QUẢ' : 'VÁN TIẾP THEO') + '</button></div>';
     openModal(body);
@@ -1107,10 +1124,12 @@
     '<ul>' +
     '<li>Mỗi ván có một <b>câu hỏi hiện sẵn</b> phía trên ô chữ. Đáp án của câu hỏi chính là ô chữ phải mở.</li>' +
     '<li>Quay nón rồi chọn một chữ cái. Mỗi chữ cái xuất hiện trong ô chữ được cộng đúng số điểm vừa quay.</li>' +
+    '<li><b>Quay vào ô nào cũng được đoán một chữ cái</b>, miễn là cún còn tim. Thưởng phạt của ô áp dụng trước, rồi mới đến lượt đoán chữ, mỗi chữ đúng được <b>300 điểm</b>. Chỉ ô <b>MẤT LƯỢT</b> là mất lượt thật.</li>' +
     '<li>Bảng chữ cái phân biệt rõ <b>A — Ă — Â</b>, <b>E — Ê</b>, <b>O — Ô — Ơ</b>, <b>U — Ư</b> và <b>D — Đ</b>. Chọn đúng nguyên âm sẽ mở mọi dấu thanh của nguyên âm đó.</li>' +
     '<li>Mỗi người có <b>5 mạng</b>, hiện thành 5 trái tim trên khung cún. Đoán sai chữ cái, hoặc quay vào ô phạt <b>MẤT LƯỢT</b>, <b>CÚN GẶP NGUY</b>, <b>XUI RỒI</b>, <b>THỬ THÁCH</b> hỏng đều mất tim.</li>' +
     '<li>Càng ít mạng thì kẻ bắt cún càng tiến sát và cún càng hoảng sợ. Hết 5 mạng là cún bị chụp lưới.</li>' +
     '<li><b>ĐOÁN ĐÁP ÁN</b> dùng được bất cứ lúc nào. Càng nhiều chữ còn ẩn thì thưởng càng lớn, nhưng sai là cún bị bắt ngay.</li>' +
+    '<li>Liều nhất là <b>đoán mù</b> — chốt đáp án khi chưa mở một chữ cái nào. Trúng thì ngoài điểm thưởng còn được <b>thêm một trái tim</b>. Mở chữ rồi mới đoán thì chỉ được điểm.</li>' +
     '</ul>' +
     '<h3 style="font-size:19px;margin-top:4px">Các ô trên vòng quay</h3>' +
     '<ul>' +
@@ -1118,12 +1137,12 @@
     '<li><b>MẤT LƯỢT</b> — giữ nguyên điểm nhưng mất một tim và nhường nón cho người kế tiếp.</li>' +
     '<li><b>GẤP ĐÔI</b> / <b>CHIA ĐÔI</b> — điểm hiện có nhân đôi hoặc chia đôi.</li>' +
     '<li><b>THÊM MẠNG</b> và <b>CỨU TRỢ</b> — được thêm một trái tim, kẻ bắt cún lùi lại một bước.</li>' +
-    '<li><b>MAY MẮN</b> — ba phần quà hiện ra cho bạn xem, rồi úp xuống và xáo trộn. Bạn chọn một hộp để nhận quà, xong vẫn được quay tiếp.</li>' +
-    '<li><b>XUI RỒI</b> — y hệt MAY MẮN nhưng là ba phần phạt. Chọn xong thì mất lượt.</li>' +
-    '<li><b>THỬ THÁCH</b> — một câu đố phụ có ba lựa chọn, giới hạn 15 giây. Đúng thì được 1.000 điểm, mở thêm một chữ cái và quay tiếp; sai hoặc hết giờ thì mất một trái tim và mất lượt.</li>' +
+    '<li><b>MAY MẮN</b> — ba phần quà hiện ra cho bạn xem, rồi úp xuống và xáo trộn. Bạn chọn một hộp để nhận quà.</li>' +
+    '<li><b>XUI RỒI</b> — y hệt MAY MẮN nhưng là ba phần phạt.</li>' +
+    '<li><b>THỬ THÁCH</b> — một câu đố phụ có ba lựa chọn, giới hạn 15 giây. Đúng thì được 1.000 điểm và mở thêm một chữ cái; sai hoặc hết giờ thì mất một trái tim.</li>' +
     '<li><b>CHÚC MỪNG</b> — tặng thẳng 1.000 điểm.</li>' +
-    '<li><b>MẤT ĐIỂM</b> — điểm tụt xuống mốc 5.000 liền dưới, ví dụ 12.400 còn 10.000. Không mất tim, không mất lượt.</li>' +
-    '<li><b>CÚN GẶP NGUY</b> — mất ngay một mạng và mất lượt.</li>' +
+    '<li><b>MẤT ĐIỂM</b> — điểm tụt xuống mốc liền dưới trong dãy 0, 1.000, 2.000, 5.000, 10.000, 20.000, 50.000... Ví dụ 12.400 còn 10.000. Không mất tim.</li>' +
+    '<li><b>CÚN GẶP NGUY</b> — mất ngay một trái tim.</li>' +
     '<li><b>CƯỢC ĐÔI</b> — bạn tự chọn: nhận cược thì đúng được gấp ba điểm, sai mất hai mạng; bỏ qua thì ăn điểm như thường.</li>' +
     '</ul>' +
     '<div class="btns"><button class="cta" data-act="close">ĐÃ HIỂU</button></div>';

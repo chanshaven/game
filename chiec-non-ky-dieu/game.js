@@ -82,6 +82,7 @@
       const C = window.AudioContext || window.webkitAudioContext;
       if (!C) return false;
       A.ctx = new C();
+      if (A.ctx.state === 'suspended' && A.ctx.resume) A.ctx.resume();
       A.master = A.ctx.createGain(); A.master.gain.value = 0.85; A.master.connect(A.ctx.destination);
       A.musicGain = A.ctx.createGain(); A.musicGain.gain.value = 0; A.musicGain.connect(A.master);
       A.sfxGain = A.ctx.createGain(); A.sfxGain.gain.value = 0.85; A.sfxGain.connect(A.master);
@@ -112,6 +113,16 @@
     s.start(t0); s.stop(t0 + dur + 0.02);
   }
   const now = () => (A.ctx ? A.ctx.currentTime : 0);
+
+  /* iOS hay treo AudioContext khi chuyển tab hoặc khoá màn hình — chạm lại là đánh thức */
+  ['touchend', 'pointerup', 'click'].forEach(ev =>
+    document.addEventListener(ev, () => {
+      try { if (A.ctx && A.ctx.state === 'suspended') A.ctx.resume(); } catch (e) { /* bỏ qua */ }
+    }, { passive: true, capture: true })
+  );
+  document.addEventListener('visibilitychange', () => {
+    try { if (!document.hidden && A.on && A.ctx && A.ctx.state === 'suspended') A.ctx.resume(); } catch (e) { /* bỏ qua */ }
+  });
   let tensionNodes = null;
 
   const sfx = {
@@ -283,6 +294,7 @@
     btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     btn.textContent = on ? '♪ Nhạc nền: bật' : '♪ Nhạc nền: tắt';
     if (!audioInit()) return;
+    try { if (A.ctx.state === 'suspended' && A.ctx.resume) A.ctx.resume(); } catch (e) { /* bỏ qua */ }
     const g = A.musicGain.gain, t = A.ctx.currentTime;
     g.cancelScheduledValues(t); g.setValueAtTime(g.value, t);
     g.linearRampToValueAtTime(on ? 0.2 : 0.0001, t + 0.6);

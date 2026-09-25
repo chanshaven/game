@@ -12,6 +12,7 @@
     'Y': 'YÝỲỶỸỴ',
     'Đ': 'Đ'
   };
+  const VN_ONLY = ['Ă', 'Â', 'Đ', 'Ê', 'Ô', 'Ơ', 'Ư'];
   const ALPHABET = ['A','Ă','Â','B','C','D','Đ','E','Ê','F','G','H','I','J','K','L','M','N','O','Ô','Ơ','P','Q','R','S','T','U','Ư','V','W','X','Y','Z'];
   const BASE = {};
   for (const k in GROUPS) for (const ch of GROUPS[k]) BASE[ch] = k;
@@ -956,7 +957,8 @@
     [...box.children].forEach(b => {
       const L = b.dataset.letter;
       const used = S.used.indexOf(L) >= 0;
-      b.className = 'key' + (used ? (set.has(L) ? ' hit' : ' miss') : (open ? '' : ' locked'));
+      const vn = VN_ONLY.indexOf(L) >= 0 ? ' vn' : '';
+      b.className = 'key' + vn + (used ? (set.has(L) ? ' hit' : ' miss') : (open ? '' : ' locked'));
       b.disabled = used || !open;
     });
   }

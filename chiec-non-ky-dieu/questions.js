@@ -649,7 +649,7 @@
     "Tác phẩm Sống như Anh của Trần Đình Vân viết về nhân vật lịch sử nào?"],
 
   ["ĐIỆN BIÊN", "Văn học",
-    "Điền từ còn thiếu trong thơ Tố Hữu: “Chín năm làm một..., nên vành hoa đỏ...”?"],
+    "Điền từ còn thiếu trong thơ Tố Hữu: “Chín năm làm một... / Nên vành hoa đỏ nên thiên sử vàng”?"],
 
   ["DẦU", "Hóa học",
     "Kim loại natri thường được ngâm trong chất gì để bảo quản?"],
@@ -658,7 +658,7 @@
     "Nhà thơ nào từng làm bài Văn tế sống vợ?"],
 
   ["TƯƠNG TƯ", "Văn học",
-    "Điền từ còn thiếu trong câu thơ Nguyễn Bính: “... là bệnh của tôi yêu nàng”?"],
+    "Theo nhà thơ Nguyễn Bính thì bệnh gì là bệnh 'của tôi yêu nàng'?"],
 
   ["TUẦN LỄ VÀNG", "Lịch sử",
     "Sau Cách mạng tháng Tám, phong trào nào được phát động để huy động tài chính trong nhân dân?"],
@@ -678,3 +678,413 @@
 );
 
 
+(window.QBANK = window.QBANK || []).push(
+
+  ["YÊN BÁI", "Lịch sử",
+    "Cuộc khởi nghĩa nào thất bại năm 1930, đánh dấu sự suy yếu của khuynh hướng cách mạng tư sản ở Việt Nam?"],
+
+  ["THÁP BÁO THIÊN", "Lịch sử",
+    "Công trình nào cùng chuông Quy Điền, vạc Phổ Minh và tượng Phật Quỳnh Lâm hợp thành “An Nam tứ khí”?"],
+
+  ["LƯƠNG VĂN CAN", "Lịch sử",
+    "Ai là một trong những người lãnh đạo tiêu biểu của phong trào Đông Kinh Nghĩa Thục?"],
+
+  ["HOÀNG ANH GIA LAI", "Thể thao",
+    "Câu lạc bộ bóng đá Việt Nam nào từng có biệt danh là “Gỗ”?"],
+
+  ["REFORMING", "Hóa học",
+    "Quá trình chuyển hiđrocacbon mạch hở thành hiđrocacbon mạch vòng gọi là gì?"],
+
+  ["ĐÔI MẮT", "Văn học",
+    "Ngoài Chí Phèo, Nam Cao còn nhắc đến Tào Tháo trong tác phẩm nào?"],
+
+  ["THI NHÂN VIỆT NAM", "Văn học",
+    "Tác phẩm phê bình nổi tiếng của Hoài Thanh và Hoài Chân về phong trào Thơ Mới tên là gì?"],
+
+  ["KHỐI LƯỢNG", "Vật lý",
+    "Theo tài liệu, đại lượng nào không được bảo toàn riêng rẽ trong phản ứng hạt nhân?"],
+
+  ["KHÔNG NGỦ ĐƯỢC", "Văn học",
+    "Theo tài liệu, hình ảnh ngôi sao vàng năm cánh lần đầu xuất hiện trong bài thơ nào của Hồ Chí Minh?"],
+
+  ["TRẺ CON", "Văn học",
+    "Trong Truyện cổ tích về loài người của Xuân Quỳnh, điều gì được sinh ra trước nhất?"],
+
+  ["CỤ CỐ TỔ", "Văn học",
+    "Đám tang trong đoạn trích Hạnh phúc của một tang gia là đám tang của ai?"],
+
+  ["VÔ ĐỀ CẦM", "Âm nhạc",
+    "Đàn đáy còn được gọi bằng tên nào?"],
+
+  ["SÓNG CỰC NGẮN", "Vật lý",
+    "Loại sóng nào dùng trong truyền hình và thường cần các trạm tiếp vận?"],
+
+  ["ĐẠI TÂY DƯƠNG", "Địa lý",
+    "Kênh đào Panama nối Thái Bình Dương với đại dương nào?"],
+
+  ["LÁ GAN", "Sinh học",
+    "Cơ quan nội tạng có kích thước lớn nhất trong cơ thể người là gì?"],
+
+  ["ĐAUYN", "Sinh học",
+    "Nhà khoa học nào được tài liệu nhắc đến với thuyết biến dị cá thể?"],
+
+  ["HỒNG THÁI", "Lịch sử",
+    "Điền địa danh còn thiếu: “Mái đình ..., cây đa Tân Trào”?"],
+
+  ["ÁNH TRĂNG TAN", "Văn học",
+    "Trong Nhớ rừng của Thế Lữ, khi say con hổ được miêu tả là uống gì?"],
+
+  ["OLIU", "Kiến thức chung",
+    "Biểu tượng trên lá cờ Liên Hợp Quốc có cành của loài cây nào?"],
+
+  ["BỒN ĐỊA", "Địa lý",
+    "Vùng đất trũng rộng lớn được các đồi núi bao quanh gọi là gì?"],
+
+  ["MUMBAI", "Điện ảnh",
+    "Thành phố nào được xem là trung tâm của ngành điện ảnh Ấn Độ?"],
+
+  ["DIỄM XƯA", "Âm nhạc",
+    "Ca khúc nào của Trịnh Công Sơn được dịch sang tiếng Nhật với tên Utsukushii mukashi?"],
+
+  ["KHMER", "Văn hóa",
+    "Lễ Đôn Ta là lễ hội truyền thống quan trọng của dân tộc nào?"],
+
+  ["HAI CÂY PHONG", "Văn học",
+    "Đoạn trích từ Người thầy đầu tiên từng được giảng dạy trong Ngữ văn có tên là gì?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["TRÙNG ROI XANH", "Sinh học",
+    "Loài động vật nguyên sinh nào từng được dùng để nghiên cứu mối liên hệ giữa động vật và thực vật?"],
+
+  ["KIM LÂN", "Điện ảnh",
+    "Nhà văn nào từng đóng vai lão Hạc trong phim Làng Vũ Đại ngày ấy?"],
+
+  ["MÀU ĐỎ", "Kiến thức chung",
+    "Màu nào xuất hiện phổ biến nhất trên quốc kỳ các nước theo tài liệu?"],
+
+  ["PABLO PICASSO", "Nghệ thuật",
+    "Danh họa nào là một trong những người mở đầu trường phái lập thể?"],
+
+  ["KHỔNG MINH", "Văn học",
+    "Nhân vật nào được gọi là “Tuyệt trí” trong Tam quốc diễn nghĩa?"],
+
+  ["NỞ VÌ NHIỆT", "Vật lý",
+    "Nhiệt kế thủy ngân hoạt động dựa chủ yếu trên hiện tượng nào?"],
+
+  ["DÃY URAL", "Địa lý",
+    "Dãy núi nào thường được xem là ranh giới tự nhiên giữa châu Âu và châu Á?"],
+
+  ["BHUTAN", "Địa lý",
+    "Ngoài Nepal, quốc gia nào nằm trên dãy Himalaya theo tài liệu?"],
+
+  ["DA", "Sinh học",
+    "Giun đất hô hấp chủ yếu qua bộ phận nào?"],
+
+  ["KIM ĐỒNG", "Lịch sử",
+    "Đội viên đầu tiên của Đội Thiếu niên Tiền phong Việt Nam là ai?"],
+
+  ["HÀN QUỐC", "Địa lý",
+    "Quốc kỳ nước nào có biểu tượng âm dương ở chính giữa?"],
+
+  ["THẤU KÍNH HỘI TỤ", "Vật lý",
+    "Thủy tinh thể của mắt có tác dụng quang học tương tự loại thấu kính nào?"],
+
+  ["NHÀ HỒ", "Lịch sử",
+    "Hà Nội từng mang tên Đông Đô dưới triều đại nào?"],
+
+  ["INDONESIA", "Thể thao",
+    "Môn võ Pencak Silat có nguồn gốc từ quốc gia nào?"],
+
+  ["CHỨNG KHOÁN", "Kinh tế",
+    "Phố Wall ở New York nổi tiếng gắn với lĩnh vực tài chính nào?"],
+
+  ["NGUYỄN VĂN SIÊU", "Văn hóa",
+    "Ai cho khắc ba chữ “Tả Thanh Thiên” trên Tháp Bút bên Hồ Gươm?"],
+
+  ["GIỌT ĐÀN BẦU", "Âm nhạc",
+    "Trong ca khúc Đất nước của Phạm Minh Tuấn, đất nước được ví với hình ảnh nào?"],
+
+  ["BẢN YÊU SÁCH CỦA NHÂN DÂN AN NAM", "Lịch sử",
+    "Tác phẩm nào lần đầu được Nguyễn Ái Quốc ký tên theo tài liệu?"],
+
+  ["FRUCTOZO", "Hóa học",
+    "Loại đường nào có nhiều trong mật ong theo tài liệu?"],
+
+  ["TRƯƠNG HÁN SIÊU", "Văn học",
+    "Ai là tác giả Bạch Đằng giang phú?"],
+
+  ["BẠC", "Văn học",
+    "Điền từ còn thiếu trong thơ Hồ Xuân Hương: “Đừng xanh như lá, ... như vôi”?"],
+
+  ["ĐẺ ĐẤT ĐẺ NƯỚC", "Văn học",
+    "Bộ sử thi nổi tiếng của dân tộc Mường có tên là gì?"],
+
+  ["PHẠM NGŨ LÃO", "Lịch sử",
+    "Danh tướng nhà Trần nào nổi tiếng với tích đan sọt mà lo việc nước?"],
+
+  ["NHỰA ĐƯỜNG", "Hóa học",
+    "Phần cặn nặng còn lại trong quá trình chế biến dầu mỏ có thể dùng làm gì?"],
+
+  ["CAFEIN", "Hóa học",
+    "Chất kích thích nào có trong cà phê, chè và hạt cacao theo tài liệu?"],
+
+  ["VOLTA", "Khoa học",
+    "Nhà khoa học nào được xem là cha đẻ của pin điện hóa?"],
+
+  ["MẠNH TỬ", "Triết học",
+    "Ai nổi tiếng với quan niệm “Nhân chi sơ tính bản thiện”?"],
+
+  ["NEWTON", "Thiên văn",
+    "Ai chế tạo kính thiên văn phản xạ đầu tiên theo tài liệu?"],
+
+  ["GREENLAND", "Địa lý",
+    "Hòn đảo lớn nhất thế giới có tên là gì?"],
+
+  ["NHÀ THỜ ĐỨC BÀ PARIS", "Văn học",
+    "Kiệt tác lãng mạn nào của Victor Hugo được xuất bản năm 1831?"],
+
+  ["ARISTOTE", "Triết học",
+    "Ai được Marx gọi là nhà tư tưởng vĩ đại nhất của thời cổ đại theo tài liệu?"],
+
+  ["CÙNG NHAU TA ĐI LÊN", "Âm nhạc",
+    "Bài ca chính thức của Đội Thiếu niên Tiền phong Hồ Chí Minh có tên là gì?"],
+
+  ["LỘI NƯỚC", "Thành ngữ",
+    "Điền từ còn thiếu: “Ăn cỗ đi trước, ... theo sau”?"],
+
+  ["LEV TOLSTOY", "Văn học",
+    "Nhà văn nào được mệnh danh là “con sư tử của văn học Nga”?"],
+
+  ["BÊN KIA SÔNG ĐUỐNG", "Văn học",
+    "Tác phẩm nào của Hoàng Cầm được viết sau khi ông nghe tin quê hương bị giặc chiếm?"],
+
+  ["AFF", "Thể thao",
+    "Liên đoàn Bóng đá Đông Nam Á có tên viết tắt là gì?"],
+
+  ["BUỘC", "Văn học",
+    "Trong bài Vội vàng, Xuân Diệu muốn làm gì với gió?"],
+
+  ["PHÙNG KHẮC KHOAN", "Lịch sử",
+    "Vị tiến sĩ thời Lê nào được người đời gọi là Trạng Bùng?"],
+
+  ["RÉT NÀNG BÂN", "Văn hóa",
+    "Đợt rét muộn thường xuất hiện vào tháng ba ở miền Bắc được gọi là gì?"],
+
+  ["HỒNG LÂU MỘNG", "Văn học",
+    "Tác phẩm nào cùng Tam quốc diễn nghĩa, Thủy hử và Tây du ký hợp thành Tứ đại kỳ thư?"],
+
+  ["ELIP", "Thiên văn",
+    "Quỹ đạo các hành tinh quanh Mặt Trời có dạng đường gì?"],
+
+  ["ATP", "Sinh học",
+    "Hợp chất nào thường được gọi là “đồng tiền năng lượng” của tế bào?"],
+
+  ["CHÙA BÚT THÁP", "Văn hóa",
+    "Tượng Quan Âm nghìn mắt nghìn tay nổi tiếng được đặt tại ngôi chùa nào theo tài liệu?"],
+
+  ["MMHG", "Y học",
+    "Đơn vị thường dùng để biểu thị huyết áp được viết tắt là gì?"]
+
+);
+
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["NGUYỄN BÍNH", "Văn học",
+    "Ai là tác giả bài thơ Tiểu đoàn 307?"],
+
+  ["CALIFORNIA", "Điện ảnh",
+    "Hollywood, trung tâm điện ảnh nổi tiếng của Mỹ, nằm ở bang nào?"],
+
+  ["CÁCH MẠNG XANH", "Nông nghiệp",
+    "Cuộc cách mạng nhằm tăng mạnh năng suất cây lương thực được gọi là gì?"],
+
+  ["METAN", "Hóa học",
+    "Khí nào thường sinh ra khi chất hữu cơ phân hủy trong điều kiện thiếu không khí?"],
+
+  ["PIANO", "Âm nhạc",
+    "Tên tuổi của nhà soạn nhạc Chopin gắn đặc biệt với nhạc cụ nào?"],
+
+  ["LÀO", "Địa lý",
+    "Cánh Đồng Chum là địa danh nổi tiếng của quốc gia nào?"],
+
+  ["QUÂN ĐỘI NHÂN DÂN", "Lịch sử",
+    "Hồ Chí Minh dành lời “Trung với Đảng, hiếu với dân...” cho lực lượng nào?"],
+
+  ["ĐÒN BẨY", "Vật lý",
+    "Câu nói “Cho tôi một điểm tựa, tôi sẽ nhấc bổng Trái Đất” liên quan nguyên lý nào?"],
+
+  ["MAGELLAN", "Địa lý",
+    "Nhà thám hiểm nào được ghi nhận là người đặt tên cho Thái Bình Dương?"],
+
+  ["CONTREBASS", "Âm nhạc",
+    "Nhạc cụ nào có kích thước lớn nhất trong bộ dây của dàn nhạc giao hưởng?"],
+
+  ["CẦU HIỀN LƯƠNG", "Lịch sử",
+    "Cây cầu nào bắc qua sông Bến Hải và gắn với thời kỳ đất nước bị chia cắt?"],
+
+  ["PHẠM TUÂN", "Khoa học",
+    "Người Việt Nam đầu tiên bay vào vũ trụ là ai?"],
+
+  ["BÁN ĐẢO SƠN TRÀ", "Lịch sử",
+    "Thực dân Pháp nổ súng mở đầu cuộc xâm lược Việt Nam tại địa điểm nào năm 1858?"],
+
+  ["XÍCH ĐẠO", "Khoa học",
+    "Theo lý thuyết, sân bay vũ trụ nên đặt gần khu vực nào để tận dụng chuyển động quay của Trái Đất?"],
+
+  ["PUSHKIN", "Văn học",
+    "Đại thi hào Nga nào từng được ví như “mặt trời thi ca”?"],
+
+  ["HOÀNG THỊ LOAN", "Lịch sử",
+    "Thân mẫu của Chủ tịch Hồ Chí Minh là ai?"],
+
+  ["SƯƠNG MÙ", "Khoa học",
+    "Đám mây rất thấp gồm những hạt nước nhỏ lơ lửng gần mặt đất gọi là gì?"],
+
+  ["THÀNH CÁT TƯ HÃN", "Lịch sử",
+    "Nhân vật nào lập nên đế quốc Mông Cổ rộng lớn vào đầu thế kỷ XIII?"],
+
+  ["HÒN GÀ CHỌI", "Địa lý",
+    "Hòn đảo đá nào thường được xem là một biểu tượng của Vịnh Hạ Long?"],
+
+  ["ỐC BƯƠU VÀNG", "Sinh học",
+    "Loài ngoại lai nào sinh sản nhanh và từng gây hại lớn cho đồng ruộng Việt Nam?"],
+
+  ["DƯ ĐỊA CHÍ", "Văn học",
+    "Tác phẩm địa lý nổi tiếng nào của Nguyễn Trãi được biên soạn vào thế kỷ XV?"],
+
+  ["CHỮ TƯỢNG HÌNH", "Lịch sử",
+    "Loại chữ cổ dùng hình vẽ mô phỏng sự vật để biểu đạt ý nghĩa gọi là gì?"],
+
+  ["TÂN THUẬN", "Kinh tế",
+    "Khu chế xuất đầu tiên của Việt Nam theo tài liệu có tên là gì?"],
+
+  ["HÒA LẠC", "Công nghệ",
+    "Khu công nghệ cao lớn ở phía Bắc Việt Nam theo tài liệu có tên là gì?"],
+
+  ["ATHENA", "Thần thoại",
+    "Nữ thần Hy Lạp nào được sinh ra từ trán thần Zeus và gắn với cây ô liu?"],
+
+  ["BẠCH TUỘC", "Động vật",
+    "Loài động vật nào có ba tim, tám tay và máu màu xanh?"],
+
+  ["LÊ HOÀN", "Lịch sử",
+    "Tên thật của vua Lê Đại Hành là gì?"],
+
+  ["ĐỖ PHỦ", "Văn học",
+    "Nhà thơ Trung Quốc nào được tôn xưng là “Thi thánh”?"],
+
+  ["KỶ BĂNG HÀ", "Khoa học",
+    "Voi ma mút khổng lồ gắn với thời kỳ khí hậu nào của Trái Đất?"],
+
+  ["DIỄN ĐÀN HỢP TÁC Á ÂU", "Kiến thức chung",
+    "ASEM là tên viết tắt của diễn đàn hợp tác nào?"]
+
+);
+
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["MARIO PUZO", "Văn học",
+    "Ai là tác giả tiểu thuyết Bố già?"],
+
+  ["BỘ GUỐC LẺ", "Sinh học",
+    "Tê giác thuộc bộ động vật có vú nào?"],
+
+  ["KÍNH TÂM", "Văn học",
+    "Trong vở chèo Quan Âm Thị Kính, Thị Kính giả trai với tên gì?"],
+
+  ["MẠC ĐĨNH CHI", "Lịch sử",
+    "Danh sĩ nhà Trần nào được xưng tụng là “Lưỡng quốc Trạng nguyên”?"],
+
+  ["HULA", "Văn hóa",
+    "Vũ điệu truyền thống nổi tiếng của quần đảo Hawaii có tên là gì?"],
+
+  ["LƯƠNG THẾ VINH", "Toán học",
+    "Ai là tác giả Đại thành toán pháp dưới thời Hậu Lê?"],
+
+  ["TƯỢNG NHÂN SƯ", "Nghệ thuật",
+    "Tác phẩm điêu khắc khổng lồ nào trở thành một biểu tượng của Ai Cập cổ đại?"],
+
+  ["VICTOR HUGO", "Văn học",
+    "Ai là tác giả tiểu thuyết Những người khốn khổ?"],
+
+  ["GIÓ TÍN PHONG", "Địa lý",
+    "Loại gió thổi thường xuyên từ áp cao cận chí tuyến về áp thấp xích đạo gọi là gì?"],
+
+  ["ACHILLES", "Văn học",
+    "Anh hùng nào hiện thân cho sức mạnh nổi bật trong sử thi Iliad?"],
+
+  ["LÝ BẠCH", "Văn học",
+    "Hành lộ nan và Tĩnh dạ tư là những bài thơ của tác giả nào?"],
+
+  ["NGUYÊN HỒNG", "Văn học",
+    "Bỉ vỏ là tác phẩm của nhà văn nào?"],
+
+  ["NGÔI NHÀ LỚN", "Lịch sử",
+    "Danh xưng Pharaoh của Ai Cập cổ đại ban đầu mang nghĩa gì?"],
+
+  ["NHỮNG CÔNG CỤ BIẾT NÓI", "Lịch sử",
+    "Trong xã hội chiếm hữu nô lệ phương Tây cổ đại, nô lệ từng bị gọi là gì?"],
+
+  ["CÁT TRẮNG", "Hóa học",
+    "Loại nguyên liệu nào thường được dùng trong sản xuất thủy tinh?"],
+
+  ["LỆ CHI VIÊN", "Lịch sử",
+    "Nguyễn Trãi liên quan đến vụ án oan nổi tiếng nào?"],
+
+  ["RONALDO", "Thể thao",
+    "Cầu thủ Brazil nào từng được mệnh danh là “Người ngoài hành tinh”?"],
+
+  ["TỨ BẤT TỬ", "Văn hóa",
+    "Tản Viên, Chử Đồng Tử, Thánh Gióng và Liễu Hạnh được gọi chung là gì?"],
+
+  ["TRÁI ĐẤT", "Thiên văn",
+    "Hành tinh nào trong hệ Mặt Trời không mang tên một vị thần cổ đại?"],
+
+  ["CÂN XOẮN", "Vật lý",
+    "Coulomb dùng dụng cụ nào trong các thí nghiệm dẫn tới định luật mang tên ông?"],
+
+  ["SƠN DẦU", "Văn học",
+    "Trong truyện Bức tranh của Nguyễn Minh Châu, người họa sĩ vẽ bằng chất liệu gì?"],
+
+  ["PA LĂNG", "Vật lý",
+    "Hệ thống kết hợp ròng rọc động và ròng rọc cố định gọi là gì?"],
+
+  ["SÔNG KỲ CÙNG", "Địa lý",
+    "Con sông nào ở Việt Nam chảy về phía Bắc qua khu vực biên giới Việt Trung?"],
+
+  ["NEPAL", "Văn hóa",
+    "Nơi sinh của Đức Phật Thích Ca ngày nay thuộc quốc gia nào?"],
+
+  ["LÊ KI MA", "Văn hóa",
+    "Loài hoa nào thường được nhắc đến khi tưởng nhớ Võ Thị Sáu?"],
+
+  ["CÁ NGỰA", "Sinh học",
+    "Ở loài động vật nào, con đực đảm nhiệm việc mang thai và sinh con?"],
+
+  ["PHILADELPHIA", "Lịch sử",
+    "Thành phố nào từng là thủ đô của Hoa Kỳ trước Washington?"],
+
+  ["ÔNG GIÁO", "Văn học",
+    "Trong truyện Lão Hạc, nhân vật nào thường được xem là người thể hiện góc nhìn của người kể chuyện?"],
+
+  ["VẠC PHỔ MINH", "Lịch sử",
+    "Công trình nào cùng Tháp Báo Thiên, chuông Quy Điền và tượng Phật Quỳnh Lâm hợp thành An Nam tứ khí?"],
+
+  ["CÀNH CỌ VÀNG", "Điện ảnh",
+    "Giải thưởng cao quý nhất của Liên hoan phim Cannes có tên là gì?"],
+
+  ["ISAAC LEVITAN", "Nghệ thuật",
+    "Bức tranh Mùa thu vàng nổi tiếng là của họa sĩ Nga nào?"],
+
+  ["NAPOLEON BONAPARTE", "Âm nhạc",
+    "Beethoven ban đầu dự định dành bản giao hưởng Anh hùng cho nhân vật lịch sử nào?"]
+
+);

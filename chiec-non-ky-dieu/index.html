@@ -362,6 +362,22 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
   text-align:center;background:rgba(12,3,7,.7);border:1.5px solid rgba(255,209,102,.4);color:var(--cream);margin-bottom:12px}
 .warn{font-size:12.5px;color:#FFD6CD;background:rgba(255,91,65,.14);border:1px solid rgba(255,91,65,.4);
   padding:10px 12px;border-radius:11px;line-height:1.5;margin-bottom:14px}
+/* kỷ lục cá nhân trên màn hình đầu */
+.record{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:11px 15px;border-radius:13px;font-size:13px;
+  background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.3)}
+.record b{font-family:var(--fx-display);font-size:12px;letter-spacing:.14em;color:var(--gold-300)}
+.record span{font-weight:800;color:var(--cream);font-variant-numeric:tabular-nums}
+.record i{font-style:normal;opacity:.4}
+
+/* ô kết quả để chép vào nhóm chat */
+.sharebox{width:100%;min-height:82px;resize:none;padding:11px 13px;border-radius:12px;margin-bottom:12px;
+  font-family:var(--fx-body);font-size:13px;line-height:1.6;
+  background:rgba(12,3,7,.6);border:1.5px solid rgba(255,209,102,.3);color:var(--cream-dim)}
+.newrec{display:inline-block;margin-bottom:12px;padding:7px 14px;border-radius:999px;
+  font-family:var(--fx-display);font-size:13px;letter-spacing:.1em;color:#3A1704;
+  background:linear-gradient(180deg,#FFE9A8,var(--gold-400));box-shadow:0 4px 14px rgba(255,209,102,.3)}
+
 /* nút thoát ván */
 .ghost.danger{color:#FFD9D0;border-color:rgba(255,91,65,.45);background:rgba(255,91,65,.1)}
 .ghost.danger:hover{background:rgba(255,91,65,.22);border-color:var(--ember)}
@@ -473,6 +489,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 
       <div class="names" id="nameFields"></div>
       <button class="cta" id="btnStart">BẮT ĐẦU CHƠI</button>
+      <div class="record" id="record" hidden></div>
     </div>
 
     <p class="foot">Mẹo: bấm <b>Nhạc nền</b> ở góc trên để bật tiếng. Dùng iPhone thì nhớ <b>gạt nút chuông bên hông sang chế độ có tiếng</b> — để ở chế độ im lặng là iPhone chặn hết âm thanh của mọi trang web.</p>

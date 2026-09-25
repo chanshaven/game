@@ -1088,3 +1088,77 @@
     "Beethoven ban đầu dự định dành bản giao hưởng Anh hùng cho nhân vật lịch sử nào?"]
 
 );
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["CHÚ TỄU", "Văn hóa",
+    "Nhân vật nào trong múa rối nước thường xuất hiện để giới thiệu và dẫn chuyện?"],
+
+  ["RÔBINHOOD", "Văn hóa",
+    "Nhân vật nào nổi tiếng với việc cướp của người giàu chia cho người nghèo?"],
+
+  ["CHOPIN", "Âm nhạc",
+    "Nhạc sĩ nào được mệnh danh là “Thi nhân dương cầm”?"],
+
+  ["PHIM TÀI LIỆU", "Điện ảnh",
+    "Theo tài liệu, loại hình đầu tiên của điện ảnh Việt Nam là gì?"],
+
+  ["VỢ NHẶT", "Văn học",
+    "Xóm ngụ cư là tên ban đầu khi Kim Lân sáng tác tác phẩm nào?"],
+
+  ["LOCAL AREA NETWORK", "Công nghệ",
+    "Trong mạng máy tính, LAN là viết tắt của cụm từ nào?"],
+
+  ["HOÀNG VIỆT", "Âm nhạc",
+    "Ai là tác giả bản giao hưởng đầu tiên của Việt Nam theo tài liệu?"],
+
+  ["TRẦN HIẾU NGÂN", "Thể thao",
+    "Vận động viên nào mang về huy chương bạc Olympic đầu tiên cho Việt Nam?"],
+
+  ["PHƯỚC LONG", "Lịch sử",
+    "Địa phương nào được tài liệu ghi là tỉnh đầu tiên ở miền Nam được giải phóng trong năm 1975?"],
+
+  ["SILIC", "Công nghệ",
+    "Nguyên tố hóa học nào được sử dụng phổ biến trong chế tạo chip vi tính?"],
+
+  ["QUẢNG CHÂU", "Thể thao",
+    "Thành phố nào đăng cai Đại hội Thể thao châu Á năm 2010?"],
+
+  ["BENZEN", "Hóa học",
+    "Hợp chất nào được Michael Faraday phát hiện năm 1825 từ khí thắp?"],
+
+  ["AUSTRALIA", "Môi trường",
+    "Chiến dịch Giờ Trái Đất được khởi xướng tại quốc gia nào theo tài liệu?"],
+
+  ["ĐỪNG ĐỐT", "Điện ảnh",
+    "Bộ phim nào của Đặng Nhật Minh được trao giải tại Liên hoan phim Fukuoka năm 2009?"],
+
+  ["EUCLID", "Toán học",
+    "Nhà toán học nào thường được gọi là “cha đẻ của hình học”?"],
+
+  ["ĐÈO BA DỘI", "Địa lý",
+    "Đèo Tam Điệp còn được gọi bằng tên nào?"],
+
+  ["BẢO ĐẠI", "Lịch sử",
+    "Ai nói câu “Thà làm dân một nước độc lập, hơn làm vua một nước nô lệ” theo tài liệu?"],
+
+  ["NGUYỄN BÁ HỌC", "Văn học",
+    "Câu “Đường đi không khó vì ngăn sông cách núi...” nổi tiếng là của ai?"],
+
+  ["MACHU PICCHU", "Địa lý",
+    "Địa danh nào được gọi là “Thành phố đã mất của người Inca”?"],
+
+  ["KINH DƯƠNG VƯƠNG", "Văn hóa",
+    "Theo truyền thuyết, ai được coi là thủy tổ của dân tộc Việt Nam?"],
+
+  ["NGƯỜI CON GÁI SÔNG LA", "Âm nhạc",
+    "Doãn Nho sáng tác ca khúc nào để tặng nữ anh hùng La Thị Tám?"],
+
+  ["BÀI CA HÀ NỘI", "Âm nhạc",
+    "Ca khúc nào của Vũ Thanh có câu “Ta đi trên đường Hà Nội rực rỡ chiến công”?"],
+
+  ["BƯỞI", "Văn hóa",
+    "Điền từ còn thiếu: “Chợ ... một tháng sáu phiên/ Ngày tư ngày chín cho duyên đèo bòng”?"]
+
+);

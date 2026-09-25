@@ -582,6 +582,74 @@
     setTimeout(passTurn, 1200);
   }
 
+  /* ---------------- kỷ lục cá nhân lưu trên máy ---------------- */
+  const LSK = 'cnkd.best';
+
+  function loadBest() {
+    try {
+      const r = JSON.parse(localStorage.getItem(LSK) || 'null');
+      return (r && typeof r.score === 'number') ? r : null;
+    } catch (e) { return null; }   // trình duyệt ẩn danh hoặc chặn lưu trữ
+  }
+  function saveBest(b) {
+    try { localStorage.setItem(LSK, JSON.stringify(b)); } catch (e) { /* bỏ qua */ }
+  }
+
+  /* Chỉ ghi kỷ lục ở chế độ một người — nhiều người thì điểm phụ thuộc số ván đã chọn */
+  function bestUpdate() {
+    const prev = loadBest();
+    if (S.mode !== 'solo' || !S.players.length) return { beat: false, prev: prev };
+    const score = S.players[0].score;
+    const beat = score > 0 && (!prev || score > prev.score);
+    if (beat) saveBest({ score: score, solved: S.solvedCount });
+    return { beat: beat, prev: prev };
+  }
+
+  function renderRecord() {
+    const el = $('record'), b = loadBest();
+    if (!b) { el.hidden = true; return; }
+    el.hidden = false;
+    el.innerHTML = '<b>KỶ LỤC CỦA BẠN</b><span>' + fmt(b.score) + ' điểm</span>' +
+                   '<i>·</i><span>' + b.solved + ' ô chữ</span>';
+  }
+
+  function shareText() {
+    const isWeb = /^https?:$/.test(location.protocol);
+    const link = isWeb ? location.origin + location.pathname : '';
+    let body;
+    if (S.mode === 'solo') {
+      body = 'Mình giải được ' + S.solvedCount + ' ô chữ, ghi ' + fmt(S.players[0].score) + ' điểm.';
+    } else {
+      const rank = S.players.slice().sort((a, b) => b.score - a.score);
+      body = rank[0].name + ' thắng với ' + fmt(rank[0].score) + ' điểm, ' + S.players.length + ' người chơi.';
+    }
+    return 'Chiếc Nón Kỳ Diệu — Giải cứu cún con\n' + body +
+           (link ? '\nĐến lượt bạn: ' + link : '');
+  }
+
+  function doShare(btn) {
+    const ta = $('shareBox');
+    const txt = ta ? ta.value : shareText();
+    const ok = () => {
+      if (!btn) return;
+      const old = btn.textContent;
+      btn.textContent = 'ĐÃ CHÉP!';
+      setTimeout(() => { btn.textContent = old; }, 1800);
+    };
+    const manual = () => {
+      if (!ta) return;
+      ta.focus(); ta.select();
+      if (btn) btn.textContent = 'BẤM GIỮ ĐỂ CHÉP';
+    };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(ok, manual);
+        return;
+      }
+    } catch (e) { /* rơi xuống cách thủ công */ }
+    manual();
+  }
+
   /* ---------------- hộp quà, hộp phạt, thử thách ---------------- */
   let modalDone = null;
 
@@ -836,7 +904,9 @@
 
   function gameOver() {
     const rank = S.players.slice().sort((a, b) => b.score - a.score);
+    const rec = bestUpdate();
     let html = '<h3>' + (S.mode === 'solo' ? 'Cún bị bắt mất rồi!' : 'Kết quả chung cuộc') + '</h3>';
+    if (S.mode === 'solo' && rec.beat) html += '<div class="newrec">KỶ LỤC MỚI!</div>';
     if (S.mode === 'solo') {
       html += '<p>Bạn đã giải được <b>' + S.solvedCount + '</b> ô chữ và ghi được <b>' + fmt(S.players[0].score) + '</b> điểm trước khi cún bị chụp lưới.</p>';
       html += '<div class="qq">' + esc(S.question) + '</div>';
@@ -849,7 +919,14 @@
       ).join('') + '</div>';
       html += '<p><b>' + esc(rank[0].name) + '</b> giành chiến thắng chung cuộc!</p>';
     }
-    html += '<div class="btns"><button class="cta" data-act="restart">CHƠI LẠI</button></div>';
+    if (S.mode === 'solo' && rec.prev) {
+      html += '<p style="font-size:13px">Kỷ lục ' + (rec.beat ? 'cũ' : 'của bạn') + ': <b>' +
+              fmt(rec.prev.score) + ' điểm</b> với ' + rec.prev.solved + ' ô chữ.</p>';
+    }
+    html += '<p style="font-size:12.5px;opacity:.8">Chép dòng dưới đây dán vào nhóm chat để rủ bạn bè:</p>';
+    html += '<textarea class="sharebox" id="shareBox" readonly>' + esc(shareText()) + '</textarea>';
+    html += '<div class="btns"><button class="ghost" data-act="share">CHÉP KẾT QUẢ</button>' +
+            '<button class="cta" data-act="restart">CHƠI LẠI</button></div>';
     openModal(html);
     if (S.mode === 'solo') sfx.dramaticFail(); else { sfx.victory(); confetti(); }
   }
@@ -999,7 +1076,8 @@
     else if (a === 'next') nextRound();
     else if (a === 'over') { closeModal(); gameOver(); }
     else if (a === 'restart') { closeModal(); toStart(); }
-    else if (a === 'exit') { closeModal(); toStart(); }
+    else if (a === 'exit') { bestUpdate(); closeModal(); toStart(); }
+    else if (a === 'share') { doShare(act); return; }
     else if (a === 'done') { closeModal(); const f = modalDone; modalDone = null; if (f) f(); }
   });
 
@@ -1084,6 +1162,7 @@
     $('btnExit').hidden = true;
     $('screenGame').hidden = true;
     $('screenStart').hidden = false;
+    renderRecord();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -1124,6 +1203,7 @@
   function boot(data) {
     setMode('solo');
     buildNameFields();
+    renderRecord();
     drawWheel(-Math.PI / 2);
     startBlink();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawWheel(S.angle));

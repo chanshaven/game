@@ -38,8 +38,33 @@ Bảng chữ dùng cho mã đã bỏ `0`, `O`, `1`, `I` để đọc qua điện
 | --- | --- |
 | `index.html` | Khung trang và toàn bộ CSS |
 | `levels.js` | Bộ sinh luật: điều kiện, khuôn nói dối, bậc khó, lời Người dẫn đường |
+| `audio.js` | Nhạc nền và hiệu ứng, sinh bằng WebAudio |
 | `game.js` | Logic: dựng bàn, chấm đúng sai, sổ tay, mã ván, xếp hạng |
-| `build.js` | Gộp cả ba thành `ca-tin-1-file.html` để gửi qua Zalo |
+| `build.js` | Gộp cả bốn thành `ca-tin-1-file.html` để gửi qua Zalo |
+
+## Âm thanh
+
+Không dùng file nhạc nào — tất cả sinh bằng WebAudio, nên bản một file gửi đi vẫn
+kêu và không phải tải kèm gì.
+
+Nhạc nền là một bản marimba vui nhộn, 112 nhịp một phút, tự sinh khi chơi chứ
+không lặp lại y hệt. Bè trầm đánh nốt gốc và quãng năm xen kẽ theo từng phách nên
+nghe nhún; giai điệu chạy móc đơn trong thang ngũ cung, có đảo phách và có chỗ
+nghỉ; vòng hoà âm Đô trưởng - La thứ - Fa trưởng - Sol, mỗi ô nhịp một hợp âm.
+
+Tiếng marimba dựng bằng cộng hài âm chứ không lọc. Hài âm thứ tư rất mạnh và tắt
+nhanh hơn nốt gốc — chính hai chỗ đó cho ra chất gỗ. Thêm hài âm thứ mười tắt rất
+nhanh làm tiếng dùi gõ vào thanh. Đường tắt dần dùng `setTargetAtTime`, cho ra
+đúng đường cong e mũ trừ, tức đúng cách một vật rung tắt dần trong đời thật.
+
+Nốt được đặt trước hai ô nhịp và hẹn theo đồng hồ của WebAudio, nên tiết tấu
+chính xác từng mili giây dù `setTimeout` chạy không đều.
+
+Nút loa ở góc phải trên bật tắt cả nhạc lẫn hiệu ứng, và **nhớ lựa chọn** cho lần
+sau. Hai game kia chưa có nút này.
+
+Trình duyệt nào cũng chặn tự phát nhạc, nên nhạc chỉ bắt đầu sau khi người chơi bấm
+một nút ở màn hình mở đầu. Chỉnh nhanh trong `audio.js`: `MUSIC_VOL` to nhỏ, `BPM` nhanh chậm, `REST_CHANCE` thưa dày.
 
 ## Sửa và mở rộng
 
@@ -67,6 +92,12 @@ kiểu nói dối hay cùng bộ thuộc tính, vì như thế màn sau sẽ t�
 Ghi trong tài liệu thiết kế, chưa đưa vào bản này vì cần trạng thái phức tạp hơn: luật
 hết hạn giữa chừng, luật phụ thuộc lịch sử chọn, bảng luật tự sửa chữ khi bạn nhìn đi
 chỗ khác, và giao diện nói dối.
+
+## Màn hình mở đầu
+
+Game không ném thẳng người chơi vào lưới ô nữa. Màn mở đầu có ba dòng luật chơi,
+nút bắt đầu, ô nhập mã ván, và nút *Chơi tiếp* hiện ra khi có ván đang dở.
+*Thoát ván* ở dưới đưa về đây, tiến độ vẫn còn.
 
 ## Chạy
 

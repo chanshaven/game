@@ -50,7 +50,6 @@
     LEVELS = buildRun(seed);
     S.level = (typeof level === 'number' && level >= 0 && level < LEVELS.length) ? level : 0;
     S.ranks = Array.isArray(ranks) ? ranks.slice(0, LEVELS.length) : [];
-    el('seedTag').textContent = seed;
     save();
   }
 
@@ -150,7 +149,7 @@
     S.streak = 0; S.tries = 0; S.log = [];
     el('lvlNum').textContent = S.level + 1;
     el('lvlAll').textContent = LEVELS.length;
-    el('lvlTag').textContent = 'Hồ sơ ' + String(S.level + 1).padStart(2, '0');
+    el('lvlTag').textContent = 'Ván ' + S.seed;
     el('ruleText').textContent = L.shown;
     el('tries').textContent = '0 lần thử';
     el('hintBtn').hidden = true;
@@ -167,6 +166,8 @@
     S.tries++;
     S.log.unshift({ t: t, ok: ok });
     S.streak = ok ? S.streak + 1 : 0;
+
+    AU.sfx[ok ? 'hit' : 'miss']();
 
     const node = el('board').querySelector('[data-i="' + i + '"]');
     if (node) {
@@ -196,6 +197,7 @@
     el('revRank').textContent = rankOf(S.tries);
     el('revVoice').innerHTML = '<span>Người dẫn đường</span>' + L.voice;
     el('nextBtn').textContent = (S.level === LEVELS.length - 1) ? 'Kết thúc' : 'Màn tiếp theo';
+    AU.sfx.level();
     el('reveal').hidden = false;
     el('nextBtn').focus();
   }
@@ -214,16 +216,59 @@
     el('endTotal').textContent = total;
     el('endSeed').textContent = S.seed;
     el('endVoice').innerHTML = '<span>Người dẫn đường</span>' + OUTRO;
+    AU.sfx.done();
     el('endScreen').hidden = false;
     el('againBtn').focus();
   }
 
-  /* Chơi lại = một mã ván MỚI, tức một bộ sáu bảng luật khác hẳn. */
+  /* Ván mới = một mã ván MỚI, tức một bộ sáu bảng luật khác hẳn. */
   function reset() {
-    el('reveal').hidden = true;
-    el('endScreen').hidden = true;
+    AU.sfx.click();
+    closeAllOverlays();
     openRun(newSeedCode(), 0, []);
     startLevel();
+  }
+
+  function closeAllOverlays() {
+    el('startScreen').hidden = true;
+    el('reveal').hidden = true;
+    el('endScreen').hidden = true;
+  }
+
+  /* ---------- màn hình mở đầu ---------- */
+  function showStart() {
+    AU.musicStop();
+    el('reveal').hidden = true;
+    el('endScreen').hidden = true;
+    const d = loadSaved();
+    const canResume = !!(d && d.level > 0);
+    el('resumeBtn').hidden = !canResume;
+    if (canResume) el('resumeBtn').textContent = 'Chơi tiếp màn ' + (d.level + 1);
+    el('startScreen').hidden = false;
+    el('playBtn').focus();
+  }
+
+  /* Mọi lối vào ván đều đi qua đây: nhạc chỉ được phép bắt đầu sau một cú
+     chạm của người chơi, trình duyệt nào cũng chặn tự phát. */
+  function enterGame(seed, level, ranks) {
+    AU.init();
+    if (AU.isOn()) AU.musicStart();
+    closeAllOverlays();
+    openRun(seed, level, ranks);
+    startLevel();
+  }
+
+  /* ---------- nút âm thanh ---------- */
+  const ICON_ON = '<path d="M4 9v6h4l5 5V4L8 9zM16.5 12a3.5 3.5 0 0 0-2-3.16v6.32A3.5 3.5 0 0 0 16.5 12z' +
+                  'M14.5 3.23v2.06A6.5 6.5 0 0 1 14.5 18.7v2.06A8.5 8.5 0 0 0 14.5 3.23z"/>';
+  const ICON_OFF = '<path d="M4 9v6h4l5 5V4L8 9zM21 9.41 19.59 8l-2.3 2.29L15 8v2.83l.88.88L15 12.6v2.82' +
+                   'l2.29-2.29L19.59 16 21 14.59l-2.29-2.3z"/>';
+  function paintSound() {
+    const onNow = AU.isOn();
+    el('icSound').innerHTML = onNow ? ICON_ON : ICON_OFF;
+    el('btnSound').setAttribute('aria-pressed', onNow ? 'true' : 'false');
+    el('btnSound').title = onNow ? 'Tắt âm thanh' : 'Bật âm thanh';
+    el('lblSound').textContent = onNow ? 'Tiếng' : 'Tắt';
   }
 
   /* ---------- gắn sự kiện ---------- */
@@ -249,12 +294,47 @@
   el('againBtn').addEventListener('click', reset);
   el('homeBtn').addEventListener('click', () => { window.location.href = '../'; });
 
-  (function boot() {
-    const urlSeed = seedFromUrl();
-    if (urlSeed) { openRun(urlSeed, 0, []); return startLevel(); }
+  el('exitBtn').addEventListener('click', () => { AU.sfx.click(); showStart(); });
+  /* Ô mã ván có gì thì chơi đúng ván đó, để trống thì bốc ngẫu nhiên. */
+  el('playBtn').addEventListener('click', () => {
+    const raw = el('seedInput').value.trim();
+    if (!raw) { enterGame(newSeedCode(), 0, []); AU.sfx.click(); return; }
+    const c = normSeedCode(raw);
+    if (!c) {
+      el('seedInput').value = '';
+      el('seedInput').placeholder = 'Mã 4 ký tự';
+      el('seedInput').focus();
+      return;
+    }
+    enterGame(c, 0, []);
+    AU.sfx.click();
+  });
+  el('resumeBtn').addEventListener('click', () => {
     const d = loadSaved();
-    if (d) openRun(normSeedCode(d.seed), d.level, d.ranks);
+    if (d) enterGame(normSeedCode(d.seed), d.level, d.ranks);
+    else enterGame(newSeedCode(), 0, []);
+    AU.sfx.click();
+  });
+  el('seedInput').addEventListener('keydown', e => { if (e.key === 'Enter') el('playBtn').click(); });
+
+  el('btnSound').addEventListener('click', () => {
+    AU.init();
+    AU.setOn(!AU.isOn());
+    paintSound();
+    if (AU.isOn()) AU.sfx.click();
+  });
+
+  (function boot() {
+    paintSound();
+    /* Dựng sẵn bàn chơi phía sau để trang lúc nghỉ không phải là một ô trống,
+       rồi mới phủ màn hình mở đầu lên. */
+    const urlSeed = seedFromUrl();
+    const d = loadSaved();
+    if (urlSeed) openRun(urlSeed, 0, []);
+    else if (d) openRun(normSeedCode(d.seed), d.level, d.ranks);
     else openRun(newSeedCode(), 0, []);
     startLevel();
+    if (urlSeed) el('seedInput').value = urlSeed;
+    showStart();
   })();
 })();

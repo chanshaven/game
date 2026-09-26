@@ -86,6 +86,51 @@
     }
     .pip.on { background: var(--gold-400); border-color: var(--gold-400); box-shadow: 0 0 9px rgba(255, 209, 102, .6) }
 
+    /* nút biểu tượng trên thanh đầu trang */
+    .icobtn {
+      display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto;
+      background: transparent; color: var(--gold-300); cursor: pointer;
+      border: 1.5px solid rgba(255, 209, 102, .26); border-radius: 10px;
+      padding: 7px 10px; font: inherit; text-decoration: none;
+      font-family: var(--fx-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+    }
+    .icobtn:hover { border-color: var(--gold-400); color: var(--gold-400) }
+    .icobtn:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px }
+    .icobtn svg { width: 15px; height: 15px; flex: 0 0 auto; display: block; fill: currentColor }
+    .icobtn[aria-pressed="false"] { color: var(--cream-dim); opacity: .6 }
+    /* chật chỗ thì bỏ chữ, giữ biểu tượng */
+    @media (max-width: 430px) { .icobtn .lbl { display: none } .icobtn { padding: 7px 9px } }
+
+    /* ---------- màn hình mở đầu ---------- */
+    .sheet.start { gap: 16px }
+    .start .lead {
+      margin: 0; font-size: 15.5px; line-height: 1.55; color: var(--ink); text-wrap: balance;
+    }
+    .start ol.how {
+      margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px;
+      font-size: 13.5px; line-height: 1.5; color: var(--ink-soft);
+    }
+    .start ol.how b { color: var(--ink) }
+    .seedin { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+    .seedin label {
+      font-family: var(--fx-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft);
+    }
+    .seedin input {
+      font-family: var(--fx-mono); font-size: 14px; font-weight: 600; letter-spacing: .18em;
+      width: 6.5em; padding: 8px 10px; text-transform: uppercase;
+      background: rgba(0, 0, 0, .05); color: var(--ink);
+      border: 1px solid var(--paper-line); border-radius: 4px;
+    }
+    .seedin input:focus-visible { outline: 2px solid var(--stamp); outline-offset: 1px }
+    /* Nút phụ nằm trên tờ giấy sáng thì phải lấy màu mực. Màu vàng kem là
+       màu dành cho nền tối, đặt lên đây đọc không ra, trông như nút bị khoá. */
+    .sheet .act { color: var(--ink); border-color: var(--paper-line) }
+    .sheet .act:hover { border-color: var(--ink); background: rgba(0, 0, 0, .04) }
+    .sheet .act:focus-visible { outline-color: var(--stamp) }
+    .sheet .act.primary { color: #3A1704; border-color: transparent }
+
     /* ---------- bảng luật: tờ giấy hành chính đặt giữa sân khấu ---------- */
     .card {
       position: relative; background: var(--paper); color: var(--ink);
@@ -250,15 +295,22 @@
 
   <main class="wrap">
     <header class="top">
-      <div class="brand"><a href="../">Cả Tin</a></div>
+      <a class="icobtn" href="../" title="Về trang chủ Fiddle Game">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 12h3v9h5v-6h4v6h5v-9h3z"/></svg>
+        <span class="lbl">Trang chủ</span>
+      </a>
       <div class="meta">
         <div class="lvl">Màn <span id="lvlNum">1</span>/<span id="lvlAll">6</span></div>
         <div class="pips" id="pips" aria-label="Chuỗi đúng liên tiếp"></div>
+        <button class="icobtn" id="btnSound" aria-pressed="true" title="Bật tắt âm thanh">
+          <svg id="icSound" viewBox="0 0 24 24" aria-hidden="true"></svg>
+          <span class="lbl" id="lblSound">Tiếng</span>
+        </button>
       </div>
     </header>
 
     <section class="card">
-      <div class="eyebrow"><span>Bảng luật</span><span id="lvlTag">Hồ sơ 01</span></div>
+      <div class="eyebrow"><span>Bảng luật</span><span id="lvlTag"></span></div>
       <p class="rule" id="ruleText">…</p>
     </section>
 
@@ -275,12 +327,35 @@
       <p class="hint" id="hintText" hidden></p>
       <div class="btnrow">
         <button class="act" id="hintBtn" hidden>Gợi ý</button>
-        <button class="act" id="resetBtn">Chơi lại từ đầu</button>
+        <button class="act" id="resetBtn">Ván mới</button>
+        <button class="act" id="exitBtn">Thoát ván</button>
       </div>
-      <p class="note">Qua màn bằng cách chọn đúng <strong>ba lần liên tiếp</strong>. Bàn chơi đổi sau mỗi lần thử.<br>
-        Mã ván <b id="seedTag">—</b> &mdash; mỗi ván một bộ luật khác.</p>
+      <p class="note">Qua màn bằng cách chọn đúng <strong>ba lần liên tiếp</strong>. Bàn chơi đổi sau mỗi lần thử.</p>
     </div>
   </main>
+
+  <div class="overlay" id="startScreen" hidden>
+    <div class="sheet start" role="dialog" aria-modal="true" aria-labelledby="startTitle">
+      <h2 id="startTitle">Cả Tin</h2>
+      <p class="lead">Mỗi màn hiện ra một bảng luật viết rõ ràng. Bảng luật đó nói dối.</p>
+      <ol class="how">
+        <li>Chọn một ô bất kỳ. Game trả lời <b>đúng</b> hoặc <b>sai</b>.</li>
+        <li>Đọc sổ tay, so các lần thử với nhau, suy ra luật thật.</li>
+        <li>Chọn đúng <b>ba lần liên tiếp</b> là qua màn. Bàn chơi đổi sau mỗi lần thử.</li>
+      </ol>
+      <div class="seedin">
+        <label for="seedInput">Mã ván</label>
+        <input id="seedInput" maxlength="4" placeholder="để trống" autocomplete="off" spellcheck="false"
+          inputmode="latin" aria-describedby="seedHelp">
+      </div>
+      <p class="seednote" id="seedHelp">Để trống thì bốc một ván ngẫu nhiên. Cùng mã thì cùng bộ sáu bảng luật,
+        nên gửi mã cho bạn bè là hai người chơi đúng một ván.</p>
+      <div class="btnrow">
+        <button class="act primary" id="playBtn">Bắt đầu</button>
+        <button class="act" id="resumeBtn" hidden>Chơi tiếp</button>
+      </div>
+    </div>
+  </div>
 
   <div class="overlay" id="reveal" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="revealTitle">
@@ -298,7 +373,7 @@
 
   <div class="overlay" id="endScreen" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="endTitle">
-      <h2 id="endTitle">Hết hồ sơ</h2>
+      <h2 id="endTitle">Hết ván</h2>
       <table class="scores">
         <tbody id="scoreBody"></tbody>
       </table>
@@ -596,6 +671,219 @@ function buildRun(code) {
 
 </script>
 <script>
+/* ===== audio.js ===== */
+/* ============================================================================
+   CẢ TIN — âm thanh
+   Sinh hoàn toàn bằng WebAudio, không dùng file ngoài: bản một file gửi qua
+   Zalo và bản chơi thử trên link đều chạy được, không phải tải kèm gì.
+
+   Nhạc nền cố tình KHÔNG có giai điệu. Đây là game phải ngồi nghĩ, một vòng
+   lặp có giai điệu nghe đến lần thứ mười là muốn tắt. Thay vào đó là một tầng
+   trầm giữ nguyên, thỉnh thoảng điểm một tiếng chuông thưa — đủ để căn phòng
+   không chết lặng, không đủ để giành lấy sự chú ý.
+   ========================================================================== */
+const AU = (function () {
+  'use strict';
+
+  const KEY_SND = 'ca-tin-sound';
+  const A = { ctx: null, master: null, musicGain: null, sfxGain: null, playing: false, nextBar: 0, timer: null };
+  let on = true;
+  try { if (localStorage.getItem(KEY_SND) === '0') on = false; } catch (e) { }
+
+  const MUSIC_VOL = 0.09, SFX_VOL = 0.75;
+
+  function init() {
+    if (A.ctx) { if (A.ctx.state === 'suspended') A.ctx.resume(); return true; }
+    try {
+      const C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return false;
+      A.ctx = new C();
+      if (A.ctx.state === 'suspended' && A.ctx.resume) A.ctx.resume();
+
+      A.master = A.ctx.createGain(); A.master.gain.value = 0.9;
+      /* Bộ nén cuối đường: tiếng qua màn có mấy nốt chồng lên nhau, không nén
+         thì đỉnh sóng vọt lên trên nền nhạc và chói tai. */
+      let out = A.ctx.destination;
+      try {
+        const comp = A.ctx.createDynamicsCompressor();
+        comp.threshold.value = -8; comp.knee.value = 18; comp.ratio.value = 4;
+        comp.attack.value = 0.005; comp.release.value = 0.25;
+        comp.connect(A.ctx.destination); out = comp;
+      } catch (e) { out = A.ctx.destination; }
+      A.master.connect(out);
+
+      A.musicGain = A.ctx.createGain(); A.musicGain.gain.value = 0.0001; A.musicGain.connect(A.master);
+      A.sfxGain = A.ctx.createGain(); A.sfxGain.gain.value = on ? SFX_VOL : 0; A.sfxGain.connect(A.master);
+      return true;
+    } catch (e) { return false; }
+  }
+
+  const now = () => (A.ctx ? A.ctx.currentTime : 0);
+
+  function tone(freq, t0, dur, type, gain, dest) {
+    if (!A.ctx) return;
+    const o = A.ctx.createOscillator(), g = A.ctx.createGain();
+    o.type = type || 'triangle';
+    o.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, gain), t0 + 0.016);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(dest || A.sfxGain);
+    o.start(t0); o.stop(t0 + dur + 0.06);
+  }
+
+  /* ---------------- nhạc nền ----------------
+     Marimba vui nhộn, tự sinh khi chơi chứ không lặp lại y hệt.
+
+     Ba bè:
+       trầm      — nốt gốc và quãng năm xen kẽ theo từng phách, nghe nhún
+       giai điệu — marimba, móc đơn, có đảo phách và có chỗ nghỉ
+       hoà âm    — vòng Đô trưởng - La thứ - Fa trưởng - Sol, mỗi ô nhịp một hợp âm
+
+     Marimba dựng bằng cộng hài âm chứ không lọc: hài âm thứ tư rất mạnh và
+     tắt nhanh hơn nốt gốc, chính hai chỗ đó cho ra tiếng gỗ. Thêm hài âm thứ
+     mười tắt rất nhanh làm tiếng dùi gõ vào thanh.
+
+     Chỉnh nhanh: MUSIC_VOL to nhỏ, BPM nhanh chậm, REST_CHANCE thưa dày.      */
+
+  const BPM = 112;
+  const BEAT = 60 / BPM;
+  const BAR = BEAT * 4;
+  const REST_CHANCE = 0.25;
+
+  /* [gốc, quãng năm] của từng hợp âm, tính bằng Hz */
+  const PROG = [[65.41, 98.00],    // Đô trưởng
+                [55.00, 82.41],    // La thứ
+                [43.65, 65.41],    // Fa trưởng
+                [49.00, 73.42]];   // Sol
+
+  const PENT = [261.63, 293.66, 329.63, 392.00, 440.00,
+                523.25, 587.33, 659.25, 783.99];   // ngũ cung Đô, hai quãng tám
+
+  const OFFBEATS = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5];
+  let melIdx = 4, barNo = 0;
+
+  /* Một tiếng gảy dựng bằng cộng hài âm. Mỗi hài âm là [bội số, độ lớn, hằng
+     số tắt]; hài âm cao tắt nhanh hơn thì nghe mới ra chất gỗ.
+     setTargetAtTime cho ra đúng đường cong e mũ trừ, tức đúng cách một vật
+     rung tắt dần trong đời thật. */
+  function pluck(f, t0, amp, attack, parts) {
+    if (!A.ctx) return;
+    parts.forEach(function (p) {
+      const o = A.ctx.createOscillator(), g = A.ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f * p[0];
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.linearRampToValueAtTime(Math.max(0.0002, amp * p[1]), t0 + attack);
+      g.gain.setTargetAtTime(0.0001, t0 + attack, p[2]);
+      o.connect(g); g.connect(A.musicGain);
+      o.start(t0); o.stop(t0 + attack + p[2] * 6 + 0.05);
+    });
+  }
+
+  const MARIMBA = [[1, 1.0, 0.45], [4, 0.55, 0.16], [10, 0.18, 0.05]];
+  const BASS = [[1, 1.0, 0.22], [2, 0.30, 0.22]];
+
+  function scheduleBar(t0) {
+    const ch = PROG[barNo % PROG.length];
+
+    /* bè trầm nhún: gốc, quãng năm, gốc, quãng năm */
+    for (let b = 0; b < 4; b++) pluck(ch[b % 2], t0 + b * BEAT, 0.50, 0.004, BASS);
+
+    /* giai điệu đi từng bậc, không nhảy xa, thỉnh thoảng bỏ trống một nốt */
+    OFFBEATS.forEach(function (b) {
+      if (Math.random() < REST_CHANCE) return;
+      melIdx += Math.floor(Math.random() * 5) - 2;
+      if (melIdx < 0) melIdx = 0;
+      if (melIdx >= PENT.length) melIdx = PENT.length - 1;
+      pluck(PENT[melIdx], t0 + b * BEAT, (b % 1 === 0) ? 0.55 : 0.38, 0.003, MARIMBA);
+    });
+
+    barNo++;
+  }
+
+  /* Đặt trước hai ô nhịp rồi cứ nửa ô nhịp lại kiểm một lần. setTimeout chạy
+     không đều, nhưng mọi nốt đều hẹn theo đồng hồ của WebAudio nên tiết tấu
+     vẫn chính xác từng mili giây. */
+  function tick() {
+    clearTimeout(A.timer);
+    if (!A.ctx || !A.playing) return;
+    while (A.nextBar < now() + BAR * 2) { scheduleBar(A.nextBar); A.nextBar += BAR; }
+    A.timer = setTimeout(tick, BAR * 500);
+  }
+
+  function musicStart() {
+    if (!init() || A.playing) return;
+    A.playing = true; barNo = 0; melIdx = 4;
+    A.nextBar = now() + 0.25;
+    tick();
+    A.musicGain.gain.cancelScheduledValues(now());
+    A.musicGain.gain.setValueAtTime(0.0001, now());
+    A.musicGain.gain.exponentialRampToValueAtTime(on ? MUSIC_VOL : 0.0001, now() + 1.8);
+  }
+
+  function musicStop() {
+    clearTimeout(A.timer);
+    A.playing = false;
+    if (!A.ctx) return;
+    const t = now();
+    A.musicGain.gain.cancelScheduledValues(t);
+    A.musicGain.gain.setValueAtTime(Math.max(0.0002, A.musicGain.gain.value), t);
+    A.musicGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+  }
+
+  /* ---------------- hiệu ứng ---------------- */
+  const sfx = {
+    click: function () { if (A.ctx) tone(660, now(), 0.06, 'triangle', 0.10); },
+    hit: function () {
+      if (!A.ctx) return; const t = now();
+      tone(523.25, t, 0.18, 'triangle', 0.16);
+      tone(784.00, t + 0.07, 0.30, 'sine', 0.11);
+    },
+    miss: function () {
+      if (!A.ctx) return; const t = now();
+      tone(146.83, t, 0.26, 'triangle', 0.13);
+      tone(98.00, t + 0.03, 0.34, 'sine', 0.13);
+    },
+    level: function () {
+      if (!A.ctx) return; const t = now();
+      [392.00, 523.25, 659.25].forEach(function (f, i) { tone(f, t + i * 0.11, 0.55, 'triangle', 0.13); });
+    },
+    done: function () {
+      if (!A.ctx) return; const t = now();
+      [261.63, 392.00, 523.25, 784.00].forEach(function (f, i) { tone(f, t + i * 0.17, 0.95, 'sine', 0.12); });
+    }
+  };
+
+  /* ---------------- bật tắt ---------------- */
+  function setOn(v) {
+    on = !!v;
+    try { localStorage.setItem(KEY_SND, on ? '1' : '0'); } catch (e) { }
+    if (!A.ctx) { if (on) musicStart(); return on; }
+    const t = now();
+    A.sfxGain.gain.setTargetAtTime(on ? SFX_VOL : 0, t, 0.05);
+    A.musicGain.gain.cancelScheduledValues(t);
+    A.musicGain.gain.setValueAtTime(Math.max(0.0002, A.musicGain.gain.value), t);
+    A.musicGain.gain.exponentialRampToValueAtTime(on ? MUSIC_VOL : 0.0001, t + 0.6);
+    if (on && !A.playing) musicStart();
+    return on;
+  }
+  const isOn = () => on;
+
+  /* iOS treo AudioContext khi chuyển tab hay khoá màn hình — chạm lại là đánh thức */
+  ['touchend', 'pointerup', 'click'].forEach(function (ev) {
+    document.addEventListener(ev, function () {
+      try { if (A.ctx && A.ctx.state === 'suspended') A.ctx.resume(); } catch (e) { }
+    }, { passive: true, capture: true });
+  });
+  document.addEventListener('visibilitychange', function () {
+    try { if (!document.hidden && A.ctx && A.ctx.state === 'suspended') A.ctx.resume(); } catch (e) { }
+  });
+
+  return { init: init, sfx: sfx, musicStart: musicStart, musicStop: musicStop, setOn: setOn, isOn: isOn };
+})();
+
+</script>
+<script>
 /* ===== game.js ===== */
 /* ============================================================================
    CẢ TIN — logic trò chơi
@@ -649,7 +937,6 @@ function buildRun(code) {
     LEVELS = buildRun(seed);
     S.level = (typeof level === 'number' && level >= 0 && level < LEVELS.length) ? level : 0;
     S.ranks = Array.isArray(ranks) ? ranks.slice(0, LEVELS.length) : [];
-    el('seedTag').textContent = seed;
     save();
   }
 
@@ -749,7 +1036,7 @@ function buildRun(code) {
     S.streak = 0; S.tries = 0; S.log = [];
     el('lvlNum').textContent = S.level + 1;
     el('lvlAll').textContent = LEVELS.length;
-    el('lvlTag').textContent = 'Hồ sơ ' + String(S.level + 1).padStart(2, '0');
+    el('lvlTag').textContent = 'Ván ' + S.seed;
     el('ruleText').textContent = L.shown;
     el('tries').textContent = '0 lần thử';
     el('hintBtn').hidden = true;
@@ -766,6 +1053,8 @@ function buildRun(code) {
     S.tries++;
     S.log.unshift({ t: t, ok: ok });
     S.streak = ok ? S.streak + 1 : 0;
+
+    AU.sfx[ok ? 'hit' : 'miss']();
 
     const node = el('board').querySelector('[data-i="' + i + '"]');
     if (node) {
@@ -795,6 +1084,7 @@ function buildRun(code) {
     el('revRank').textContent = rankOf(S.tries);
     el('revVoice').innerHTML = '<span>Người dẫn đường</span>' + L.voice;
     el('nextBtn').textContent = (S.level === LEVELS.length - 1) ? 'Kết thúc' : 'Màn tiếp theo';
+    AU.sfx.level();
     el('reveal').hidden = false;
     el('nextBtn').focus();
   }
@@ -813,16 +1103,59 @@ function buildRun(code) {
     el('endTotal').textContent = total;
     el('endSeed').textContent = S.seed;
     el('endVoice').innerHTML = '<span>Người dẫn đường</span>' + OUTRO;
+    AU.sfx.done();
     el('endScreen').hidden = false;
     el('againBtn').focus();
   }
 
-  /* Chơi lại = một mã ván MỚI, tức một bộ sáu bảng luật khác hẳn. */
+  /* Ván mới = một mã ván MỚI, tức một bộ sáu bảng luật khác hẳn. */
   function reset() {
-    el('reveal').hidden = true;
-    el('endScreen').hidden = true;
+    AU.sfx.click();
+    closeAllOverlays();
     openRun(newSeedCode(), 0, []);
     startLevel();
+  }
+
+  function closeAllOverlays() {
+    el('startScreen').hidden = true;
+    el('reveal').hidden = true;
+    el('endScreen').hidden = true;
+  }
+
+  /* ---------- màn hình mở đầu ---------- */
+  function showStart() {
+    AU.musicStop();
+    el('reveal').hidden = true;
+    el('endScreen').hidden = true;
+    const d = loadSaved();
+    const canResume = !!(d && d.level > 0);
+    el('resumeBtn').hidden = !canResume;
+    if (canResume) el('resumeBtn').textContent = 'Chơi tiếp màn ' + (d.level + 1);
+    el('startScreen').hidden = false;
+    el('playBtn').focus();
+  }
+
+  /* Mọi lối vào ván đều đi qua đây: nhạc chỉ được phép bắt đầu sau một cú
+     chạm của người chơi, trình duyệt nào cũng chặn tự phát. */
+  function enterGame(seed, level, ranks) {
+    AU.init();
+    if (AU.isOn()) AU.musicStart();
+    closeAllOverlays();
+    openRun(seed, level, ranks);
+    startLevel();
+  }
+
+  /* ---------- nút âm thanh ---------- */
+  const ICON_ON = '<path d="M4 9v6h4l5 5V4L8 9zM16.5 12a3.5 3.5 0 0 0-2-3.16v6.32A3.5 3.5 0 0 0 16.5 12z' +
+                  'M14.5 3.23v2.06A6.5 6.5 0 0 1 14.5 18.7v2.06A8.5 8.5 0 0 0 14.5 3.23z"/>';
+  const ICON_OFF = '<path d="M4 9v6h4l5 5V4L8 9zM21 9.41 19.59 8l-2.3 2.29L15 8v2.83l.88.88L15 12.6v2.82' +
+                   'l2.29-2.29L19.59 16 21 14.59l-2.29-2.3z"/>';
+  function paintSound() {
+    const onNow = AU.isOn();
+    el('icSound').innerHTML = onNow ? ICON_ON : ICON_OFF;
+    el('btnSound').setAttribute('aria-pressed', onNow ? 'true' : 'false');
+    el('btnSound').title = onNow ? 'Tắt âm thanh' : 'Bật âm thanh';
+    el('lblSound').textContent = onNow ? 'Tiếng' : 'Tắt';
   }
 
   /* ---------- gắn sự kiện ---------- */
@@ -848,13 +1181,48 @@ function buildRun(code) {
   el('againBtn').addEventListener('click', reset);
   el('homeBtn').addEventListener('click', () => { window.location.href = '../'; });
 
-  (function boot() {
-    const urlSeed = seedFromUrl();
-    if (urlSeed) { openRun(urlSeed, 0, []); return startLevel(); }
+  el('exitBtn').addEventListener('click', () => { AU.sfx.click(); showStart(); });
+  /* Ô mã ván có gì thì chơi đúng ván đó, để trống thì bốc ngẫu nhiên. */
+  el('playBtn').addEventListener('click', () => {
+    const raw = el('seedInput').value.trim();
+    if (!raw) { enterGame(newSeedCode(), 0, []); AU.sfx.click(); return; }
+    const c = normSeedCode(raw);
+    if (!c) {
+      el('seedInput').value = '';
+      el('seedInput').placeholder = 'Mã 4 ký tự';
+      el('seedInput').focus();
+      return;
+    }
+    enterGame(c, 0, []);
+    AU.sfx.click();
+  });
+  el('resumeBtn').addEventListener('click', () => {
     const d = loadSaved();
-    if (d) openRun(normSeedCode(d.seed), d.level, d.ranks);
+    if (d) enterGame(normSeedCode(d.seed), d.level, d.ranks);
+    else enterGame(newSeedCode(), 0, []);
+    AU.sfx.click();
+  });
+  el('seedInput').addEventListener('keydown', e => { if (e.key === 'Enter') el('playBtn').click(); });
+
+  el('btnSound').addEventListener('click', () => {
+    AU.init();
+    AU.setOn(!AU.isOn());
+    paintSound();
+    if (AU.isOn()) AU.sfx.click();
+  });
+
+  (function boot() {
+    paintSound();
+    /* Dựng sẵn bàn chơi phía sau để trang lúc nghỉ không phải là một ô trống,
+       rồi mới phủ màn hình mở đầu lên. */
+    const urlSeed = seedFromUrl();
+    const d = loadSaved();
+    if (urlSeed) openRun(urlSeed, 0, []);
+    else if (d) openRun(normSeedCode(d.seed), d.level, d.ranks);
     else openRun(newSeedCode(), 0, []);
     startLevel();
+    if (urlSeed) el('seedInput').value = urlSeed;
+    showStart();
   })();
 })();
 

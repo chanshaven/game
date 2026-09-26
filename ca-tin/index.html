@@ -86,6 +86,51 @@
     }
     .pip.on { background: var(--gold-400); border-color: var(--gold-400); box-shadow: 0 0 9px rgba(255, 209, 102, .6) }
 
+    /* nút biểu tượng trên thanh đầu trang */
+    .icobtn {
+      display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto;
+      background: transparent; color: var(--gold-300); cursor: pointer;
+      border: 1.5px solid rgba(255, 209, 102, .26); border-radius: 10px;
+      padding: 7px 10px; font: inherit; text-decoration: none;
+      font-family: var(--fx-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+    }
+    .icobtn:hover { border-color: var(--gold-400); color: var(--gold-400) }
+    .icobtn:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px }
+    .icobtn svg { width: 15px; height: 15px; flex: 0 0 auto; display: block; fill: currentColor }
+    .icobtn[aria-pressed="false"] { color: var(--cream-dim); opacity: .6 }
+    /* chật chỗ thì bỏ chữ, giữ biểu tượng */
+    @media (max-width: 430px) { .icobtn .lbl { display: none } .icobtn { padding: 7px 9px } }
+
+    /* ---------- màn hình mở đầu ---------- */
+    .sheet.start { gap: 16px }
+    .start .lead {
+      margin: 0; font-size: 15.5px; line-height: 1.55; color: var(--ink); text-wrap: balance;
+    }
+    .start ol.how {
+      margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px;
+      font-size: 13.5px; line-height: 1.5; color: var(--ink-soft);
+    }
+    .start ol.how b { color: var(--ink) }
+    .seedin { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+    .seedin label {
+      font-family: var(--fx-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft);
+    }
+    .seedin input {
+      font-family: var(--fx-mono); font-size: 14px; font-weight: 600; letter-spacing: .18em;
+      width: 6.5em; padding: 8px 10px; text-transform: uppercase;
+      background: rgba(0, 0, 0, .05); color: var(--ink);
+      border: 1px solid var(--paper-line); border-radius: 4px;
+    }
+    .seedin input:focus-visible { outline: 2px solid var(--stamp); outline-offset: 1px }
+    /* Nút phụ nằm trên tờ giấy sáng thì phải lấy màu mực. Màu vàng kem là
+       màu dành cho nền tối, đặt lên đây đọc không ra, trông như nút bị khoá. */
+    .sheet .act { color: var(--ink); border-color: var(--paper-line) }
+    .sheet .act:hover { border-color: var(--ink); background: rgba(0, 0, 0, .04) }
+    .sheet .act:focus-visible { outline-color: var(--stamp) }
+    .sheet .act.primary { color: #3A1704; border-color: transparent }
+
     /* ---------- bảng luật: tờ giấy hành chính đặt giữa sân khấu ---------- */
     .card {
       position: relative; background: var(--paper); color: var(--ink);
@@ -250,15 +295,22 @@
 
   <main class="wrap">
     <header class="top">
-      <div class="brand"><a href="../">Cả Tin</a></div>
+      <a class="icobtn" href="../" title="Về trang chủ Fiddle Game">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 12h3v9h5v-6h4v6h5v-9h3z"/></svg>
+        <span class="lbl">Trang chủ</span>
+      </a>
       <div class="meta">
         <div class="lvl">Màn <span id="lvlNum">1</span>/<span id="lvlAll">6</span></div>
         <div class="pips" id="pips" aria-label="Chuỗi đúng liên tiếp"></div>
+        <button class="icobtn" id="btnSound" aria-pressed="true" title="Bật tắt âm thanh">
+          <svg id="icSound" viewBox="0 0 24 24" aria-hidden="true"></svg>
+          <span class="lbl" id="lblSound">Tiếng</span>
+        </button>
       </div>
     </header>
 
     <section class="card">
-      <div class="eyebrow"><span>Bảng luật</span><span id="lvlTag">Hồ sơ 01</span></div>
+      <div class="eyebrow"><span>Bảng luật</span><span id="lvlTag"></span></div>
       <p class="rule" id="ruleText">…</p>
     </section>
 
@@ -275,12 +327,35 @@
       <p class="hint" id="hintText" hidden></p>
       <div class="btnrow">
         <button class="act" id="hintBtn" hidden>Gợi ý</button>
-        <button class="act" id="resetBtn">Chơi lại từ đầu</button>
+        <button class="act" id="resetBtn">Ván mới</button>
+        <button class="act" id="exitBtn">Thoát ván</button>
       </div>
-      <p class="note">Qua màn bằng cách chọn đúng <strong>ba lần liên tiếp</strong>. Bàn chơi đổi sau mỗi lần thử.<br>
-        Mã ván <b id="seedTag">—</b> &mdash; mỗi ván một bộ luật khác.</p>
+      <p class="note">Qua màn bằng cách chọn đúng <strong>ba lần liên tiếp</strong>. Bàn chơi đổi sau mỗi lần thử.</p>
     </div>
   </main>
+
+  <div class="overlay" id="startScreen" hidden>
+    <div class="sheet start" role="dialog" aria-modal="true" aria-labelledby="startTitle">
+      <h2 id="startTitle">Cả Tin</h2>
+      <p class="lead">Mỗi màn hiện ra một bảng luật viết rõ ràng. Bảng luật đó nói dối.</p>
+      <ol class="how">
+        <li>Chọn một ô bất kỳ. Game trả lời <b>đúng</b> hoặc <b>sai</b>.</li>
+        <li>Đọc sổ tay, so các lần thử với nhau, suy ra luật thật.</li>
+        <li>Chọn đúng <b>ba lần liên tiếp</b> là qua màn. Bàn chơi đổi sau mỗi lần thử.</li>
+      </ol>
+      <div class="seedin">
+        <label for="seedInput">Mã ván</label>
+        <input id="seedInput" maxlength="4" placeholder="để trống" autocomplete="off" spellcheck="false"
+          inputmode="latin" aria-describedby="seedHelp">
+      </div>
+      <p class="seednote" id="seedHelp">Để trống thì bốc một ván ngẫu nhiên. Cùng mã thì cùng bộ sáu bảng luật,
+        nên gửi mã cho bạn bè là hai người chơi đúng một ván.</p>
+      <div class="btnrow">
+        <button class="act primary" id="playBtn">Bắt đầu</button>
+        <button class="act" id="resumeBtn" hidden>Chơi tiếp</button>
+      </div>
+    </div>
+  </div>
 
   <div class="overlay" id="reveal" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="revealTitle">
@@ -298,7 +373,7 @@
 
   <div class="overlay" id="endScreen" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="endTitle">
-      <h2 id="endTitle">Hết hồ sơ</h2>
+      <h2 id="endTitle">Hết ván</h2>
       <table class="scores">
         <tbody id="scoreBody"></tbody>
       </table>
@@ -317,6 +392,7 @@
   </div>
 
   <script src="levels.js"></script>
+  <script src="audio.js"></script>
   <script src="game.js"></script>
 </body>
 

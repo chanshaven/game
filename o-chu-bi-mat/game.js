@@ -38,26 +38,158 @@ let strictAccent = true;                       // mặc định: bắt buộc g�
 const same     = (a,b) => strictAccent ? normV(a)===normV(b) : norm(a)===norm(b);
 const nearMiss = (a,b) => strictAccent && normV(a)!==normV(b) && norm(a)===norm(b) && norm(a)!=='';
 
-/* ---------- âm thanh ---------- */
-let AC=null, soundOn=true;
-function beep(freq, dur=.14, type='sine', vol=.18, delay=0){
-  if(!soundOn) return;
+/* ============================================================================
+   ÂM THANH — tất cả sinh ra bằng Web Audio, không dùng file mp3 nào
+   ----------------------------------------------------------------------------
+   Đường tín hiệu:  nhạc nền  ┐
+                              ├─> master ─> bộ nén ─> loa
+                    hiệu ứng  ┘
+   Bộ nén để tiếng thắng cuộc (cả chục nốt chồng nhau) không chói tai.
+   ========================================================================== */
+const A = { ctx:null, master:null, musicGain:null, sfxGain:null, noise:null,
+            timer:null, step:0, next:0, duck:false };
+let soundOn = true;      // hiệu ứng
+let musicOn = true;      // nhạc nền
+const MUSIC_VOL = 0.34;  // to nhỏ của nhạc nền, chỉnh ở đây
+const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+
+function audioInit(){
+  if(A.ctx){ if(A.ctx.state==='suspended') A.ctx.resume(); return true; }
   try{
-    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
-    const t = AC.currentTime + delay;
-    const o = AC.createOscillator(), g = AC.createGain();
-    o.type=type; o.frequency.setValueAtTime(freq,t);
-    g.gain.setValueAtTime(0,t);
-    g.gain.linearRampToValueAtTime(vol,t+.01);
-    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
-    o.connect(g).connect(AC.destination); o.start(t); o.stop(t+dur+.02);
-  }catch(e){}
+    const C = window.AudioContext || window.webkitAudioContext;
+    if(!C) return false;
+    A.ctx = new C();
+    if(A.ctx.state==='suspended' && A.ctx.resume) A.ctx.resume();
+    A.master = A.ctx.createGain(); A.master.gain.value = 0.9;
+    let out = A.ctx.destination;
+    try{
+      const comp = A.ctx.createDynamicsCompressor();
+      comp.threshold.value=-8; comp.knee.value=18; comp.ratio.value=4;
+      comp.attack.value=0.005; comp.release.value=0.25;
+      comp.connect(A.ctx.destination); out = comp;
+    }catch(e){}
+    A.master.connect(out);
+    A.musicGain = A.ctx.createGain(); A.musicGain.gain.value = 0; A.musicGain.connect(A.master);
+    A.sfxGain   = A.ctx.createGain(); A.sfxGain.gain.value   = 0.75; A.sfxGain.connect(A.master);
+    const len = A.ctx.sampleRate * 1.2, buf = A.ctx.createBuffer(1,len,A.ctx.sampleRate), d = buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i] = Math.random()*2-1;
+    A.noise = buf;
+    return true;
+  }catch(e){ return false; }
 }
-const sGood = ()=>{[523,659,784,1046].forEach((f,i)=>beep(f,.16,'triangle',.16,i*.07))};
-const sBad  = ()=>{beep(220,.22,'sawtooth',.13);beep(155,.32,'sawtooth',.13,.13)};
-const sWin  = ()=>{[523,659,784,1046,1318].forEach((f,i)=>beep(f,.3,'triangle',.18,i*.11))};
+function tone(freq, t0, dur, type, gain, dest){
+  if(!A.ctx) return;
+  const o=A.ctx.createOscillator(), g=A.ctx.createGain();
+  o.type=type||'triangle'; o.frequency.setValueAtTime(freq,t0);
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(Math.max(0.0002,gain), t0+0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  o.connect(g); g.connect(dest||A.sfxGain);
+  o.start(t0); o.stop(t0+dur+0.06);
+}
+function noiseHit(t0, dur, gain, hp, dest){
+  if(!A.ctx||!A.noise) return;
+  const s=A.ctx.createBufferSource(); s.buffer=A.noise;
+  const f=A.ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value=hp||2000;
+  const g=A.ctx.createGain();
+  g.gain.setValueAtTime(gain,t0); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  s.connect(f); f.connect(g); g.connect(dest||A.sfxGain);
+  s.start(t0); s.stop(t0+dur+0.02);
+}
+const now = () => A.ctx ? A.ctx.currentTime : 0;
+
+/* ---------- hiệu ứng ---------- */
+function beep(freq, dur=.14, type='sine', vol=.18, delay=0){
+  if(!soundOn || !audioInit()) return;
+  tone(freq, now()+delay, dur, type, vol);
+}
+const sGood = ()=>{ if(!soundOn||!audioInit())return; const t=now();
+  [523,659,784,1046].forEach((f,i)=>tone(f,t+i*0.07,0.22,'triangle',0.16)); };
+const sBad  = ()=>{ if(!soundOn||!audioInit())return; const t=now();
+  tone(233,t,0.22,'sawtooth',0.12); tone(165,t+0.13,0.34,'sawtooth',0.12); };
+const sWin  = ()=>{ if(!soundOn||!audioInit())return; const t=now();
+  [523,659,784,1046,1318].forEach((f,i)=>tone(f,t+i*0.11,0.42,'triangle',0.17));
+  [0,0.11,0.22].forEach(d=>noiseHit(t+d,0.18,0.05,3000)); };
 const sTick = ()=>beep(880,.05,'square',.07);
 const sOpen = ()=>beep(660,.09,'sine',.1);
+
+/* ============================================================================
+   NHẠC NỀN — vòng lặp 8 ô nhịp, hợp âm Am – F – C – G, giai điệu hộp nhạc.
+   Chậm và êm vì đây là game phải suy nghĩ, không phải game gấp gáp.
+   Muốn đổi nhạc thì sửa CHORDS (hợp âm) và MEL (giai điệu) bên dưới.
+   Số trong MEL là cao độ MIDI, 0 = nghỉ. 69 = nốt La giữa.
+   ========================================================================== */
+const CHORDS = [[57,60,64],[53,57,60],[52,55,60],[55,59,62],
+                [57,60,64],[53,57,60],[52,55,60],[55,59,62]];
+const MEL = [
+  [69, 0,72, 0,76, 0,74, 0],
+  [72, 0,69, 0,72, 0, 0, 0],
+  [76, 0,74, 0,72, 0,69, 0],
+  [67, 0,71, 0,74, 0, 0, 0],
+  [81, 0,79, 0,76, 0,74, 0],
+  [72,74,76, 0,74, 0, 0, 0],
+  [79, 0,76, 0,72, 0,74, 0],
+  [71, 0,74, 0,69, 0, 0, 0]
+];
+const BPM = 84, STEP = (60/BPM)/4;
+
+function scheduleStep(st, t){
+  const bar = Math.floor(st/16) % 8, p = st % 16, ch = CHORDS[bar];
+  if(p===0){                                   // nền dày, ngân dài cả ô nhịp
+    ch.forEach(m => tone(mtof(m), t, 2.5, 'sine', 0.035, A.musicGain));
+    tone(mtof(ch[0]-24), t, 0.7, 'sine', 0.18, A.musicGain);   // bè trầm
+  }
+  if(p===8) tone(mtof(ch[0]-24), t, 0.5, 'sine', 0.12, A.musicGain);
+  if(p%2===0){                                 // giai điệu hộp nhạc
+    const m = MEL[bar][p/2];
+    if(m) tone(mtof(m), t, 0.5, 'triangle', 0.10, A.musicGain);
+  }
+  if(p%4===2) tone(mtof(ch[((p-2)/4)%3]+12), t, 0.16, 'sine', 0.022, A.musicGain);
+  if(p%4===0) noiseHit(t, 0.025, 0.012, 7000, A.musicGain);    // hi-hat khẽ
+  if(p===8)   noiseHit(t, 0.09, 0.022, 1600, A.musicGain);
+}
+function musicStart(){
+  if(!A.ctx || A.timer) return;
+  A.next = A.ctx.currentTime + 0.1;
+  A.timer = setInterval(()=>{
+    if(!A.ctx) return;
+    while(A.next < A.ctx.currentTime + 0.2){ scheduleStep(A.step, A.next); A.step++; A.next += STEP; }
+  }, 30);
+}
+function musicStop(){ if(A.timer){ clearInterval(A.timer); A.timer=null; } }
+function musicLevel(){ return musicOn ? (A.duck ? MUSIC_VOL*0.4 : MUSIC_VOL) : 0.0001; }
+function applyMusicGain(ms=600){
+  if(!A.ctx) return;
+  const g=A.musicGain.gain, t=A.ctx.currentTime;
+  g.cancelScheduledValues(t); g.setValueAtTime(Math.max(0.0001,g.value), t);
+  g.linearRampToValueAtTime(musicLevel(), t + ms/1000);
+}
+function setMusic(on){
+  musicOn = on;
+  const b=$('#btnMusic');
+  if(b){ b.classList.toggle('off',!on); b.querySelector('span').textContent = on ? 'Nhạc nền' : 'Tắt nhạc'; }
+  if(!audioInit()) return;
+  try{ if(A.ctx.state==='suspended') A.ctx.resume(); }catch(e){}
+  applyMusicGain();
+  if(on) musicStart(); else setTimeout(musicStop, 700);
+}
+/* hạ nhạc xuống khi đang đọc câu hỏi để còn nghe người dẫn nói */
+function duck(on){ A.duck = on; applyMusicGain(250); }
+
+/* Trình duyệt không cho phát tiếng trước khi người dùng chạm vào trang,
+   nên nhạc chỉ thật sự bắt đầu ở cú bấm phím / chạm đầu tiên. */
+let audioArmed = false;
+function armAudio(){
+  if(audioArmed) return; audioArmed = true;
+  if(audioInit() && musicOn) setMusic(true);
+}
+['pointerdown','keydown','touchend'].forEach(ev =>
+  document.addEventListener(ev, armAudio, {once:false, passive:true}));
+document.addEventListener('visibilitychange', ()=>{
+  if(!A.ctx) return;
+  if(document.hidden) musicStop();
+  else if(musicOn){ try{A.ctx.resume();}catch(e){} musicStart(); }
+});
 
 /* ---------- trạng thái ---------- */
 let D, S;
@@ -159,12 +291,12 @@ function openQ(i){
   $('#qLen').textContent = r.L.length + ' chữ cái';
   $('#qHint').disabled = r.hinted;
   $('#qInput').value=''; 
-  $('#ovQ').classList.add('show');
+  $('#ovQ').classList.add('show'); duck(true);
   setTimeout(()=>$('#qInput').focus(), 80);
   startTimer();
 }
 function closeQ(){
-  stopTimer(); $('#ovQ').classList.remove('show');
+  stopTimer(); $('#ovQ').classList.remove('show'); duck(false);
   document.querySelectorAll('.cell.peek').forEach(c=>{
     c.classList.remove('peek');
     const f=c.querySelector('.face'); f.classList.remove('peeked');
@@ -262,7 +394,7 @@ function paintAccentUI(){
 function openK(){
   if(S.over||S.lives<=0) return;
   $('#kMeta').innerHTML='Đúng: <b>+'+bonusNow()+'đ</b> • Sai: −15đ • Còn '+S.lives+' lượt';
-  $('#kInput').value=''; $('#ovK').classList.add('show');
+  $('#kInput').value=''; $('#ovK').classList.add('show'); duck(true);
   setTimeout(()=>$('#kInput').focus(),80); sOpen();
 }
 function guessK(){
@@ -274,11 +406,11 @@ function guessK(){
   }
   if(same(v, D.keyword)){
     S.score += bonusNow();
-    $('#ovK').classList.remove('show');
+    $('#ovK').classList.remove('show'); duck(false);
     finish(true);
   }else{
     S.lives--; S.score=Math.max(0,S.score-15);
-    $('#ovK').classList.remove('show'); render(); sBad();
+    $('#ovK').classList.remove('show'); duck(false); render(); sBad();
     toast(S.lives>0 ? '❌ Chưa đúng rồi! Còn '+S.lives+' lượt đoán (−15đ)' : '❌ Hết lượt đoán từ khoá!','bad');
     checkEnd();
   }
@@ -311,6 +443,7 @@ function finish(win){
     const pt = r.state==='open' ? '+10đ' : r.state==='failed' ? '0đ' : 'chưa mở';
     return `<div><span class="${cl}">${ic} (${i+1})</span> <span>${r.a}</span><b>${pt}</b></div>`;
   }).join('');
+  duck(true);
   setTimeout(()=>$('#ovR').classList.add('show'), 600);
   if(win){ sWin(); confetti(); } else beep(200,.5,'sine',.12);
 }
@@ -342,14 +475,15 @@ $('#qClose').onclick  = closeQ;
 $('#qHint').onclick   = hint;
 $('#qInput').addEventListener('keydown', e=>{ if(e.key==='Enter') answer(false); });
 $('#kSubmit').onclick = guessK;
-$('#kClose').onclick  = ()=>$('#ovK').classList.remove('show');
+$('#kClose').onclick  = ()=>{ $('#ovK').classList.remove('show'); duck(false); };
 $('#kInput').addEventListener('keydown', e=>{ if(e.key==='Enter') guessK(); });
 $('#btnGuess').onclick = openK;
 $('#btnNext').onclick  = ()=>{ const i=S.rows.findIndex(r=>r.state==='idle'); if(i>=0) openQ(i); };
-$('#btnReset').onclick = ()=>{ $('#ovR').classList.remove('show'); newGame(+($('#topicPick').value||0)); toast('Bắt đầu lại nào! 🌱','info'); };
-$('#rAgain').onclick   = ()=>{ $('#ovR').classList.remove('show'); newGame(+($('#topicPick').value||0)); };
+$('#btnReset').onclick = ()=>{ $('#ovR').classList.remove('show'); duck(false); newGame(+($('#topicPick').value||0)); toast('Bắt đầu lại nào! 🌱','info'); };
+$('#rAgain').onclick   = ()=>{ $('#ovR').classList.remove('show'); duck(false); newGame(+($('#topicPick').value||0)); };
 $('#btnSound').onclick = e=>{ soundOn=!soundOn; e.currentTarget.classList.toggle('off',!soundOn);
-  e.currentTarget.querySelector('span').textContent = soundOn?'Âm thanh':'Đã tắt'; if(soundOn) sOpen(); };
+  e.currentTarget.querySelector('span').textContent = soundOn?'Âm thanh':'Tắt tiếng'; if(soundOn) sOpen(); };
+$('#btnMusic').onclick = ()=>setMusic(!musicOn);
 $('#btnAccent').onclick = ()=>{
   strictAccent=!strictAccent; paintAccentUI(); sOpen();
   toast(strictAccent ? 'Chế độ <b>bắt buộc gõ dấu</b> ✍️' : 'Chế độ <b>không cần dấu</b>','info');
@@ -361,7 +495,7 @@ $('#btnTimer').onclick = e=>{
   e.currentTarget.querySelector('span').textContent = S.timerOn ? ('Giờ: '+TIME+'s') : 'Không giờ';
   if(S.cur>=0) startTimer();
 };
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeQ(); $('#ovK').classList.remove('show'); }});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeQ(); $('#ovK').classList.remove('show'); duck(false); }});
 addEventListener('resize', ()=>{ const cv=$('#confetti'); cv.width=innerWidth; cv.height=innerHeight; });
 
 /* ---------- chọn bộ đề ---------- */

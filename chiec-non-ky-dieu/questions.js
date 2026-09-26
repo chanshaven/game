@@ -661,3 +661,100 @@
 );
 
 
+(window.QBANK = window.QBANK || []).push(
+
+  ["BÒ TÓT", "Động vật",
+    "Loài thú lớn nào được đồng bào Rắc Lây gọi là “min”?"],
+
+  ["KẾT THÚC THẾ CHIẾN II", "Lịch sử",
+    "Bức ảnh “nụ hôn chiến thắng” ở Quảng trường Thời Đại ghi lại khoảnh khắc ăn mừng sự kiện nào?"],
+
+  ["THỢ MỎ", "Văn học",
+    "Bảy chú lùn trong truyện Nàng Bạch Tuyết làm nghề gì?"],
+
+  ["TIỂU THUYẾT THỨ BẢY", "Văn học",
+    "Tác phẩm Đời thừa của Nam Cao lần đầu được đăng trên tờ báo nào?"],
+
+  ["BẾN TRE", "Ẩm thực",
+    "Sầu riêng Cái Mơn nổi tiếng là đặc sản của địa phương nào?"],
+
+  ["MẸ", "Tiếng Việt",
+    "Trong cách gọi dân gian ở một số vùng miền Bắc, từ “bu” có nghĩa là gì?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["NGƯỜI CHIẾN SĨ ẤY", "Âm nhạc",
+    "Ca khúc nào có câu “Bao nhiêu năm trường lên rừng xuống biển...”?"],
+
+  ["NGÀY KHÍ TƯỢNG THẾ GIỚI", "Khoa học",
+    "Ngày 23 tháng 3 hằng năm được biết đến là ngày quốc tế nào?"],
+
+  ["CÁCH MẠNG THÁNG MƯỜI NGA", "Lịch sử",
+    "Tác phẩm Mười ngày rung chuyển thế giới của John Reed viết về cuộc cách mạng nào?"],
+
+  ["MƯỜNG", "Văn hóa",
+    "Hát Xường là hình thức sinh hoạt văn hóa cổ truyền của dân tộc nào?"],
+
+  ["NGUYỄN TƯ NGHIÊM", "Nghệ thuật",
+    "Bức tranh Nguyệt ước là tác phẩm của họa sĩ nào?"],
+
+  ["ROLAND GARROS", "Thể thao",
+    "Giải quần vợt Pháp Mở rộng mang tên một nhà tiên phong trong lĩnh vực nào?"],
+
+  ["NABATAEA", "Lịch sử",
+    "Thành phố cổ Petra từng là kinh đô của vương quốc cổ đại nào?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["CHAPPELL ROAN", "Âm nhạc",
+    "Nữ ca sĩ nào giành giải Nghệ sĩ mới xuất sắc nhất tại Grammy 2025?"],
+
+  ["HOÀNG NHUẬN CẦM", "Văn học",
+    "Nhà thơ nào từng vào vai Bác sĩ Hoa Súng trong chương trình Gặp nhau cuối tuần?"],
+
+  ["KỶ NEOGEN", "Khoa học",
+    "Kỷ địa chất nào bắt đầu khoảng 23 triệu năm trước và thuộc Đại Tân Sinh?"],
+
+  ["SAO THỦY", "Thiên văn",
+    "Hố va chạm mang tên danh họa Tô Ngọc Vân nằm trên hành tinh nào?"],
+
+  ["QUẠ ĐEN", "Động vật",
+    "Những Ravenmaster tại Tháp London có nhiệm vụ chăm sóc loài chim nào?"],
+
+  ["PAKISTAN", "Địa lý",
+    "Hồ Attabad nổi tiếng nằm ở quốc gia nào?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["LÀM GỐM", "Văn hóa",
+    "Nghề truyền thống nổi tiếng của làng cổ Phước Tích ở Huế là nghề gì?"],
+
+  ["THEODORE ROOSEVELT", "Lịch sử",
+    "Trong bốn tổng thống trên núi Rushmore, ai gắn nổi bật với bảo tồn thiên nhiên?"],
+
+  ["DAMIEN CHAZELLE", "Điện ảnh",
+    "Đạo diễn nào trở thành người trẻ nhất từng giành Oscar Đạo diễn xuất sắc nhất?"],
+
+  ["THẦN GEB", "Thần thoại",
+    "Trong thần thoại Ai Cập cổ đại, vị thần nào tượng trưng cho Trái Đất?"],
+
+  ["MẠNH HẠO NHIÊN", "Văn học",
+    "Bài thơ Hoàng Hạc lâu tống Mạnh Hạo Nhiên chi Quảng Lăng của Lý Bạch tiễn biệt ai?"],
+
+  ["LÀNG VŨ ĐẠI NGÀY ẤY", "Điện ảnh",
+    "Bộ phim nào được chuyển thể từ nhiều tác phẩm của nhà văn Nam Cao?"],
+
+  ["TÂM THẤT TRÁI", "Sinh học",
+    "Ngăn tim nào có thành cơ dày nhất để bơm máu đi khắp cơ thể?"]
+
+);
+

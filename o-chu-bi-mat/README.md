@@ -130,7 +130,8 @@ Có từ 2 bộ đề trở lên, game **tự hiện ô chọn chủ đề** tr�
 | 🏠 **Trang chủ** | Quay về trang danh sách game |
 | ✍️ **Bắt buộc gõ dấu** | Bật/tắt yêu cầu gõ đúng dấu tiếng Việt |
 | ⏱️ **Giờ** | Đổi 30s → 45s → 60s → tắt đồng hồ |
-| 🔊 **Âm thanh** | Tắt/bật tiếng |
+| 🎵 **Nhạc nền** | Tắt/bật nhạc nền |
+| 🔊 **Âm thanh** | Tắt/bật tiếng hiệu ứng (đúng, sai, đếm ngược) |
 | 🔄 **Chơi lại** | Bắt đầu lại từ đầu |
 
 **Về chế độ gõ dấu** (mặc định bật): gõ `nhiet do` sẽ bị nhắc *"Gần đúng rồi, kiểm tra
@@ -145,7 +146,45 @@ Chữ hoa/thường và khoảng trắng không phân biệt: `Thực Vật` = `
 
 ---
 
-## 6. Gộp thành một file để gửi cho người khác
+## 6. Nhạc nền
+
+Nhạc **sinh ra ngay trong trình duyệt bằng Web Audio**, không có file mp3 nào cả —
+thư mục vẫn nhẹ và không dính bản quyền của ai.
+
+Đó là một vòng lặp dài khoảng 23 giây: hợp âm **Am – F – C – G**, giai điệu kiểu hộp
+nhạc ở giọng La thứ, thêm bè trầm, tiếng đệm nhẹ và hi-hat khẽ. Nhịp 84 BPM, chậm và
+êm, vì đây là game phải ngồi nghĩ chứ không phải game gấp gáp.
+
+Vài điều đã xử lý sẵn:
+
+- Trình duyệt cấm phát tiếng trước khi người dùng chạm vào trang, nên nhạc chỉ thật sự
+  bắt đầu ở **cú bấm đầu tiên**. Không phải lỗi.
+- Mở bảng câu hỏi thì nhạc **tự nhỏ xuống còn 40%**, đóng lại thì to trở lại — để người
+  dẫn chương trình đọc câu hỏi còn nghe rõ.
+- Chuyển sang tab khác thì nhạc tạm dừng, quay lại tự chạy tiếp.
+- Nhạc và hiệu ứng đi qua **một bộ nén** ở cuối, nên lúc thắng cuộc cả chục nốt chồng
+  lên nhau vẫn không chói tai.
+
+### Muốn đổi nhạc
+
+Mở `game.js`, tìm khối `NHẠC NỀN` rồi sửa hai mảng:
+
+```js
+const CHORDS = [[57,60,64],[53,57,60],[52,55,60],[55,59,62], ...];  // hợp âm mỗi ô nhịp
+const MEL = [
+  [69, 0,72, 0,76, 0,74, 0],   // 8 nốt móc đơn của ô nhịp 1, số 0 là nghỉ
+  ...
+];
+const BPM = 84;                 // nhanh chậm
+const MUSIC_VOL = 0.34;         // to nhỏ
+```
+
+Số trong mảng là **cao độ MIDI**: 60 = Đô giữa, 69 = La giữa, cứ +12 là lên một quãng
+tám. `MEL` có 8 dòng ứng với 8 ô nhịp, mỗi dòng 8 nốt móc đơn.
+
+---
+
+## 7. Gộp thành một file để gửi cho người khác
 
 Sửa đề xong, chạy:
 
@@ -162,7 +201,7 @@ Lưu ý: bản 1 file vẫn có nút *Trang chủ* trỏ ra `../index.html`, m�
 
 ---
 
-## 7. Đăng lên web
+## 8. Đăng lên web
 
 Thư mục này nằm cạnh `chiec-non-ky-dieu` trong thư mục `game`, và trang chủ
 `game/index.html` đã có sẵn thẻ dẫn vào đây. Sửa xong chỉ cần:

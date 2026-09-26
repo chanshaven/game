@@ -382,6 +382,16 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
   text-align:center;background:rgba(12,3,7,.7);border:1.5px solid rgba(255,209,102,.4);color:var(--cream);margin-bottom:12px}
 .warn{font-size:12.5px;color:#FFD6CD;background:rgba(255,91,65,.14);border:1px solid rgba(255,91,65,.4);
   padding:10px 12px;border-radius:11px;line-height:1.5;margin-bottom:14px}
+/* Nhắc "gõ thiếu dấu" — đây là lời nhắc chứ không phải lỗi, nên dùng màu vàng chứ không đỏ
+   như .warn, để người chơi không tưởng là mình vừa đoán sai và mất cún. */
+.solvehint{font-size:13px;line-height:1.55;font-weight:600;color:var(--gold-300);
+  background:rgba(255,209,102,.14);border:1px solid rgba(255,209,102,.5);
+  padding:10px 12px;border-radius:11px;margin-bottom:12px}
+.solvehint b{color:#FFF6E2}
+.tipvn{font-size:12.5px;opacity:.78;margin-bottom:14px;line-height:1.6}
+.tipvn b{color:var(--gold-300);opacity:1}
+.guessinput.nudge{animation:nudgeIn .42s ease}
+@keyframes nudgeIn{0%,100%{transform:translateX(0)}22%{transform:translateX(-8px)}64%{transform:translateX(8px)}}
 /* kỷ lục cá nhân trên màn hình đầu */
 .record{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
   padding:11px 15px;border-radius:13px;font-size:13px;

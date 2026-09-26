@@ -621,3 +621,43 @@
 );
 
 
+(window.QBANK = window.QBANK || []).push(
+
+  ["EL NINO", "Địa lý",
+    "Hiện tượng nước biển bề mặt nóng lên bất thường ở vùng xích đạo Thái Bình Dương gọi là gì?"],
+
+  ["MẠNH TRƯỜNG", "Điện ảnh",
+    "Nam diễn viên nào từng vào vai Bác Hồ trong phim Thầu Chín ở Xiêm?"],
+
+  ["GỖ DƯƠNG", "Nghệ thuật",
+    "Bức Mona Lisa của Leonardo da Vinci được vẽ trên tấm gỗ loại nào?"],
+
+  ["TƯỢNG THẦN MẶT TRỜI Ở RHODES", "Lịch sử",
+    "Kỳ quan cổ đại nào bị một trận động đất làm sụp đổ?"],
+
+  ["NGỰA ĐUA", "Kiến thức chung",
+    "Seabiscuit, biểu tượng nổi tiếng của nước Mỹ thời Đại khủng hoảng, là loại động vật nào?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["BAYERN MUNICH", "Thể thao",
+    "Đội bóng nào từng vô địch Champions League với thành tích toàn thắng cả mùa?"],
+
+  ["NGUYỄN ĐỊA LÔ", "Lịch sử",
+    "Danh tướng nào của Trần Hưng Đạo nổi tiếng với tài bắn cung bách phát bách trúng?"],
+
+  ["OKTOBERFEST", "Văn hóa",
+    "Lễ hội bia nổi tiếng được tổ chức hằng năm tại Đức có tên là gì?"],
+
+  ["SCHUBERT", "Âm nhạc",
+    "Bản giao hưởng giọng Si thứ mang biệt danh “Bỏ dở” là tác phẩm của ai?"],
+
+  ["TUẦN TRĂNG MẬT", "Điện ảnh",
+    "Charlie Chaplin đến Việt Nam năm 1936 để nghỉ ngơi trong dịp gì?"]
+
+);
+
+

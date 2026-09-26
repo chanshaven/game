@@ -311,8 +311,28 @@ Nghĩa là:
 - Chọn đúng nguyên âm gốc thì **mở hết mọi dấu thanh** của nguyên âm đó — bấm `Â`
   là lộ cả `â ấ ầ ẩ ẫ ậ`. Người chơi không phải đoán riêng từng dấu sắc huyền hỏi ngã nặng.
 
-Riêng khi **đoán cả đáp án**, hàm `loose()` bỏ hết dấu trước khi so sánh, nên gõ
-không dấu vẫn được tính đúng — để người chơi trên điện thoại không cần bộ gõ tiếng Việt.
+Khi **đoán cả đáp án** thì cũng **phân biệt dấu**, giống hệt bảng phím. Có ba hàm lo việc này:
+
+| Hàm | Làm gì | Dùng ở đâu |
+|---|---|---|
+| `nfc()` | Gộp chữ cái và dấu rời thành một ký tự | Cả hai hàm dưới đều gọi nó đầu tiên |
+| `strictKey()` | Giữ nguyên dấu, chỉ bỏ khoảng trắng, dấu câu, hoa thường | So đáp án đúng hay sai |
+| `loose()` | Bỏ sạch dấu, gộp ă â → a, ê → e, ô ơ → o, ư → u, đ → d | Nhận ra trường hợp "đúng chữ, sai dấu" |
+
+Ba nhánh trong `doSolve()`:
+
+1. `strictKey` khớp → **đúng**, thắng ván.
+2. `strictKey` lệch nhưng `loose` khớp → **đúng chữ, sai dấu**. Hiện dòng nhắc màu vàng
+   ngay trong bảng, ô nhập rung nhẹ, bảng không đóng và **không phạt gì cả**. Người chơi
+   sửa dấu rồi chốt lại.
+3. Cả hai đều lệch → **sai**, cún bị bắt như cũ.
+
+Muốn quay lại kiểu cũ (gõ không dấu cũng tính đúng) thì trong `doSolve()` đổi
+`strictKey` thành `loose` ở nhánh 1 rồi xoá nhánh 2 đi.
+
+> `nfc()` quan trọng hơn vẻ ngoài của nó. Bộ gõ tiếng Việt trên máy Mac hay sinh ra chữ
+> ở dạng tách rời — `ư` là hai ký tự `u` + dấu móc. Nhìn giống hệt nhau nhưng so chuỗi
+> thẳng thì khác, người chơi gõ đúng y hệt vẫn bị báo sai. Đừng bỏ `nfc()` đi.
 
 ---
 

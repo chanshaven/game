@@ -20,9 +20,23 @@
   const baseOf = ch => BASE[ch] || null;
 
   const FLAT = { 'Ă':'A','Â':'A','Ê':'E','Ô':'O','Ơ':'O','Ư':'U','Đ':'D' };
+
+  /* Bàn phím tiếng Việt trên máy Mac hay gõ ra dạng tách rời (chữ cái + dấu là hai ký tự),
+     nhìn thì giống hệt nhưng so chuỗi lại khác nhau. normalize('NFC') gộp chúng về một ký tự
+     trước khi so, nếu không thì gõ đúng y hệt vẫn bị báo sai. */
+  const nfc = s => (s || '').normalize('NFC').toUpperCase().normalize('NFC');
+
+  /* So khớp CÓ phân biệt dấu: giữ nguyên dấu thanh, giữ ă â ê ô ơ ư đ,
+     chỉ bỏ khoảng trắng, dấu câu và không phân biệt hoa thường. */
+  function strictKey(s) {
+    let out = '';
+    for (const ch of nfc(s)) if (baseOf(ch) || /[A-Z0-9]/.test(ch)) out += ch;
+    return out;
+  }
+
   function loose(s) {
     let out = '';
-    for (const ch of (s || '').toUpperCase()) {
+    for (const ch of nfc(s)) {
       const b = baseOf(ch);
       if (b) out += (FLAT[b] || b);
       else if (/[A-Z0-9]/.test(ch)) out += ch;
@@ -869,7 +883,9 @@
       '<div class="warn">Đúng thì được thưởng thêm <b>' + fmt(bonus) + ' điểm</b>' +
         (blind ? ' <b>và một trái tim</b>, vì chưa mở chữ cái nào' : ' (đã mở chữ rồi nên không được thêm trái tim)') +
         '. Sai thì cún bị bắt ngay và ' + esc(S.players[S.cur].name) + ' mất hẳn lượt chơi.</div>' +
-      '<p style="font-size:12.5px;opacity:.75;margin-bottom:14px">Không cần gõ dấu — nhập không dấu vẫn được tính đúng.</p>' +
+      '<div class="solvehint" id="solveHint" hidden></div>' +
+      '<p class="tipvn">Nhớ gõ <b>đủ dấu</b> — <b>a ă â</b>, <b>e ê</b>, <b>o ô ơ</b>, <b>u ư</b> và <b>d đ</b> ' +
+        'được tính là khác nhau, y như bảng chữ cái bên dưới. Đúng chữ mà dấu chưa khớp thì mình nhắc chứ chưa tính là sai.</p>' +
       '<div class="btns"><button class="ghost" data-act="close">Quay lại</button><button class="solve" data-act="confirm">CHỐT ĐÁP ÁN</button></div>'
     );
     const inp = $('solveInput');
@@ -877,11 +893,33 @@
     inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); doSolve(inp.value); } });
   }
 
+  /* Nhắc ngay trong bảng đoán đáp án, không đóng bảng, không phạt gì cả */
+  function solveNudge(html) {
+    const h = $('solveHint'), inp = $('solveInput');
+    if (h) { h.innerHTML = html; h.hidden = false; }
+    if (inp) {
+      inp.classList.remove('nudge');
+      void inp.offsetWidth;            /* ép trình duyệt chạy lại hiệu ứng rung */
+      inp.classList.add('nudge');
+      inp.focus(); inp.select();
+    }
+    sfx.click();
+  }
+
   function doSolve(text) {
     const p = S.players[S.cur];
     const hid = hiddenCount(), blind = S.revealed.length === 0, bonus = 300 + hid * 150;
+
+    /* Chưa nhập gì thì nhắc thôi, không nỡ bắt cún vì một cú bấm nhầm */
+    if (!strictKey(text)) return void solveNudge('Bạn chưa nhập đáp án nào cả.');
+
+    /* Đúng chữ nhưng dấu chưa khớp: nhắc rồi cho gõ lại, chưa tính là sai */
+    if (strictKey(text) !== strictKey(S.answer) && loose(text) === loose(S.answer))
+      return void solveNudge('<b>Gần đúng rồi!</b> Chữ thì trúng nhưng dấu chưa khớp. ' +
+        'Sửa lại cho đủ dấu tiếng Việt rồi chốt lần nữa — lần này chưa tính là sai đâu.');
+
     closeModal();
-    if (loose(text) && loose(text) === loose(S.answer)) {
+    if (strictKey(text) === strictKey(S.answer)) {
       p.score += bonus;
       /* Chỉ đoán mù, chưa mở chữ nào, mới được thêm trái tim */
       if (blind) gainLives(p, 1);
@@ -1134,6 +1172,7 @@
     '<li>Mỗi người có <b>5 mạng</b>, hiện thành 5 trái tim trên khung cún. Đoán sai chữ cái, hoặc quay vào ô phạt <b>MẤT LƯỢT</b>, <b>CÚN GẶP NGUY</b>, <b>XUI RỒI</b>, <b>THỬ THÁCH</b> hỏng đều mất tim.</li>' +
     '<li>Càng ít mạng thì kẻ bắt cún càng tiến sát và cún càng hoảng sợ. Hết 5 mạng là cún bị chụp lưới.</li>' +
     '<li><b>ĐOÁN ĐÁP ÁN</b> dùng được bất cứ lúc nào. Càng nhiều chữ còn ẩn thì thưởng càng lớn, nhưng sai là cún bị bắt ngay.</li>' +
+    '<li>Khi đoán đáp án phải <b>gõ đủ dấu</b> — dấu thanh và ă â ê ô ơ ư đ đều tính. Nếu đúng chữ mà dấu chưa khớp thì game chỉ nhắc để bạn gõ lại, chưa tính là đoán sai.</li>' +
     '<li>Liều nhất là <b>đoán mù</b> — chốt đáp án khi chưa mở một chữ cái nào. Trúng thì ngoài điểm thưởng còn được <b>thêm một trái tim</b>. Mở chữ rồi mới đoán thì chỉ được điểm.</li>' +
     '</ul>' +
     '<h3 style="font-size:19px;margin-top:4px">Các ô trên vòng quay</h3>' +

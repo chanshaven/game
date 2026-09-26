@@ -88,6 +88,11 @@ body{
   display:inline-flex;align-items:center;gap:7px;
 }
 .ghost:hover{background:rgba(255,222,150,.17);border-color:var(--gold-400)}
+/* Nút về trang chủ Fiddle Game. Là thẻ <a> nên phải bỏ gạch chân thủ công.
+   Điện thoại hẹp thì chỉ còn biểu tượng ngôi nhà cho đỡ chật thanh trên. */
+.ghost.home{text-decoration:none}
+.ghost.home svg{width:15px;height:15px;flex:0 0 auto;display:block}
+@media (max-width:430px){ .ghost.home .lbl{display:none} .ghost.home{padding:9px 11px} }
 button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold-400);outline-offset:2px}
 
 /* ---------- start screen ---------- */
@@ -445,6 +450,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
   <symbol id="ic-heart" viewBox="0 0 24 24">
     <path d="M12 21.2C12 21.2 3.4 16 3.4 9.9A4.7 4.7 0 0 1 12 6.9a4.7 4.7 0 0 1 8.6 3c0 6.1-8.6 11.3-8.6 11.3z" fill="currentColor"/>
   </symbol>
+  <symbol id="ic-home" viewBox="0 0 24 24">
+    <path d="M3.6 10.4 12 3.5l8.4 6.9V20a1 1 0 0 1-1 1h-4.6v-6h-5.6v6H4.6a1 1 0 0 1-1-1z"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+  </symbol>
   <symbol id="ic-wheel" viewBox="0 0 64 64">
     <circle cx="32" cy="32" r="27" fill="#7E1730" stroke="#FFD166" stroke-width="3"/>
     <path d="M32 5v54M5 32h54M13 13l38 38M51 13L13 51" stroke="#FFD166" stroke-width="2.6"/>
@@ -462,6 +471,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
       </div>
     </div>
     <div class="topbtns">
+      <a class="ghost home" id="btnHome" href="../" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-home"/></svg><span class="lbl">Trang chủ</span>
+      </a>
       <button class="ghost" id="btnMusic" aria-pressed="false">♪ Nhạc nền</button>
       <button class="ghost" id="btnRules">Luật chơi</button>
       <button class="ghost danger" id="btnExit" hidden>Thoát ván</button>

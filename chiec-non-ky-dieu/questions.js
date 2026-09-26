@@ -186,7 +186,7 @@
   ["BỊ CÁO", "Pháp luật", "Người đã bị tòa án quyết định đưa ra xét xử được gọi là gì?"],
   ["MIỀN BẮC", "Âm nhạc", "Cò lả là làn điệu dân ca của vùng nào ở Việt Nam?"],
   ["HOA GẠO", "Thực vật", "Hoa pơ lang còn được gọi phổ biến bằng tên nào?"],
-  ["MƯA AXIT", "Khoa học", "Khí lưu huỳnh đioxit là một nguyên nhân gây ra hiện tượng nào?"],
+  ["MƯA ACID", "Khoa học", "Khí lưu huỳnh đioxit là một nguyên nhân gây ra hiện tượng nào?"],
   ["LAM SƠN", "Lịch sử", "Nhà Hậu Lê được thành lập sau thắng lợi của cuộc khởi nghĩa nào?"],
   ["FLO", "Hóa học", "Nguyên tố nào có độ âm điện lớn nhất trong bảng tuần hoàn?"],
   ["NAM PHI", "Địa lý", "Quốc gia nào nổi tiếng vì có ba thủ đô?"],
@@ -256,7 +256,7 @@
   ["ELVIS PRESLEY", "Âm nhạc", "Ca sĩ nào được mệnh danh là “Ông hoàng Rock and Roll”?"],
   ["LỰC LORENTZ", "Vật lý", "Lực tác dụng lên điện tích chuyển động trong từ trường được gọi là lực gì?"],
   ["DẦU MỎ", "Hóa học", "Nguồn nguyên liệu tự nhiên chủ yếu để thu các ankan là gì?"],
-  ["AXIT CITRIC", "Hóa học", "Loại axit hữu cơ đặc trưng có nhiều trong quả chanh là gì?"],
+  ["ACID CITRIC", "Hóa học", "Loại acid hữu cơ đặc trưng có nhiều trong quả chanh là gì?"],
   ["NGUYỄN VĂN TRỖI", "Lịch sử", "Tác phẩm Sống như Anh của Trần Đình Vân viết về nhân vật lịch sử nào?"],
   ["ĐIỆN BIÊN", "Văn học", "Điền từ còn thiếu trong thơ Tố Hữu: “Chín năm làm một... / Nên vành hoa đỏ nên thiên sử vàng”?"],
   ["TÚ XƯƠNG", "Văn học", "Nhà thơ nào từng làm bài Văn tế sống vợ?"],
@@ -394,6 +394,230 @@
   ["NGƯỜI CON GÁI SÔNG LA", "Âm nhạc", "Doãn Nho sáng tác ca khúc nào để tặng nữ anh hùng La Thị Tám?"],
   ["BÀI CA HÀ NỘI", "Âm nhạc", "Ca khúc nào của Vũ Thanh có câu “Ta đi trên đường Hà Nội rực rỡ chiến công”?"],
   ["BƯỞI", "Văn hóa", "Điền từ còn thiếu: “Chợ ... một tháng sáu phiên/ Ngày tư ngày chín cho duyên đèo bòng”?"]
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["VÕNG MẠC", "Sinh học",
+    "Trong phép so sánh mắt với máy ảnh, phim của máy ảnh tương ứng với bộ phận nào của mắt?"],
+
+  ["TÔ LỊCH", "Địa lý",
+    "Tuyến đường ưu tiên cho xe đạp đầu tiên của Hà Nội được xây dựng ven sông nào?"],
+
+  ["TRƯƠNG ĐỊNH", "Lịch sử",
+    "Ai được nhân dân suy tôn là “Bình Tây Đại Nguyên Soái” trong cuộc kháng chiến chống Pháp?"],
+
+  ["NỐI VÒNG TAY LỚN", "Âm nhạc",
+    "Ca khúc nào của Trịnh Công Sơn từng là chướng ngại vật 13 chữ cái tại Olympia 2025?"],
+
+  ["NET ZERO", "Môi trường",
+    "Thuật ngữ nào chỉ trạng thái phát thải khí nhà kính được cân bằng bởi lượng khí được loại bỏ?"],
+
+  ["WIFI", "Công nghệ",
+    "Công nghệ mạng không dây phổ biến dùng để kết nối thiết bị trong mạng cục bộ gọi là gì?"],
+
+  ["ĐIỆN KÍNH THIÊN", "Lịch sử",
+    "Chính điện quan trọng nằm ở trung tâm Hoàng thành Thăng Long có tên là gì?"],
+
+  ["THANH NIÊN XUNG PHONG", "Lịch sử",
+    "Lực lượng nào từng đảm nhiệm tải đạn, vận chuyển lương thực và thông đường trong kháng chiến?"],
+
+  ["BỘ ĐỘI BIÊN PHÒNG", "Kiến thức chung",
+    "Lực lượng nào làm nòng cốt chuyên trách quản lý và bảo vệ biên giới quốc gia Việt Nam?"],
+
+  ["VOVINAM", "Thể thao",
+    "Môn võ Việt Nam nào còn được biết đến với tên Việt Võ Đạo?"],
+
+  ["GIÓ MÙA", "Địa lý",
+    "Loại gió có hướng thịnh hành thay đổi theo mùa được gọi là gì?"],
+
+  ["ĐẠI VIỆT", "Lịch sử",
+    "Quốc hiệu nào được vua Lý Thánh Tông xác lập vào năm 1054?"],
+
+  ["CCTV", "Công nghệ",
+    "Hệ thống truyền hình mà tín hiệu chỉ được truyền tới một nhóm màn hình giới hạn gọi tắt là gì?"],
+
+  ["MẬT KHẨU", "Công nghệ",
+    "Chuỗi ký tự bí mật dùng để xác thực người dùng khi truy cập hệ thống gọi là gì?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["HỆ NHỊ PHÂN", "Công nghệ",
+    "Hệ đếm nào chỉ sử dụng hai chữ số 0 và 1?"],
+
+  ["KỊCH NÓI", "Nghệ thuật",
+    "Loại hình sân khấu nào chủ yếu kể chuyện bằng lời thoại và diễn xuất?"],
+
+  ["HỒN TRƯƠNG BA DA HÀNG THỊT", "Văn học",
+    "Vở kịch nổi tiếng nào kể bi kịch một linh hồn phải sống nhờ trong thân xác người khác?"],
+
+  ["KÍNH LÃO ĐẮC THỌ", "Thành ngữ",
+    "Thành ngữ nào khuyên con người kính trọng và quý trọng người cao tuổi?"],
+
+  ["VUA HÙNG", "Lịch sử",
+    "Danh xưng chung của những vị vua gắn với thời kỳ dựng nước Văn Lang là gì?"],
+
+  ["BIẾN ĐỔI KHÍ HẬU", "Môi trường",
+    "Sự thay đổi lâu dài về nhiệt độ và các kiểu thời tiết của Trái Đất gọi là gì?"],
+
+  ["KHỞI NGHĨA YÊN THẾ", "Lịch sử",
+    "Cuộc khởi nghĩa chống Pháp kéo dài nhiều năm gắn với Hoàng Hoa Thám có tên là gì?"],
+
+  ["CHẤT BÁN DẪN", "Vật lý",
+    "Chất có khả năng dẫn điện nằm giữa chất dẫn điện và chất cách điện gọi là gì?"],
+
+  ["SỞ HỮU TRÍ TUỆ", "Pháp luật",
+    "Khái niệm nào chỉ quyền đối với các sản phẩm do trí tuệ con người tạo ra?"],
+
+  ["SƠN TINH THỦY TINH", "Văn học",
+    "Truyền thuyết nào kể cuộc giao tranh hằng năm giữa thần núi và thần nước?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["VNEID", "Công nghệ",
+    "Ứng dụng định danh điện tử quốc gia của Việt Nam có tên là gì?"],
+
+  ["HẰNG ĐẲNG THỨC", "Toán học",
+    "Đẳng thức đúng với mọi giá trị của các biến được gọi là gì?"],
+
+  ["NGUYỄN KHUYẾN", "Văn học",
+    "Nhà thơ nào là tác giả bộ ba Thu điếu, Thu ẩm và Thu vịnh?"],
+
+  ["HỆ MIỄN DỊCH", "Sinh học",
+    "Hệ thống bảo vệ cơ thể trước các tác nhân gây bệnh được gọi là gì?"],
+
+  ["CỜ ĐỎ SAO VÀNG", "Văn hóa",
+    "Quốc kỳ Việt Nam thường được gọi bằng tên quen thuộc nào?"],
+
+  ["BỆNH TRUYỀN NHIỄM", "Y học",
+    "Nhóm bệnh có khả năng lây truyền do các tác nhân gây bệnh được gọi chung là gì?"],
+
+  ["CHÁU NGOAN BÁC HỒ", "Văn hóa",
+    "Danh hiệu dành cho thiếu nhi có thành tích tốt trong học tập và rèn luyện gọi là gì?"],
+
+  ["ĐƯỜNG TRƯỜNG SƠN", "Lịch sử",
+    "Tuyến vận tải chiến lược nổi tiếng trong kháng chiến chống Mỹ còn được gọi là đường gì?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["GIUN ĐẤT", "Sinh học",
+    "Loài động vật không xương sống nào sống trong đất và góp phần làm đất tơi xốp?"],
+
+  ["LÊ HỮU TRÁC", "Lịch sử",
+    "Đại danh y Việt Nam nào nổi tiếng với biệt hiệu Hải Thượng Lãn Ông?"],
+
+  ["THƠ MỚI", "Văn học",
+    "Phong trào thi ca Việt Nam phát triển mạnh trong giai đoạn 1932–1945 được gọi là gì?"],
+
+  ["SỐT XUẤT HUYẾT", "Y học",
+    "Bệnh do virus Dengue lây truyền chủ yếu qua muỗi vằn được gọi là gì?"],
+
+  ["MÃ QR", "Công nghệ",
+    "Loại mã hai chiều thường được quét bằng camera điện thoại gọi là gì?"],
+
+  ["VƯỜN QUỐC GIA", "Địa lý",
+    "Khu vực tự nhiên được bảo vệ để bảo tồn hệ sinh thái thường được gọi là gì?"],
+
+  ["NAM BỘ KHÁNG CHIẾN", "Lịch sử",
+    "Cuộc kháng chiến bùng nổ ở Nam Bộ ngày 23 tháng 9 năm 1945 được gọi là gì?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["MŨ CỐI", "Văn hóa",
+    "Loại mũ cứng có vành tròn, từng rất phổ biến với bộ đội và người dân Việt Nam, gọi là gì?"],
+
+  ["EM THÚY", "Nghệ thuật",
+    "Bức chân dung thiếu nữ nổi tiếng của họa sĩ Trần Văn Cẩn có tên là gì?"],
+
+  ["ĐIỆN HẠT NHÂN", "Khoa học",
+    "Loại điện năng được tạo ra từ năng lượng giải phóng trong phản ứng hạt nhân gọi là gì?"],
+
+  ["TẾ BÀO GỐC", "Sinh học",
+    "Loại tế bào có khả năng tự tái tạo và biệt hóa thành nhiều loại tế bào khác gọi là gì?"],
+
+  ["VỊNH THÁI LAN", "Địa lý",
+    "Vùng biển nằm giữa bán đảo Mã Lai và bán đảo Đông Dương có tên là gì?"],
+
+  ["VỆ TINH NHÂN TẠO", "Thiên văn",
+    "Vật thể do con người chế tạo và đưa lên quỹ đạo quanh Trái Đất gọi là gì?"],
+
+  ["RUỘNG BẬC THANG", "Địa lý",
+    "Kiểu ruộng được tạo thành từng tầng trên sườn núi để canh tác gọi là gì?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["LÊ THỊ ĐÀO", "Văn học",
+    "Tên thật của nhân vật chị Dậu trong Tắt đèn của Ngô Tất Tố là gì?"],
+
+  ["ĐỢI CHỜ", "Văn hóa",
+    "Tên thác Dambri ở Tây Nguyên mang ý nghĩa gì?"],
+
+  ["RAU ĐAY", "Ẩm thực",
+    "Canh cua đồng truyền thống ở miền Bắc thường được nấu cùng loại rau nào?"],
+
+  ["SÓC TRĂNG", "Ẩm thực",
+    "Bánh pía nổi tiếng là đặc sản của địa phương nào?"],
+
+  ["CHĂM", "Văn hóa",
+    "H'ri là làn điệu dân ca của dân tộc nào ở Việt Nam?"],
+
+  ["CHIẾC GHẾ GÃY CHÂN", "Kiến thức chung",
+    "Biểu tượng chống bom mìn đặt tại quảng trường Place des Nations ở Geneva là gì?"],
+
+  ["NHÀ NGUYỄN", "Lịch sử",
+    "Giỗ Tổ Hùng Vương được chính thức quy định là Quốc lễ dưới triều đại nào?"],
+
+  ["GEORGIA", "Địa lý",
+    "Quốc gia nào còn được gọi bằng tên Gruzia trong tiếng Việt?"],
+
+  ["BTS", "Âm nhạc",
+    "Nhóm nhạc Hàn Quốc nào phát hành album Map of the Soul: 7?"],
+
+  ["NGÀY TOILET THẾ GIỚI", "Kiến thức chung",
+    "Ngày 19 tháng 11 hằng năm được biết đến là ngày quốc tế nào?"]
+
+);
+
+
+(window.QBANK = window.QBANK || []).push(
+
+  ["ALEXANDRE DUMAS", "Văn học",
+    "Ai là tác giả tiểu thuyết Bá tước Monte Cristo?"],
+
+  ["ROWAN ATKINSON", "Điện ảnh",
+    "Nam diễn viên người Anh nào nổi tiếng với vai Mr Bean?"],
+
+  ["THANH HÓA", "Âm nhạc",
+    "Bài dân ca Đi cấy nổi tiếng gắn với địa phương nào?"],
+
+  ["HOA KỲ", "Kiến thức chung",
+    "Bảo tàng Gián điệp Quốc tế nổi tiếng nằm ở quốc gia nào?"],
+
+  ["QUEEN ANNE", "Kiến trúc",
+    "Tên nữ hoàng nào được dùng để gọi một phong cách kiến trúc nổi tiếng?"],
+
+  ["CÁT BÀ", "Du lịch",
+    "Điểm đến nào được người dùng Google Việt Nam tìm kiếm nhiều nhất trong năm 2020?"],
+
+  ["CÀ MAU", "Văn hóa",
+    "Trong vọng cổ Tình anh bán chiếu, những chiếc chiếu được nhắc đến có xuất xứ từ đâu?"]
+
 );
 
 

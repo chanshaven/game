@@ -501,6 +501,10 @@
   }
 
   /* ---------------- kết quả ô quay ---------------- */
+  /* Đường dẫn về trang chủ Fiddle Game. Game nằm trong thư mục con nên '../' là đúng.
+     Muốn trỏ đi đâu khác thì sửa đúng một dòng này. */
+  const HOME_URL = '../';
+
   /* Điểm mỗi chữ cái khi vừa ăn một ô thưởng/phạt (mấy ô đó không có số điểm riêng) */
   const SPECIAL_PTS = 300;
 
@@ -1115,6 +1119,7 @@
     else if (a === 'over') { closeModal(); gameOver(); }
     else if (a === 'restart') { closeModal(); toStart(); }
     else if (a === 'exit') { bestUpdate(); closeModal(); toStart(); }
+    else if (a === 'home') { bestUpdate(); location.href = HOME_URL; }
     else if (a === 'share') { doShare(act); return; }
     else if (a === 'done') { closeModal(); const f = modalDone; modalDone = null; if (f) f(); }
   });
@@ -1215,6 +1220,29 @@
   $('btnSolve').addEventListener('click', () => { audioInit(); openSolve(); });
   $('btnRules').addEventListener('click', () => { audioInit(); openModal(RULES); });
   $('btnMusic').addEventListener('click', () => setMusic(!A.on));
+  /* Nút về trang chủ. Chỉ hiện khi trang chạy độc lập — nếu bị nhúng trong khung
+     của trang khác thì '../' không còn ý nghĩa nên giấu luôn cho gọn. */
+  (function setupHome() {
+    const a = $('btnHome');
+    if (!a) return;
+    let standalone = true;
+    try { standalone = window.self === window.top; } catch (e) { standalone = false; }
+    if (!standalone) return;
+    a.href = HOME_URL;
+    a.hidden = false;
+    a.addEventListener('click', e => {
+      if (!S.started) return;            /* chưa vào ván thì đi thẳng */
+      e.preventDefault();
+      audioInit(); sfx.click();
+      openModal(
+        '<h3>Về trang chủ?</h3>' +
+        '<p>Ván đang chơi sẽ mất hết điểm và số tim. Điểm cao nhất của bạn vẫn được lưu lại.</p>' +
+        '<div class="btns"><button class="ghost" data-act="close">CHƠI TIẾP</button>' +
+        '<button class="cta" data-act="home">VỀ TRANG CHỦ</button></div>'
+      );
+    });
+  })();
+
   $('btnExit').addEventListener('click', () => {
     audioInit(); sfx.click();
     openModal(

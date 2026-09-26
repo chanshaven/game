@@ -160,6 +160,23 @@ Trong `doSolve`, `if (blind) gainLives(p, 1);` là chỗ cộng thêm trái tim 
 Muốn thưởng đậm hơn thì đổi số 1, muốn bỏ hẳn thì xóa dòng đó (nhớ sửa luôn câu chữ
 trong `openSolve` cho khớp).
 
+### Nút "Trang chủ" — `game.js`
+
+```js
+const HOME_URL = '../';
+```
+
+Nút ngôi nhà ở thanh trên cùng đưa người chơi về trang chủ Fiddle Game. Game nằm trong
+thư mục con nên `'../'` là đúng; muốn trỏ đi chỗ khác thì sửa đúng dòng này.
+
+Vài điều nút đó tự lo:
+
+- Đang chơi dở mà bấm thì nó hỏi lại trước, điểm cao nhất vẫn được lưu.
+- Màn hình hẹp dưới 430px thì chỉ còn biểu tượng ngôi nhà, giấu chữ đi cho đỡ chật.
+- Nếu trang bị nhúng trong khung của trang khác thì `'../'` hết ý nghĩa, nút tự giấu luôn.
+- Bản gộp một file cũng không có nút này, vì file rời thì không có trang chủ nào để về.
+  Chỗ bỏ nút nằm trong đoạn dựng bản một file, tìm chữ `btnHome`.
+
 ### Màu sắc và phông chữ — `index.html`
 
 Toàn bộ màu nằm trong khối `:root{ ... }` ở đầu thẻ `<style>`, đặt tên theo kiểu

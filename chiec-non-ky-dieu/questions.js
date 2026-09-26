@@ -758,3 +758,33 @@
 
 );
 
+(window.QBANK = window.QBANK || []).push(
+
+  ["ANTONIO VIVALDI", "Âm nhạc",
+    "Bộ concerto Bốn mùa nổi tiếng là tác phẩm của nhà soạn nhạc nào?"],
+
+  ["NGUYỄN NHƯỢC PHÁP", "Văn học",
+    "Bài thơ được phổ thành ca khúc Em đi Chùa Hương là của ai?"],
+
+  ["NGHỀ NÔNG", "Văn hóa",
+    "Lễ hội Tịch Điền mang ý nghĩa đề cao và khuyến khích nghề gì?"],
+
+  ["RINGO STARR", "Âm nhạc",
+    "Tay trống nào là thành viên cuối cùng gia nhập The Beatles?"],
+
+  ["ISTANBUL", "Lịch sử",
+    "Constantinople, kinh đô của Đế quốc Đông La Mã, ngày nay là thành phố nào?"],
+
+  ["THE KISS", "Điện ảnh",
+    "Bộ phim ngắn năm 1896 ghi lại nụ hôn đầu tiên trên màn ảnh có tên là gì?"],
+
+  ["SUNGAI NIPAH", "Y học",
+    "Virus Nipah được đặt tên theo ngôi làng nào ở Malaysia?"],
+
+  ["PHÁP LAM", "Nghệ thuật",
+    "Kỹ nghệ tráng men màu trên nền đồng nổi bật trong mỹ thuật cung đình triều Nguyễn gọi là gì?"],
+
+  ["XÀ GẠC", "Văn hóa",
+    "Loại công cụ lao động kiêm vũ khí phổ biến ở Trường Sơn - Tây Nguyên gọi là gì?"]
+
+);

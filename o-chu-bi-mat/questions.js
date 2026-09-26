@@ -31,18 +31,104 @@
 
 (window.DEBANK = window.DEBANK || []).push(
 
-{
-  topic: "Thế giới thực vật",
-  keyword: "THỰC VẬT",
-  rows: [
-    ["NHIỆT ĐỘ",    4, "Đây là một yếu tố mà khi tăng quá cao hoặc hạ quá thấp cây sẽ ngừng quang hợp và hô hấp."],
-    ["ÁNH SÁNG",    2, "Đây là yếu tố quan trọng giúp cho cây trồng thực hiện được quá trình quang hợp."],
-    ["SỰ SỐNG",     1, "Điền vào chỗ trống: Cây cần đủ nước, chất khoáng, không khí, ánh sáng và nhiệt độ thích hợp để duy trì …… và phát triển."],
-    ["NƯỚC",        3, "Chất này thoát ra ở lá cây dưới dạng hơi."],
-    ["VỪA ĐỦ",      0, "Khi tưới nước cho cây, em cần lưu ý tưới một lượng nước như thế nào?"],
-    ["CHẬU",        2, "Em thường trồng cây cảnh vào đâu?"],
-    ["CHẤT KHOÁNG", 3, "Ngoài nước, rễ cây còn vận chuyển chất gì lên thân và lá?"]
-  ]
-}
+  /* =========================================================
+     1. TỪ KHÓA: TITANIC
+  
+     Không câu hỏi nào nhắc Titanic.
+     Các đáp án khi ghép lại mới dẫn người chơi tới Titanic.
+     ========================================================= */
+  {
+    topic: "Sự kiện lịch sử",
+    keyword: "TITANIC",
+    rows: [
+
+      ["WHITE STAR LINE", 3,
+        "Hãng vận tải biển Anh nào từng là đối thủ lớn của Cunard Line đầu thế kỷ XX?"],
+
+      ["ICEBERG", 0,
+        "Khối băng lớn trôi nổi trên biển được gọi bằng từ tiếng Anh nào?"],
+
+      ["ATLANTIC", 1,
+        "Đại dương nằm giữa châu Mỹ với châu Âu và châu Phi có tên tiếng Anh là gì?"],
+
+      ["CARPATHIA", 1,
+        "Con tàu nào đã cứu hơn 700 người sống sót trong một thảm họa hàng hải nổi tiếng năm 1912?"],
+
+      ["NEW YORK", 0,
+        "Thành phố Mỹ có tượng Nữ thần Tự do nằm ở cửa ngõ cảng là thành phố nào?"],
+
+      ["SMITH", 2,
+        "Họ của thuyền trưởng Edward John, người thiệt mạng trong một thảm họa hàng hải năm 1912, là gì?"],
+
+      ["CHERBOURG", 0,
+        "Cảng biển của Pháp từng là điểm dừng trên nhiều tuyến vượt Đại Tây Dương đầu thế kỷ XX có tên là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     2. TỪ KHÓA: BEATLES
+  
+     Không dùng "The Beatles" trong bất kỳ câu hỏi nào.
+     ========================================================= */
+  {
+    topic: "Âm nhạc",
+    keyword: "BEATLES",
+    rows: [
+
+      ["ABBEY ROAD", 1,
+        "Album năm 1969 nào nổi tiếng với bìa ảnh bốn nhạc sĩ đang băng qua một vạch sang đường?"],
+
+      ["HEY JUDE", 1,
+        "Ca khúc nào được Paul McCartney viết với ý định an ủi Julian Lennon?"],
+
+      ["PAUL MCCARTNEY", 1,
+        "Nhạc sĩ người Anh nào là người sáng tác chính ca khúc Yesterday?"],
+
+      ["RINGO STARR", 6,
+        "Richard Starkey được công chúng biết đến nhiều hơn bằng nghệ danh nào?"],
+
+      ["JOHN LENNON", 4,
+        "Nhạc sĩ nào sáng tác và thể hiện ca khúc Imagine?"],
+
+      ["GEORGE HARRISON", 1,
+        "Ai là tác giả ca khúc While My Guitar Gently Weeps?"],
+
+      ["YELLOW SUBMARINE", 6,
+        "Ca khúc nổi tiếng nào lấy hình ảnh một chiếc tàu ngầm màu vàng làm chủ đề?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     3. TỪ KHÓA: PARIS
+  
+     Các hàng ngang là những biểu tượng, địa điểm và yếu tố
+     cùng hội tụ vào một thành phố.
+     ========================================================= */
+  {
+    topic: "Thành phố thế giới",
+    keyword: "PARIS",
+    rows: [
+
+      ["PANTHÉON", 0,
+        "Công trình nào là nơi an nghỉ của nhiều danh nhân Pháp như Victor Hugo, Voltaire và Rousseau?"],
+
+      ["ARC DE TRIOMPHE", 0,
+        "Khải hoàn môn nổi tiếng nằm tại quảng trường Charles de Gaulle có tên tiếng Pháp là gì?"],
+
+      ["LOUVRE", 4,
+        "Bảo tàng nào lưu giữ bức Mona Lisa của Leonardo da Vinci?"],
+
+      ["SEINE", 2,
+        "Dòng sông nào chảy dưới những cây cầu nổi tiếng như Pont Neuf và Pont Alexandre III?"],
+
+      ["SACRÉ CŒUR", 0,
+        "Vương cung thánh đường màu trắng nổi bật trên đồi Montmartre có tên là gì?"]
+
+    ]
+  }
 
 );

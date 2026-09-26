@@ -5,8 +5,6 @@
 (function () {
   'use strict';
 
-  const COLORS = ['lam', 'đỏ', 'vàng'];
-  const SHAPES = ['tròn', 'vuông', 'tam giác'];
   const CVAR = { 'lam': 'var(--lam)', 'đỏ': 'var(--do)', 'vàng': 'var(--vang)' };
   // màu chữ số đặt trong lòng hình, chọn riêng từng màu cho đủ tương phản
   const CINK = { 'lam': '#EAF4FC', 'đỏ': '#FFF0EC', 'vàng': '#2E2106' };
@@ -16,12 +14,13 @@
   const FLASH_MS = 620;      // thời gian giữ dấu ĐÚNG/SAI trước khi đổi bàn
   const KEY = 'ca-tin-v2';
 
-  const S = { seed: '', level: 0, streak: 0, tries: 0, log: [], ranks: [], locked: false };
+  const S = { seed: '', level: 0, streak: 0, tries: 0, log: [], ranks: [],
+              locked: false, prevTile: null, trusted: [] };
+  let idleT = null, crossT = null;   // đồng hồ của màn nghịch lý
   let LEVELS = [];   // sinh ra từ mã ván, xem levels.js
   let board = [];
 
   const el = id => document.getElementById(id);
-  const rnd = n => Math.floor(Math.random() * n);
 
   /* ---------- mã ván và lưu tiến độ ----------
      Luật được sinh RA TỪ mã ván, không lưu vào máy. Nhờ vậy mở lại trang giữa
@@ -48,30 +47,10 @@
   function openRun(seed, level, ranks) {
     S.seed = seed;
     LEVELS = buildRun(seed);
+    S.trusted = [];
     S.level = (typeof level === 'number' && level >= 0 && level < LEVELS.length) ? level : 0;
     S.ranks = Array.isArray(ranks) ? ranks.slice(0, LEVELS.length) : [];
     save();
-  }
-
-  /* ---------- dựng bàn chơi ----------
-     Mỗi bàn luôn có 2–4 ô đúng và không ô nào trùng ô nào, nên không bao giờ
-     có bàn bế tắc mà cũng không dễ đoán mò.                                  */
-  const randTile = () => ({ color: COLORS[rnd(3)], shape: SHAPES[rnd(3)], num: 1 + rnd(9) });
-  const tkey = t => t.color + '|' + t.shape + '|' + t.num;
-
-  function makeBoard(test) {
-    const want = 2 + rnd(3);
-    const good = [], bad = [], seen = Object.create(null);
-    let guard = 0;
-    while ((good.length < want || bad.length < 9 - want) && guard++ < 40000) {
-      const t = randTile(), k = tkey(t);
-      if (seen[k]) continue;
-      if (test(t)) { if (good.length < want) { seen[k] = 1; good.push(t); } }
-      else { if (bad.length < 9 - want) { seen[k] = 1; bad.push(t); } }
-    }
-    const all = good.concat(bad);
-    for (let i = all.length - 1; i > 0; i--) { const j = rnd(i + 1); [all[i], all[j]] = [all[j], all[i]]; }
-    return all;
   }
 
   /* Con số nằm trong lòng hình: hình đã nói rõ màu và dáng rồi, không cần
@@ -138,15 +117,43 @@
   const rankOf = n => n < 6 ? 'vàng' : (n < 12 ? 'bạc' : 'đồng');
 
   /* ---------- vòng chơi ---------- */
+  /* Bàn chơi dựng theo luật THẬT của màn, và theo cả ô vừa chọn — vì có kiểu
+     luật nhắc tới nước đi liền trước. makeBoard nằm trong levels.js. */
   function newRound() {
-    board = makeBoard(LEVELS[S.level].test);
+    board = makeBoard(LEVELS[S.level].test, S.prevTile) || randomBoard();
     drawBoard();
     S.locked = false;
   }
 
+  /* ---------- màn nghịch lý ----------
+     Không ô nào đúng. Qua màn bằng cách ngừng chạm vào bàn: sau 3,5 giây yên
+     lặng, một nét gạch bắt đầu kéo ngang dòng chữ đang nói dối, mất 7 giây để
+     đi hết. Chạm vào bất cứ đâu là nét gạch tan và phải làm lại từ đầu.
+     Làm hiện ra như thế để người chơi THẤY việc không làm gì cũng là một nước
+     đi — chứ đợi mù trong ba mươi giây thì chỉ thành bực. */
+  function clearIdle() {
+    clearTimeout(idleT); clearTimeout(crossT);
+    idleT = crossT = null;
+  }
+  function resetCross() {
+    const c = el('ruleCross');
+    c.style.transition = 'width .22s ease-out';
+    c.style.width = '0%';
+  }
+  function armIdle() {
+    clearIdle(); resetCross();
+    idleT = setTimeout(() => {
+      const c = el('ruleCross');
+      c.style.transition = 'width 7s linear';
+      c.style.width = '100%';
+      crossT = setTimeout(() => { clearIdle(); clearLevel(); }, 7050);
+    }, 3500);
+  }
+
   function startLevel() {
     const L = LEVELS[S.level];
-    S.streak = 0; S.tries = 0; S.log = [];
+    clearIdle(); resetCross();
+    S.streak = 0; S.tries = 0; S.log = []; S.prevTile = null;
     el('lvlNum').textContent = S.level + 1;
     el('lvlAll').textContent = LEVELS.length;
     el('lvlTag').textContent = 'Ván ' + S.seed;
@@ -156,16 +163,24 @@
     el('hintText').hidden = true;
     el('hintText').textContent = '';
     drawPips(); drawLog(); newRound();
+    if (L.isParadox) armIdle();
   }
 
   function onPick(i) {
     if (S.locked) return;
-    const L = LEVELS[S.level], t = board[i], ok = !!L.test(t);
+    const L = LEVELS[S.level], t = board[i], ok = !!L.test(t, i, S.prevTile);
+
+    /* Nước đi ĐẦU TIÊN của mỗi màn: người chơi có làm đúng y như bảng luật
+       bảo không? Đó là lúc họ còn tin, và là con số cuối ván đáng đếm. */
+    if (S.tries === 0) S.trusted[S.level] = !!(L.shownTest && L.shownTest(t, i, S.prevTile));
+
+    if (L.isParadox) armIdle();
 
     S.locked = true;
     S.tries++;
     S.log.unshift({ t: t, ok: ok });
     S.streak = ok ? S.streak + 1 : 0;
+    S.prevTile = t;          // nước đi này thành mốc cho nước sau
 
     AU.sfx[ok ? 'hit' : 'miss']();
 
@@ -179,7 +194,11 @@
     el('tries').textContent = S.tries + ' lần thử';
     drawPips(); drawLog();
 
-    if (S.tries >= HINT_AFTER && el('hintBtn').hidden && el('hintText').hidden) {
+    if (L.isParadox) {
+      let msg = '';
+      L.nudges.forEach(n => { if (S.tries >= n[0]) msg = n[1]; });
+      if (msg) { el('hintText').textContent = msg; el('hintText').hidden = false; }
+    } else if (S.tries >= HINT_AFTER && el('hintBtn').hidden && el('hintText').hidden) {
       el('hintBtn').hidden = false;
     }
 
@@ -187,6 +206,7 @@
   }
 
   function clearLevel() {
+    clearIdle();
     const L = LEVELS[S.level];
     S.ranks[S.level] = { tries: S.tries, rank: rankOf(S.tries) };
     save();
@@ -213,17 +233,21 @@
       tr.innerHTML = '<td>Màn ' + (i + 1) + '</td><td>' + r.tries + ' lần · ' + r.rank + '</td>';
       body.appendChild(tr);
     });
+    const trust = S.trusted.filter(Boolean).length;
     el('endTotal').textContent = total;
+    el('endTrust').textContent = trust + '/' + LEVELS.length;
     el('endSeed').textContent = S.seed;
-    el('endVoice').innerHTML = '<span>Người dẫn đường</span>' + OUTRO;
+    const o = OUTROS.find(x => trust >= x.min) || OUTROS[OUTROS.length - 1];
+    el('endVoice').innerHTML = '<span>Người dẫn đường</span>' + o.text;
     AU.sfx.done();
     el('endScreen').hidden = false;
     el('againBtn').focus();
   }
 
-  /* Ván mới = một mã ván MỚI, tức một bộ sáu bảng luật khác hẳn. */
+  /* Ván mới = một mã ván MỚI, tức một bộ luật khác hẳn. */
   function reset() {
     AU.sfx.click();
+    clearIdle();
     closeAllOverlays();
     openRun(newSeedCode(), 0, []);
     startLevel();
@@ -238,6 +262,7 @@
   /* ---------- màn hình mở đầu ---------- */
   function showStart() {
     AU.musicStop();
+    clearIdle();
     el('reveal').hidden = true;
     el('endScreen').hidden = true;
     const d = loadSaved();

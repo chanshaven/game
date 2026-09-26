@@ -6,9 +6,11 @@ luật đó nói dối. Người chơi phải thử, đọc sổ tay, rồi suy 
 Qua màn bằng cách chọn đúng **ba lần liên tiếp**. Bàn chơi đổi sau mỗi lần thử nên
 không thể ăn may, phải thật sự nắm được luật.
 
+Chín màn: tám màn sinh ra mỗi ván một khác, và màn thứ chín luôn cố định.
+
 ## Mỗi ván một bộ luật khác
 
-Luật **không** nằm cứng trong code. Mỗi ván sinh ra sáu bảng luật mới, nên chơi lại
+Luật **không** nằm cứng trong code. Mỗi ván sinh ra chín bảng luật mới, nên chơi lại
 không thể dựa vào trí nhớ của ván trước.
 
 Nhưng luật cũng không sinh bừa. Cái hay của game nằm ở chỗ bảng luật nói sai **một
@@ -17,10 +19,40 @@ nhiên chỉ là thuộc tính cụ thể. Ba thứ đổi mỗi ván:
 
 1. Thuộc tính trong từng luật — lần này *lam + số chẵn*, lần sau *tam giác + số lớn hơn 5*
 2. Kiểu nói dối của từng màn — bốc trong bậc khó của màn đó
-3. Màn **nói thật** rơi vào đâu — đâu đó từ màn 3 đến màn 6
+3. Màn **nói thật** rơi vào đâu — đâu đó từ màn 3 đến màn 8
 
 Điều thứ ba đáng giá nhất: vì không biết màn nào là màn thật, người chơi phải ôm câu
 hỏi "lần này nó có đang nói thật không" suốt cả ván.
+
+## Màn cuối
+
+Bảng luật màn chín chỉ có một dòng: **"Luật chơi là lời nói dối."**
+
+Nếu câu đó đúng thì nó đang nói dối, nên nó sai. Nếu nó sai thì bảng luật đang nói
+thật, nên nó đúng. Không ô nào trên bàn cho ra kết quả đúng — và đó không phải lỗi,
+đó là cả màn chơi.
+
+Cách qua màn là **ngừng chạm vào bàn**. Sau 3,5 giây yên lặng, một nét gạch bắt đầu
+kéo ngang chính dòng chữ đang nói dối, mất 7 giây để đi hết. Chạm vào bất cứ đâu là
+nét gạch tan và phải làm lại.
+
+Nét gạch ấy là chỗ quan trọng nhất của thiết kế này. Bản đầu trong tài liệu định để
+người chơi đợi mù ba mươi giây, nhưng đợi mù thì chỉ thành bực chứ không thành hiểu.
+Phải **cho thấy** việc không làm gì cũng là một nước đi, ngay lúc nó đang có tác dụng.
+
+Ba câu thả dần khi người chơi càng thử càng sai, ở lần thứ 5, 12 và 20 — câu cuối là
+chìa khoá: *"Tôi chưa bao giờ nói bạn phải chọn."*
+
+## Đếm cái đáng đếm
+
+Cuối ván có hai con số. Số lần thử đo kỹ năng. Con số kia đo đúng thứ trò chơi này
+nói về: **số lần bạn tin bảng luật** — tức số màn mà nước đi đầu tiên của bạn làm
+đúng y như bảng luật bảo.
+
+Ở màn nghịch lý, chạm vào bàn dù chỉ một lần cũng tính là tin, vì bạn vẫn tin rằng
+có gì đó để chọn.
+
+Câu kết của Người dẫn đường đổi theo con số này chứ không theo điểm.
 
 ## Mã ván
 
@@ -83,15 +115,41 @@ khó phù hợp. `need` là số điều kiện cần bốc (mỗi cái nằm tr
 **Đổi độ dài ván** — sửa `TIER_PLAN`. Mảng này vừa quyết định số màn vừa quyết định bậc
 khó của từng màn.
 
-Bộ sinh tự loại những luật hỏng: ít hơn 4 ô hợp lệ trong tổng số 81 tổ hợp thì bàn chơi
-không dựng đủ ô đúng, nhiều hơn 54 thì quá lỏng. Nó cũng tránh hai màn liền kề dùng cùng
+Bàn chơi dựng bằng cách bốc cả bàn rồi đếm, không đạt thì bốc lại — vì luật giờ có thể
+phụ thuộc vào chỗ ô nằm và vào nước đi trước, không chọn sẵn ô đúng ô sai được nữa.
+Mỗi bàn giữ 2-4 ô đúng: ít hơn thì mò mãi không ra, nhiều hơn thì ăn may.
+
+Bộ sinh tự loại những luật hỏng: luật chỉ nói về thuộc tính thì đếm thẳng trên 81 tổ
+hợp (dưới 4 là quá hiếm, trên 54 là quá lỏng); luật nói về vị trí hay về nước đi trước
+thì phải thử dựng bàn mới biết có chơi được không. Nó cũng tránh hai màn liền kề dùng cùng
 kiểu nói dối hay cùng bộ thuộc tính, vì như thế màn sau sẽ tự lộ đáp án cho màn trước.
 
-## Bốn kiểu nói dối chưa làm
+## Bốn trục, không phải ba
 
-Ghi trong tài liệu thiết kế, chưa đưa vào bản này vì cần trạng thái phức tạp hơn: luật
-hết hạn giữa chừng, luật phụ thuộc lịch sử chọn, bảng luật tự sửa chữ khi bạn nhìn đi
-chỗ khác, và giao diện nói dối.
+Mỗi ô có ba thứ **in trên nó** — màu, hình, số — và một thứ nữa không in ra: **chỗ nó
+nằm trên lưới**. Người chơi quen soi ba thứ đầu, nên một luật thật kiểu *"ô ở hàng
+dưới cùng"* giấu được rất lâu mà vẫn hoàn toàn công bằng: thông tin luôn bày ra trước
+mắt, chỉ là không ai nghĩ tới.
+
+Vì thế gợi ý ở những màn thường **cố ý không nhắc tới vị trí** — nhắc ra là lộ mất
+trục thứ tư trước khi người chơi kịp gặp nó.
+
+Trục thứ năm không nằm trên bàn chơi mà nằm ở **nước đi liền trước của chính người
+chơi**: kiểu `LICHSU` cho ra những luật như *"ô cùng màu với ô bạn vừa chọn"*. Chỗ này
+lật ngược cách nghĩ — luật không còn đứng yên một chỗ để soi, nó đi theo bạn. Sổ tay
+từ chỗ tiện lợi thành chỗ bắt buộc, và phải đọc theo thứ tự chứ không so lẻ từng dòng
+được nữa.
+
+Nước đi **đầu tiên** của một màn `LICHSU` luôn được chấp nhận, vì chưa có gì để so.
+
+Mọi điều kiện lịch sử phải đúng với *mọi* ô có thể vừa chọn. Hai điều kiện "mang số
+lớn hơn" và "mang số nhỏ hơn" đã bị bỏ: chọn phải ô số 9 rồi thì không còn ô nào lớn
+hơn, bàn chơi không dựng nổi và người chơi kẹt vĩnh viễn.
+
+## Ba kiểu nói dối còn lại
+
+Ghi trong tài liệu thiết kế, chưa làm: luật hết hạn giữa chừng, bảng luật tự sửa chữ
+khi bạn nhìn đi chỗ khác, và giao diện nói dối.
 
 ## Màn hình mở đầu
 

@@ -148,8 +148,14 @@
       letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft);
     }
     .rule {
-      margin: 11px 0 0; font-family: var(--fx-mono);
+      position: relative; margin: 11px 0 0; font-family: var(--fx-mono);
       font-size: 16px; font-weight: 600; line-height: 1.45; text-wrap: balance;
+    }
+    /* Màn cuối: ngồi yên thì một nét gạch kéo ngang chính dòng đang nói dối. */
+    .rule .cross {
+      position: absolute; left: -2px; top: 52%; height: 3px; width: 0;
+      background: var(--stamp); border-radius: 2px; pointer-events: none;
+      box-shadow: 0 0 9px rgba(179, 36, 28, .55);
     }
 
     /* ---------- bàn chơi ---------- */
@@ -311,7 +317,7 @@
 
     <section class="card">
       <div class="eyebrow"><span>Bảng luật</span><span id="lvlTag"></span></div>
-      <p class="rule" id="ruleText">…</p>
+      <p class="rule"><span id="ruleText">…</span><span class="cross" id="ruleCross"></span></p>
     </section>
 
     <div class="board" id="board"></div>
@@ -348,7 +354,7 @@
         <input id="seedInput" maxlength="4" placeholder="để trống" autocomplete="off" spellcheck="false"
           inputmode="latin" aria-describedby="seedHelp">
       </div>
-      <p class="seednote" id="seedHelp">Để trống thì bốc một ván ngẫu nhiên. Cùng mã thì cùng bộ sáu bảng luật,
+      <p class="seednote" id="seedHelp">Để trống thì bốc một ván ngẫu nhiên. Cùng mã thì cùng bộ chín bảng luật,
         nên gửi mã cho bạn bè là hai người chơi đúng một ván.</p>
       <div class="btnrow">
         <button class="act primary" id="playBtn">Bắt đầu</button>
@@ -379,9 +385,10 @@
       </table>
       <div class="tally">
         <div>Tổng số lần thử<b id="endTotal">0</b></div>
+        <div>Tin bảng luật<b id="endTrust">0/9</b></div>
         <div>Mã ván<b id="endSeed">—</b></div>
       </div>
-      <p class="seednote">Gửi mã ván cho bạn bè là họ gặp đúng sáu bảng luật vừa rồi. Mở bằng
+      <p class="seednote">Gửi mã ván cho bạn bè là họ gặp đúng chín bảng luật vừa rồi. Mở bằng
         <code>?van=MÃ</code> ở cuối địa chỉ trang.</p>
       <p class="voice" id="endVoice"><span>Người dẫn đường</span></p>
       <div class="btnrow">

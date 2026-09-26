@@ -191,16 +191,51 @@ document.addEventListener('visibilitychange', ()=>{
   else if(musicOn){ try{A.ctx.resume();}catch(e){} musicStart(); }
 });
 
-/* ---------- trạng thái ---------- */
+/* ============================================================================
+   TRẠNG THÁI
+   ----------------------------------------------------------------------------
+   HINT_STEP  gợi ý thứ nhất trừ 5đ, thứ hai 10đ, thứ ba 15đ... tăng dần.
+              Mỗi lần mở thêm một chữ cái, luôn chừa lại ít nhất một chữ.
+   ========================================================================== */
+const HINT_STEP = 5;
+const hintCost  = n => HINT_STEP * (n + 1);      // n = số gợi ý đã dùng ở hàng đó
+/* Ô nằm trên cột từ khoá KHÔNG bao giờ được gợi ý — đó là phần cốt lõi của trò chơi. */
+const hintable  = r => r.L.map((_,j)=>j).filter(j => j !== r.k);
+/* Nhiều nhất là một phần ba số chữ, và luôn chừa lại ít nhất một chữ để đoán. */
+const maxHints  = r => Math.min(Math.ceil(r.L.length/3), Math.max(0, hintable(r).length - 1));
+
 let D, S;
-function newGame(idx=0){
+let TOTAL = 0, ROUND = 0;          // điểm cộng dồn qua nhiều ván
+let curIdx = -1;                   // bộ đề đang chơi
+
+/* --- túi bốc đề: xáo hết 73 bộ rồi rút dần, hết mới xáo lại --- */
+let bag = [];
+function refillBag(){
+  bag = DE.map((_,i)=>i);
+  for(let i=bag.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [bag[i],bag[j]]=[bag[j],bag[i]]; }
+  if(bag.length>1 && bag[bag.length-1]===curIdx) [bag[0],bag[bag.length-1]]=[bag[bag.length-1],bag[0]];
+}
+function drawIdx(){
+  if(!bag.length) refillBag();
+  return bag.pop();
+}
+/* ô chọn chủ đề đang để "Ngẫu nhiên" hay đang ghim một bộ cụ thể? */
+function pickedIdx(){
+  const v = $('#topicPick') ? $('#topicPick').value : '';
+  return v === '' ? null : +v;
+}
+
+function newGame(idx){
+  if(idx === undefined || idx === null) idx = pickedIdx();
+  if(idx === undefined || idx === null) idx = drawIdx();
+  curIdx = idx;
   D = DE[idx];
   const kl = letters(D.keyword);
   S = {
     key: kl,
-    rows: D.rows.map(r => ({...r, L:letters(r.a), state:'idle', hinted:false})),
+    rows: D.rows.map(r => ({...r, L:letters(r.a), state:'idle', hints:[]})),
     score:0, lives:3, used:0, over:false, cur:-1,
-    timerOn:true, timeLeft:0, tick:null
+    timerOn:TIME>0, timeLeft:0, tick:null
   };
   buildBoard(); render();
 }
@@ -241,7 +276,13 @@ function buildBoard(){
     kc.appendChild(d);
   });
   $('#kLen').textContent = S.key.length;
-  $('#topicName').textContent = 'Chủ đề: ' + D.topic;
+  paintSub();
+}
+
+function paintSub(){
+  let t = 'Chủ đề: ' + D.topic;
+  if(ROUND>0) t += ' · Ván ' + (ROUND+1) + ' · Tổng ' + TOTAL + 'đ';
+  $('#topicName').textContent = t;
 }
 
 /* ---------- vẽ lại ---------- */
@@ -289,7 +330,7 @@ function openQ(i){
   $('#qNum').textContent = i+1;
   $('#qText').textContent = r.q;
   $('#qLen').textContent = r.L.length + ' chữ cái';
-  $('#qHint').disabled = r.hinted;
+  paintHintBtn();
   $('#qInput').value=''; 
   $('#ovQ').classList.add('show'); duck(true);
   setTimeout(()=>$('#qInput').focus(), 80);
@@ -334,7 +375,7 @@ function answer(timeout=false){
   const ok = !timeout && same(val, r.a);
   if(ok){
     r.state='open'; S.used++;
-    const pts = r.hinted ? 10 : 10;
+    const pts = 10;
     S.score += pts;
     closeQ(); render(); sGood();
     flip(i);
@@ -351,14 +392,28 @@ function flip(i){
   cells.forEach((f,j)=>{ f.style.transitionDelay=(j*55)+'ms';
     setTimeout(()=>f.style.transitionDelay='', 700+j*55); });
 }
+function paintHintBtn(){
+  const r=S.rows[S.cur], b=$('#qHint'); if(!r||!b) return;
+  const used=r.hints.length, max=maxHints(r);
+  if(used>=max){ b.disabled=true; b.innerHTML='💡 Hết gợi ý'; return; }
+  b.disabled=false;
+  b.innerHTML='💡 Gợi ý <span class="hintchip">−'+hintCost(used)+'đ</span>'+
+              (max>1 ? ' <span class="hintchip">'+used+'/'+max+'</span>' : '');
+}
 function hint(){
-  const r=S.rows[S.cur]; if(!r || r.hinted) return;
-  r.hinted=true; S.score=Math.max(0,S.score-5);
-  const cell=document.querySelector('.row[data-i="'+S.cur+'"] .cell');
+  const r=S.rows[S.cur]; if(!r) return;
+  const used=r.hints.length;
+  if(used >= maxHints(r)){ toast('Hàng này hết gợi ý rồi — chỉ còn một chữ thôi 😄','info'); return; }
+  const j = hintable(r).find(k => !r.hints.includes(k));  // mở lần lượt từ trái sang
+  if(j===undefined) return;
+  const cost = hintCost(used);
+  r.hints.push(j);
+  S.score = Math.max(0, S.score - cost);
+  const cell=document.querySelectorAll('.row[data-i="'+S.cur+'"] .cell')[j];
   cell.classList.add('peek');
   const f=cell.querySelector('.face'); f.classList.add('peeked'); f.textContent=f.dataset.ch;
-  $('#qHint').disabled=true; render(); beep(760,.12,'sine',.12);
-  toast('Chữ cái đầu tiên: <b>'+r.L[0]+'</b> (−5đ)','info');
+  render(); paintHintBtn(); beep(700+used*60,.12,'sine',.12);
+  toast('Chữ thứ '+(j+1)+': <b>'+r.L[j]+'</b> &nbsp;(−'+cost+'đ)','info');
 }
 
 function shake(sel){
@@ -419,12 +474,13 @@ function checkEnd(){
   if(S.over) return;
   const allDone = S.rows.every(r=>r.state!=='idle');
   if(S.lives<=0 || (allDone && S.rows.every(r=>r.state==='failed'))) finish(false);
-  else if(allDone) toast('Đã xong 7 hàng ngang — đoán từ khoá thôi! 🔑','info');
+  else if(allDone) toast('Đã xong '+S.rows.length+' hàng ngang — đoán từ khoá thôi! 🔑','info');
 }
 
 /* ---------- kết thúc ---------- */
 function finish(win){
   S.over=true; stopTimer();
+  ROUND++; TOTAL += S.score;
   document.querySelectorAll('.row').forEach((el,i)=>{
     if(S.rows[i].state==='failed'){ el.classList.add('reveal-final'); }
   });
@@ -435,6 +491,13 @@ function finish(win){
   $('#rSub').textContent   = win ? 'Bạn đã tìm ra từ khoá' : 'Từ khoá là';
   $('#rKey').textContent   = D.keyword;
   $('#rScore').textContent = S.score;
+  $('#rTotal').textContent  = TOTAL;
+  $('#rRounds').textContent = ROUND;
+  $('#rTotalBar').style.display = ROUND>1 ? '' : 'none';
+  $('#rNext').style.display = DE.length>1 ? '' : 'none';
+  $('#rNext').innerHTML = pickedIdx()===null
+      ? '▶️ Ô chữ tiếp theo <span class="hintchip">còn '+(bag.length||DE.length)+'</span>'
+      : '▶️ Chơi lại chủ đề này';
   const rank = S.score>=150?'🌟 Xuất sắc!':S.score>=110?'😃 Giỏi lắm!':S.score>=70?'🙂 Khá rồi!':'💪 Lần sau cố lên nhé!';
   $('#rRank').textContent = rank;
   $('#rList').innerHTML = S.rows.map((r,i)=>{
@@ -479,8 +542,14 @@ $('#kClose').onclick  = ()=>{ $('#ovK').classList.remove('show'); duck(false); }
 $('#kInput').addEventListener('keydown', e=>{ if(e.key==='Enter') guessK(); });
 $('#btnGuess').onclick = openK;
 $('#btnNext').onclick  = ()=>{ const i=S.rows.findIndex(r=>r.state==='idle'); if(i>=0) openQ(i); };
-$('#btnReset').onclick = ()=>{ $('#ovR').classList.remove('show'); duck(false); newGame(+($('#topicPick').value||0)); toast('Bắt đầu lại nào! 🌱','info'); };
-$('#rAgain').onclick   = ()=>{ $('#ovR').classList.remove('show'); duck(false); newGame(+($('#topicPick').value||0)); };
+$('#btnReset').onclick = ()=>{ $('#ovR').classList.remove('show'); duck(false); newGame(curIdx); toast('Bắt đầu lại ô chữ này 🌱','info'); };
+$('#rAgain').onclick   = ()=>{ $('#ovR').classList.remove('show'); duck(false); newGame(curIdx); };
+$('#rNext').onclick    = ()=>{
+  $('#ovR').classList.remove('show'); duck(false);
+  const pinned = pickedIdx();
+  newGame(pinned===null ? drawIdx() : pinned);
+  toast('Ô chữ mới: <b>'+D.topic+'</b> 🔑','info');
+};
 $('#btnSound').onclick = e=>{ soundOn=!soundOn; e.currentTarget.classList.toggle('off',!soundOn);
   e.currentTarget.querySelector('span').textContent = soundOn?'Âm thanh':'Tắt tiếng'; if(soundOn) sOpen(); };
 $('#btnMusic').onclick = ()=>setMusic(!musicOn);
@@ -501,8 +570,13 @@ addEventListener('resize', ()=>{ const cv=$('#confetti'); cv.width=innerWidth; c
 /* ---------- chọn bộ đề ---------- */
 if(DE.length>1){
   const sel=$('#topicPick'); sel.style.display='';
-  DE.forEach((d,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=d.topic; sel.appendChild(o); });
-  sel.onchange = ()=>newGame(+sel.value);
+  const rnd=document.createElement('option'); rnd.value=''; rnd.textContent='🎲 Ngẫu nhiên'; sel.appendChild(rnd);
+  /* Cố ý KHÔNG ghi từ khoá vào đây, kẻo nhìn danh sách là lộ đáp án. */
+  DE.map((d,i)=>({i, label:d.topic+' · '+d.rows.length+' hàng'}))
+    .sort((a,b)=>a.label.localeCompare(b.label,'vi'))
+    .forEach(({i,label})=>{ const o=document.createElement('option'); o.value=i; o.textContent=label; sel.appendChild(o); });
+  sel.value='';                       // mặc định: mỗi lần một đề khác nhau
+  sel.onchange = ()=>{ newGame(); toast(sel.value==='' ? 'Chuyển sang chế độ <b>ngẫu nhiên</b> 🎲' : 'Đã ghim chủ đề này 📌','info'); };
 }
 
 /* ---------- kiểm tra dữ liệu, báo lỗi rõ ràng trong Console (F12) ---------- */
@@ -525,5 +599,6 @@ if(!DE.length){
     '<p style="text-align:center;padding:30px;font-weight:700;line-height:1.7">Chưa có bộ đề nào.<br>'+
     'Mở file <b>questions.js</b> và thêm ít nhất một bộ đề nhé.</p>';
 } else {
-  newGame(0);
+  refillBag();
+  newGame();
 }

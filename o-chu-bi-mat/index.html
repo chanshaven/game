@@ -70,6 +70,12 @@ h1{
 }
 .chipbtn:hover{background:rgba(255,255,255,.15);transform:translateY(-1px)}
 .chipbtn.off{opacity:.45}
+select.chipbtn{max-width:min(230px,42vw);font-weight:700;appearance:none;
+  padding-right:26px;background-image:linear-gradient(45deg,transparent 50%,#9fb6cd 50%),
+  linear-gradient(135deg,#9fb6cd 50%,transparent 50%);
+  background-position:calc(100% - 15px) 52%, calc(100% - 10px) 52%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+select.chipbtn option{background:#13294a;color:#eaf2fb}
 .homebtn{
   text-decoration:none;color:#ffeac2;
   border-color:rgba(249,178,60,.45);background:rgba(249,178,60,.14);
@@ -252,6 +258,12 @@ input.shake{animation:shk .42s;border-color:var(--red)!important;box-shadow:0 0 
 .breakdown .ok{color:var(--green-deep)}
 .breakdown .no{color:#d9455a}
 .breakdown b{margin-left:auto}
+.totalbar{margin-top:10px;padding:9px 14px;border-radius:13px;display:inline-block;
+  background:linear-gradient(145deg,#eef6ff,#dfeaf6);border:1px solid #cddcea;
+  font:800 15px var(--font-body);color:#42586e}
+.totalbar b{color:var(--ink)}
+.hintchip{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:7px;
+  background:#ffe9bd;color:#8a5200;font-size:11.5px;font-weight:800;vertical-align:1px}
 canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:95}
 footer{text-align:center;margin-top:22px;font-size:12.5px;color:#7e94ab;font-weight:600}
 @media (max-width:560px){
@@ -324,7 +336,7 @@ footer{text-align:center;margin-top:22px;font-size:12.5px;color:#7e94ab;font-wei
       <button class="btn btn-ok" id="qSubmit">Trả lời</button>
     </div>
     <div class="mfoot">
-      <button class="btn btn-sm btn-grey" id="qHint">💡 Gợi ý (−5đ)</button>
+      <button class="btn btn-sm btn-grey" id="qHint">💡 Gợi ý</button>
       <div class="spacer"></div>
       <button class="btn btn-sm btn-grey" id="qClose">Để sau</button>
     </div>
@@ -362,10 +374,12 @@ footer{text-align:center;margin-top:22px;font-size:12.5px;color:#7e94ab;font-wei
     <div class="kw" id="rKey">THỰC VẬT</div>
     <div class="rank" id="rRank"></div>
     <div class="breakdown" id="rList"></div>
-    <div style="font:800 26px var(--font-title);margin-top:12px">Tổng điểm: <span style="color:var(--amber-deep)" id="rScore">0</span></div>
+    <div style="font:800 26px var(--font-title);margin-top:12px">Điểm ván này: <span style="color:var(--amber-deep)" id="rScore">0</span></div>
+    <div class="totalbar" id="rTotalBar">Tổng cộng sau <b id="rRounds">1</b> ván: <b id="rTotal">0</b>đ</div>
     <div class="actions" style="margin-top:16px">
-      <button class="btn btn-key" id="rAgain">🔄 Chơi lại</button>
-      <a class="btn btn-home" href="../index.html">🏠 Về trang chủ</a>
+      <button class="btn btn-key" id="rNext">▶️ Ô chữ tiếp theo</button>
+      <button class="btn btn-sm btn-grey" id="rAgain">🔄 Chơi lại ván này</button>
+      <a class="btn btn-sm btn-home" href="../index.html">🏠 Trang chủ</a>
     </div>
   </div>
 </div>

@@ -104,7 +104,11 @@ Chép nguyên một khối `{ ... }`, dán xuống dưới, **nhớ dấu phẩy
 );
 ```
 
-Có từ 2 bộ đề trở lên, game **tự hiện ô chọn chủ đề** trên thanh công cụ.
+Có từ 2 bộ đề trở lên, game **tự hiện ô chọn chủ đề** trên thanh công cụ, và mỗi lần mở
+game sẽ **bốc ngẫu nhiên** một bộ (xem mục 5).
+
+Danh sách trong ô chọn cố ý **chỉ ghi tên chủ đề và số hàng, không ghi từ khoá** — kẻo
+học sinh nhìn vào là biết đáp án.
 
 ---
 
@@ -113,21 +117,59 @@ Có từ 2 bộ đề trở lên, game **tự hiện ô chọn chủ đề** tr�
 | Việc | Điểm |
 |---|---|
 | Mở đúng một hàng ngang | **+10** |
-| Dùng gợi ý (hiện chữ cái đầu) | **−5** |
 | Đoán đúng từ khoá | **+100**, trừ dần 10 mỗi hàng đã dùng, thấp nhất **30** |
 | Đoán sai từ khoá | **−15** và mất một lượt (có 3 lượt) |
+| Dùng gợi ý | **tăng dần**: −5, −10, −15, −20… xem bên dưới |
 
 - Trả lời sai hoặc hết giờ thì **hàng đó xám đi và khoá luôn**, không mở lại được.
 - Hết 3 lượt đoán từ khoá là kết thúc ván.
 - Xếp loại cuối ván: từ 150 điểm — *Xuất sắc*, 110 — *Giỏi*, 70 — *Khá*.
 
+### Gợi ý
+
+Mỗi hàng ngang được gợi ý nhiều lần, mỗi lần mở thêm **một chữ cái** tính từ trái sang.
+Nhưng **càng xin càng đắt**: lần đầu −5, lần hai −10, lần ba −15, cứ thế tăng thêm 5.
+
+Số lần tối đa bằng **một phần ba số chữ** của đáp án, nên đáp án dài mới được nhiều:
+
+| Đáp án | Số gợi ý tối đa | Tổng điểm mất nếu xin hết |
+|---|---|---|
+| 4–6 chữ | 2 | 15 |
+| 7–9 chữ | 3 | 30 |
+| 10–12 chữ | 4 | 50 |
+| 13 chữ trở lên | 5 | 75 |
+
+**Ô nằm trên cột từ khoá không bao giờ bị gợi ý** — đó là phần cốt lõi của trò chơi,
+muốn có chữ đó thì phải trả lời đúng cả hàng.
+
+Nút gợi ý luôn hiện sẵn giá của lần bấm kế tiếp và số lần đã dùng, ví dụ
+`💡 Gợi ý −10đ 1/3`.
+
 ---
 
-## 5. Mấy nút trên thanh công cụ
+## 5. Chơi liền nhiều ô chữ
+
+Mở game lên là **bốc ngẫu nhiên** một bộ đề trong ngân hàng. Giải xong, bảng kết quả có
+nút **▶️ Ô chữ tiếp theo** để sang bộ khác ngay, kèm số bộ còn lại chưa chơi.
+
+Game xáo toàn bộ ngân hàng thành một "túi" rồi rút dần, nên **chơi hết lượt mới lặp
+lại**, không bị trúng đi trúng lại một đề. Hết túi thì tự xáo lại từ đầu.
+
+Điểm được **cộng dồn qua các ván**: dòng phụ đề trên đầu hiện `Ván 3 · Tổng 285đ`, và
+bảng kết quả từ ván thứ hai trở đi hiện thêm *Tổng cộng sau N ván*.
+
+Muốn chơi mãi một chủ đề (ví dụ đang dạy bài nào đó) thì chọn chủ đề cụ thể trong ô
+**🎲 Ngẫu nhiên** trên thanh công cụ — lúc đó nút sẽ thành *Chơi lại chủ đề này*. Chọn
+lại `🎲 Ngẫu nhiên` để quay về chế độ bốc thăm.
+
+---
+
+## 6. Mấy nút trên thanh công cụ
 
 | Nút | Tác dụng |
 |---|---|
 | 🏠 **Trang chủ** | Quay về trang danh sách game |
+| 🎲 **Ngẫu nhiên** | Ô chọn chủ đề — để nguyên là mỗi ván một đề khác nhau |
 | ✍️ **Bắt buộc gõ dấu** | Bật/tắt yêu cầu gõ đúng dấu tiếng Việt |
 | ⏱️ **Giờ** | Đổi 30s → 45s → 60s → tắt đồng hồ |
 | 🎵 **Nhạc nền** | Tắt/bật nhạc nền |
@@ -146,7 +188,7 @@ Chữ hoa/thường và khoảng trắng không phân biệt: `Thực Vật` = `
 
 ---
 
-## 6. Nhạc nền
+## 7. Nhạc nền
 
 Nhạc **sinh ra ngay trong trình duyệt bằng Web Audio**, không có file mp3 nào cả —
 thư mục vẫn nhẹ và không dính bản quyền của ai.
@@ -184,7 +226,7 @@ tám. `MEL` có 8 dòng ứng với 8 ô nhịp, mỗi dòng 8 nốt móc đơn.
 
 ---
 
-## 7. Gộp thành một file để gửi cho người khác
+## 8. Gộp thành một file để gửi cho người khác
 
 Sửa đề xong, chạy:
 
@@ -201,7 +243,7 @@ Lưu ý: bản 1 file vẫn có nút *Trang chủ* trỏ ra `../index.html`, m�
 
 ---
 
-## 8. Đăng lên web
+## 9. Đăng lên web
 
 Thư mục này nằm cạnh `chiec-non-ky-dieu` trong thư mục `game`, và trang chủ
 `game/index.html` đã có sẵn thẻ dẫn vào đây. Sửa xong chỉ cần:

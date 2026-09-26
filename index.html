@@ -278,6 +278,55 @@
       }
     }
 
+    .rulecard {
+      position: relative;
+      width: 134px;
+      padding: 13px 12px 14px;
+      background: #E7E2D3;
+      border: 1px solid #B9B2A0;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .5);
+      transform: rotate(-2.5deg)
+    }
+
+    .rl-h {
+      display: block;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #7A7364;
+      margin-bottom: 8px
+    }
+
+    .rl1, .rl2, .rl3 {
+      display: block;
+      height: 5px;
+      border-radius: 2px;
+      background: #8E887A;
+      margin-bottom: 5px
+    }
+
+    .rl2 { width: 84% }
+    .rl3 { width: 56%; margin-bottom: 0 }
+
+    .strike {
+      position: absolute;
+      left: 9px;
+      top: 56%;
+      height: 2.5px;
+      width: 0;
+      background: #C0271D;
+      box-shadow: 0 0 8px rgba(192, 39, 29, .85);
+      animation: strike 3.8s ease-in-out infinite
+    }
+
+    @keyframes strike {
+      0%, 14% { width: 0; opacity: 0 }
+      24% { opacity: 1 }
+      52%, 84% { width: calc(100% - 18px); opacity: 1 }
+      100% { width: calc(100% - 18px); opacity: 0 }
+    }
+
     .soon {
       border-style: dashed;
       border-color: rgba(255, 244, 220, .2);
@@ -376,6 +425,30 @@
             <span>1 người hoặc chia đội</span>
             <span>Có đồng hồ đếm giờ</span>
             <span>Giải đáp ô chữ</span>
+          </div>
+          <div class="play"><span>CHƠI NGAY</span></div>
+        </div>
+      </a>
+
+      <!-- ===== Cả Tin ===== -->
+      <a class="card" href="./ca-tin/">
+        <div class="thumb">
+          <div class="rulecard">
+            <span class="rl-h">Bảng luật</span>
+            <span class="rl1"></span>
+            <span class="rl2"></span>
+            <span class="rl3"></span>
+            <span class="strike"></span>
+          </div>
+        </div>
+        <div class="body">
+          <div class="name">Cả Tin</div>
+          <p class="desc">Mỗi màn hiện ra một bảng luật viết rõ ràng &mdash; và bảng luật đó nói dối. Thử, đọc sổ tay,
+            rồi suy ra luật thật. Chọn đúng ba lần liên tiếp mới qua được màn.</p>
+          <div class="tags">
+            <span>1 người</span>
+            <span>Suy luận</span>
+            <span>6 màn</span>
           </div>
           <div class="play"><span>CHƠI NGAY</span></div>
         </div>

@@ -171,7 +171,7 @@ lại `🎲 Ngẫu nhiên` để quay về chế độ bốc thăm.
 | 🏠 **Trang chủ** | Quay về trang danh sách game |
 | 🎲 **Ngẫu nhiên** | Ô chọn chủ đề — để nguyên là mỗi ván một đề khác nhau |
 | ✍️ **Bắt buộc gõ dấu** | Bật/tắt yêu cầu gõ đúng dấu tiếng Việt |
-| ⏱️ **Giờ** | Đổi 30s → 45s → 60s → tắt đồng hồ |
+| ⏱️ **Giờ** | Đổi 40s → 60s → 90s → tắt đồng hồ (mặc định 40s) |
 | 🎵 **Nhạc nền** | Tắt/bật nhạc nền |
 | 🔊 **Âm thanh** | Tắt/bật tiếng hiệu ứng (đúng, sai, đếm ngược) |
 | 🔄 **Chơi lại** | Bắt đầu lại từ đầu |

@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Bảng luật hiện ra luôn nói dối. Thử, quan sát, rồi suy ra luật thật.">
+  <title>Cả Tin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;600;800&family=Cousine:wght@400;700&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --wine-900: #26060E;
+      --wine-800: #4A0D1C;
+      --gold-300: #FFE9A8;
+      --gold-400: #FFD166;
+      --gold-600: #B0711C;
+      --cream: #FFF4DC;
+      --cream-dim: #E8D5B4;
+      --paper: #E7E2D3;
+      --paper-line: #B9B2A0;
+      --ink: #1A1712;
+      --ink-soft: #5E5749;
+      --stamp: #B3241C;
+      --seal: #1E7A55;
+      --lam: #2F7FB8;
+      --do: #C6362A;
+      --vang: #D69C1C;
+      --fx-display: "Anton", "Arial Narrow", Impact, sans-serif;
+      --fx-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+      --fx-mono: "Cousine", "Be Vietnam Pro", ui-monospace, Menlo, monospace;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: var(--fx-body);
+      color: var(--cream);
+      background:
+        radial-gradient(1100px 620px at 50% -14%, rgba(255, 209, 102, .18), transparent 62%),
+        radial-gradient(700px 500px at 8% 12%, rgba(255, 91, 65, .10), transparent 60%),
+        linear-gradient(175deg, var(--wine-800) 0%, var(--wine-900) 52%, #16030A 100%);
+      background-attachment: fixed;
+    }
+
+    .vignette {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      box-shadow: inset 0 0 220px 60px rgba(10, 2, 6, .7)
+    }
+
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 560px; margin: 0 auto;
+      padding-inline: 20px; padding-block: 26px 46px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* ---------- thanh trên ---------- */
+    .top {
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+      border-bottom: 1px solid rgba(255, 209, 102, .22); padding-bottom: 12px;
+    }
+    .brand {
+      font-family: var(--fx-display); font-size: 26px; line-height: 1;
+      letter-spacing: .04em; color: var(--gold-300);
+    }
+    .brand a { color: inherit; text-decoration: none }
+    .brand a:hover { color: var(--gold-400) }
+    .meta { display: flex; align-items: center; gap: 13px }
+    .lvl {
+      font-family: var(--fx-mono); font-size: 11px; letter-spacing: .1em;
+      color: var(--cream-dim); font-variant-numeric: tabular-nums; white-space: nowrap;
+    }
+    .pips { display: flex; gap: 5px }
+    .pip {
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 1.5px solid rgba(255, 233, 168, .45);
+    }
+    .pip.on { background: var(--gold-400); border-color: var(--gold-400); box-shadow: 0 0 9px rgba(255, 209, 102, .6) }
+
+    /* ---------- bảng luật: tờ giấy hành chính đặt giữa sân khấu ---------- */
+    .card {
+      position: relative; background: var(--paper); color: var(--ink);
+      padding: 15px 18px 17px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, .5);
+      transform: rotate(-.35deg);
+    }
+    .card::after {
+      content: ""; position: absolute; inset: 5px;
+      border: 1px solid var(--paper-line); pointer-events: none;
+    }
+    .eyebrow {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+      font-family: var(--fx-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft);
+    }
+    .rule {
+      margin: 11px 0 0; font-family: var(--fx-mono);
+      font-size: 16px; font-weight: 600; line-height: 1.45; text-wrap: balance;
+    }
+
+    /* ---------- bàn chơi ---------- */
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px }
+    .tile {
+      position: relative; aspect-ratio: 1; max-width: 100%; min-width: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 6px; font: inherit; color: inherit; cursor: pointer;
+      border-radius: 13px;
+      border: 1.5px solid rgba(255, 209, 102, .26);
+      background: linear-gradient(180deg, rgba(99, 18, 38, .6), rgba(30, 6, 13, .85));
+      transition: transform .18s cubic-bezier(.3, 1.1, .5, 1), border-color .18s;
+    }
+    .tile:hover:not(:disabled) { transform: translateY(-4px); border-color: var(--gold-400) }
+    .tile:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px }
+    .tile:disabled { cursor: default }
+    .tile svg { width: 66%; height: auto; display: block }
+    .tile .mark {
+      position: absolute; inset: 0; display: grid; place-items: center; border-radius: 12px;
+      font-family: var(--fx-display); font-size: 23px; letter-spacing: .1em; opacity: 0;
+    }
+    .tile.hit  { border-color: var(--seal) }
+    .tile.miss { border-color: var(--stamp) }
+    /* dấu ĐÚNG/SAI nằm đè lên hình, nên mờ hình đi cho chữ đọc được */
+    .tile.hit svg, .tile.miss svg { opacity: .14 }
+    .tile.hit .mark  { opacity: 1; color: #6BF0BE; background: rgba(30, 122, 85, .42) }
+    .tile.miss .mark { opacity: 1; color: #FF9E93; background: rgba(179, 36, 28, .42) }
+
+    /* ---------- sổ tay ---------- */
+    .log .eyebrow { color: var(--cream-dim); opacity: .8 }
+    .log ol {
+      list-style: none; margin: 9px 0 0; padding: 0;
+      max-height: 170px; overflow-y: auto;
+      border-top: 1px solid rgba(255, 209, 102, .18);
+    }
+    .log li {
+      display: flex; gap: 11px; align-items: baseline;
+      font-family: var(--fx-mono); font-size: 12px; padding: 6px 2px;
+      border-bottom: 1px solid rgba(255, 209, 102, .12);
+      font-variant-numeric: tabular-nums; color: var(--cream-dim);
+    }
+    .log li .v { font-weight: 600; width: 1.1em; flex: none }
+    .log li.ok .v { color: #4FD8A6 }
+    .log li.no .v { color: #FF8D80 }
+    .log .empty { opacity: .5; font-style: italic; border-bottom: 0 }
+
+    /* ---------- chân trang ---------- */
+    .foot { display: flex; flex-direction: column; gap: 11px }
+    .btnrow { display: flex; flex-wrap: wrap; gap: 9px }
+    button.act {
+      font-family: var(--fx-mono); font-size: 11px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      background: transparent; color: var(--gold-300); cursor: pointer;
+      border: 1.5px solid rgba(255, 209, 102, .32); border-radius: 11px; padding: 10px 15px;
+    }
+    button.act:hover { border-color: var(--gold-400); color: var(--gold-400) }
+    button.act:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px }
+    button.act.primary {
+      color: #3A1704; border-color: transparent;
+      background: linear-gradient(180deg, #FFE9A8, var(--gold-400) 45%, #E09A29);
+      box-shadow: 0 4px 0 #8E5711;
+    }
+    button.act.primary:hover { filter: brightness(1.07); color: #3A1704 }
+    .hint {
+      margin: 0; font-family: var(--fx-mono); font-size: 12px; line-height: 1.55;
+      color: var(--gold-300); border-left: 2px solid var(--gold-600); padding: 3px 0 3px 11px;
+    }
+    .note { font-size: 12px; line-height: 1.6; color: var(--cream-dim); opacity: .6; text-align: center }
+
+    /* ---------- màn hình lộ luật ---------- */
+    /* [hidden] phải thắng display:grid, nếu không lớp phủ hiện ngay lúc mở trang */
+    .overlay[hidden] { display: none }
+
+    .overlay {
+      position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+      padding: 18px; overflow-y: auto;
+      padding-block: calc(18px + env(safe-area-inset-top, 0px)) calc(18px + env(safe-area-inset-bottom, 0px));
+      background: rgba(12, 3, 7, .8); backdrop-filter: blur(3px);
+    }
+    .sheet {
+      width: 100%; max-width: 470px; background: var(--paper); color: var(--ink);
+      padding: 24px 22px; border-radius: 4px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .6);
+      display: flex; flex-direction: column; gap: 15px;
+    }
+    .sheet h2 {
+      margin: 0; font-family: var(--fx-display); font-size: 27px;
+      letter-spacing: .03em; line-height: 1.05; color: var(--ink); text-wrap: balance;
+    }
+    .line { display: flex; flex-direction: column; gap: 4px }
+    .line .k {
+      font-family: var(--fx-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft);
+    }
+    .line .v { font-family: var(--fx-mono); font-size: 14px; line-height: 1.45 }
+    .line .v.lie {
+      text-decoration: line-through; text-decoration-color: var(--stamp);
+      text-decoration-thickness: 2px; color: var(--ink-soft);
+    }
+    .line .v.truth { font-weight: 600; color: var(--seal) }
+    .tally {
+      display: flex; gap: 26px; border-top: 1px solid var(--paper-line); padding-top: 13px;
+      font-family: var(--fx-mono); font-size: 11px; color: var(--ink-soft);
+      letter-spacing: .06em; text-transform: uppercase; font-variant-numeric: tabular-nums;
+    }
+    .tally b {
+      display: block; font-family: var(--fx-display); font-size: 23px;
+      letter-spacing: .02em; color: var(--ink); text-transform: none; margin-top: 3px;
+    }
+    .seednote {
+      margin: -4px 0 0; font-size: 12px; line-height: 1.55; color: var(--ink-soft);
+    }
+    .seednote code {
+      font-family: var(--fx-mono); font-size: 11.5px;
+      background: rgba(0, 0, 0, .07); padding: 1px 5px; border-radius: 3px;
+    }
+
+    .voice {
+      margin: 0; font-size: 14.5px; line-height: 1.55; font-style: italic; color: var(--ink);
+      border-left: 3px solid var(--stamp); padding-left: 13px;
+    }
+    .voice span {
+      display: block; font-style: normal; font-family: var(--fx-mono); font-size: 10px;
+      font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--stamp); margin-bottom: 6px;
+    }
+    .scores { width: 100%; border-collapse: collapse; font-family: var(--fx-mono); font-size: 12.5px }
+    .scores td {
+      border-bottom: 1px solid var(--paper-line); padding: 7px 0;
+      font-variant-numeric: tabular-nums; color: var(--ink);
+    }
+    .scores td:last-child { text-align: right; color: var(--ink-soft) }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important }
+      .card { transform: none }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="vignette"></div>
+
+  <main class="wrap">
+    <header class="top">
+      <div class="brand"><a href="../">Cả Tin</a></div>
+      <div class="meta">
+        <div class="lvl">Màn <span id="lvlNum">1</span>/<span id="lvlAll">6</span></div>
+        <div class="pips" id="pips" aria-label="Chuỗi đúng liên tiếp"></div>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="eyebrow"><span>Bảng luật</span><span id="lvlTag">Hồ sơ 01</span></div>
+      <p class="rule" id="ruleText">…</p>
+    </section>
+
+    <div class="board" id="board"></div>
+
+    <section class="log">
+      <div class="eyebrow"><span>Sổ tay</span><span id="tries">0 lần thử</span></div>
+      <ol id="logList">
+        <li class="empty">Chưa có lần thử nào.</li>
+      </ol>
+    </section>
+
+    <div class="foot">
+      <p class="hint" id="hintText" hidden></p>
+      <div class="btnrow">
+        <button class="act" id="hintBtn" hidden>Gợi ý</button>
+        <button class="act" id="resetBtn">Chơi lại từ đầu</button>
+      </div>
+      <p class="note">Qua màn bằng cách chọn đúng <strong>ba lần liên tiếp</strong>. Bàn chơi đổi sau mỗi lần thử.<br>
+        Mã ván <b id="seedTag">—</b> &mdash; mỗi ván một bộ luật khác.</p>
+    </div>
+  </main>
+
+  <div class="overlay" id="reveal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="revealTitle">
+      <h2 id="revealTitle">Đã qua màn</h2>
+      <div class="line"><span class="k">Bảng luật đã ghi</span><span class="v lie" id="revLie"></span></div>
+      <div class="line"><span class="k">Luật thật</span><span class="v truth" id="revTruth"></span></div>
+      <div class="tally">
+        <div>Số lần thử<b id="revTries">0</b></div>
+        <div>Xếp hạng<b id="revRank">—</b></div>
+      </div>
+      <p class="voice" id="revVoice"><span>Người dẫn đường</span></p>
+      <div class="btnrow"><button class="act primary" id="nextBtn">Màn tiếp theo</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="endScreen" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="endTitle">
+      <h2 id="endTitle">Hết hồ sơ</h2>
+      <table class="scores">
+        <tbody id="scoreBody"></tbody>
+      </table>
+      <div class="tally">
+        <div>Tổng số lần thử<b id="endTotal">0</b></div>
+        <div>Mã ván<b id="endSeed">—</b></div>
+      </div>
+      <p class="seednote">Gửi mã ván cho bạn bè là họ gặp đúng sáu bảng luật vừa rồi. Mở bằng
+        <code>?van=MÃ</code> ở cuối địa chỉ trang.</p>
+      <p class="voice" id="endVoice"><span>Người dẫn đường</span></p>
+      <div class="btnrow">
+        <button class="act primary" id="againBtn">Chơi lại từ đầu</button>
+        <button class="act" id="homeBtn">Về trang chủ</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="levels.js"></script>
+  <script src="game.js"></script>
+</body>
+
+</html>

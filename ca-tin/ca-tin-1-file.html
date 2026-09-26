@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Bảng luật hiện ra luôn nói dối. Thử, quan sát, rồi suy ra luật thật.">
+  <title>Cả Tin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;600;800&family=Cousine:wght@400;700&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --wine-900: #26060E;
+      --wine-800: #4A0D1C;
+      --gold-300: #FFE9A8;
+      --gold-400: #FFD166;
+      --gold-600: #B0711C;
+      --cream: #FFF4DC;
+      --cream-dim: #E8D5B4;
+      --paper: #E7E2D3;
+      --paper-line: #B9B2A0;
+      --ink: #1A1712;
+      --ink-soft: #5E5749;
+      --stamp: #B3241C;
+      --seal: #1E7A55;
+      --lam: #2F7FB8;
+      --do: #C6362A;
+      --vang: #D69C1C;
+      --fx-display: "Anton", "Arial Narrow", Impact, sans-serif;
+      --fx-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+      --fx-mono: "Cousine", "Be Vietnam Pro", ui-monospace, Menlo, monospace;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: var(--fx-body);
+      color: var(--cream);
+      background:
+        radial-gradient(1100px 620px at 50% -14%, rgba(255, 209, 102, .18), transparent 62%),
+        radial-gradient(700px 500px at 8% 12%, rgba(255, 91, 65, .10), transparent 60%),
+        linear-gradient(175deg, var(--wine-800) 0%, var(--wine-900) 52%, #16030A 100%);
+      background-attachment: fixed;
+    }
+
+    .vignette {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      box-shadow: inset 0 0 220px 60px rgba(10, 2, 6, .7)
+    }
+
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 560px; margin: 0 auto;
+      padding-inline: 20px; padding-block: 26px 46px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+
+    /* ---------- thanh trên ---------- */
+    .top {
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+      border-bottom: 1px solid rgba(255, 209, 102, .22); padding-bottom: 12px;
+    }
+    .brand {
+      font-family: var(--fx-display); font-size: 26px; line-height: 1;
+      letter-spacing: .04em; color: var(--gold-300);
+    }
+    .brand a { color: inherit; text-decoration: none }
+    .brand a:hover { color: var(--gold-400) }
+    .meta { display: flex; align-items: center; gap: 13px }
+    .lvl {
+      font-family: var(--fx-mono); font-size: 11px; letter-spacing: .1em;
+      color: var(--cream-dim); font-variant-numeric: tabular-nums; white-space: nowrap;
+    }
+    .pips { display: flex; gap: 5px }
+    .pip {
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 1.5px solid rgba(255, 233, 168, .45);
+    }
+    .pip.on { background: var(--gold-400); border-color: var(--gold-400); box-shadow: 0 0 9px rgba(255, 209, 102, .6) }
+
+    /* ---------- bảng luật: tờ giấy hành chính đặt giữa sân khấu ---------- */
+    .card {
+      position: relative; background: var(--paper); color: var(--ink);
+      padding: 15px 18px 17px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, .5);
+      transform: rotate(-.35deg);
+    }
+    .card::after {
+      content: ""; position: absolute; inset: 5px;
+      border: 1px solid var(--paper-line); pointer-events: none;
+    }
+    .eyebrow {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+      font-family: var(--fx-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft);
+    }
+    .rule {
+      margin: 11px 0 0; font-family: var(--fx-mono);
+      font-size: 16px; font-weight: 600; line-height: 1.45; text-wrap: balance;
+    }
+
+    /* ---------- bàn chơi ---------- */
+    .board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px }
+    .tile {
+      position: relative; aspect-ratio: 1; max-width: 100%; min-width: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 6px; font: inherit; color: inherit; cursor: pointer;
+      border-radius: 13px;
+      border: 1.5px solid rgba(255, 209, 102, .26);
+      background: linear-gradient(180deg, rgba(99, 18, 38, .6), rgba(30, 6, 13, .85));
+      transition: transform .18s cubic-bezier(.3, 1.1, .5, 1), border-color .18s;
+    }
+    .tile:hover:not(:disabled) { transform: translateY(-4px); border-color: var(--gold-400) }
+    .tile:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px }
+    .tile:disabled { cursor: default }
+    .tile svg { width: 66%; height: auto; display: block }
+    .tile .mark {
+      position: absolute; inset: 0; display: grid; place-items: center; border-radius: 12px;
+      font-family: var(--fx-display); font-size: 23px; letter-spacing: .1em; opacity: 0;
+    }
+    .tile.hit  { border-color: var(--seal) }
+    .tile.miss { border-color: var(--stamp) }
+    /* dấu ĐÚNG/SAI nằm đè lên hình, nên mờ hình đi cho chữ đọc được */
+    .tile.hit svg, .tile.miss svg { opacity: .14 }
+    .tile.hit .mark  { opacity: 1; color: #6BF0BE; background: rgba(30, 122, 85, .42) }
+    .tile.miss .mark { opacity: 1; color: #FF9E93; background: rgba(179, 36, 28, .42) }
+
+    /* ---------- sổ tay ---------- */
+    .log .eyebrow { color: var(--cream-dim); opacity: .8 }
+    .log ol {
+      list-style: none; margin: 9px 0 0; padding: 0;
+      max-height: 170px; overflow-y: auto;
+      border-top: 1px solid rgba(255, 209, 102, .18);
+    }
+    .log li {
+      display: flex; gap: 11px; align-items: baseline;
+      font-family: var(--fx-mono); font-size: 12px; padding: 6px 2px;
+      border-bottom: 1px solid rgba(255, 209, 102, .12);
+      font-variant-numeric: tabular-nums; color: var(--cream-dim);
+    }
+    .log li .v { font-weight: 600; width: 1.1em; flex: none }
+    .log li.ok .v { color: #4FD8A6 }
+    .log li.no .v { color: #FF8D80 }
+    .log .empty { opacity: .5; font-style: italic; border-bottom: 0 }
+
+    /* ---------- chân trang ---------- */
+    .foot { display: flex; flex-direction: column; gap: 11px }
+    .btnrow { display: flex; flex-wrap: wrap; gap: 9px }
+    button.act {
+      font-family: var(--fx-mono); font-size: 11px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      background: transparent; color: var(--gold-300); cursor: pointer;
+      border: 1.5px solid rgba(255, 209, 102, .32); border-radius: 11px; padding: 10px 15px;
+    }
+    button.act:hover { border-color: var(--gold-400); color: var(--gold-400) }
+    button.act:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px }
+    button.act.primary {
+      color: #3A1704; border-color: transparent;
+      background: linear-gradient(180deg, #FFE9A8, var(--gold-400) 45%, #E09A29);
+      box-shadow: 0 4px 0 #8E5711;
+    }
+    button.act.primary:hover { filter: brightness(1.07); color: #3A1704 }
+    .hint {
+      margin: 0; font-family: var(--fx-mono); font-size: 12px; line-height: 1.55;
+      color: var(--gold-300); border-left: 2px solid var(--gold-600); padding: 3px 0 3px 11px;
+    }
+    .note { font-size: 12px; line-height: 1.6; color: var(--cream-dim); opacity: .6; text-align: center }
+
+    /* ---------- màn hình lộ luật ---------- */
+    /* [hidden] phải thắng display:grid, nếu không lớp phủ hiện ngay lúc mở trang */
+    .overlay[hidden] { display: none }
+
+    .overlay {
+      position: fixed; inset: 0; z-index: 20; display: grid; place-items: center;
+      padding: 18px; overflow-y: auto;
+      padding-block: calc(18px + env(safe-area-inset-top, 0px)) calc(18px + env(safe-area-inset-bottom, 0px));
+      background: rgba(12, 3, 7, .8); backdrop-filter: blur(3px);
+    }
+    .sheet {
+      width: 100%; max-width: 470px; background: var(--paper); color: var(--ink);
+      padding: 24px 22px; border-radius: 4px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .6);
+      display: flex; flex-direction: column; gap: 15px;
+    }
+    .sheet h2 {
+      margin: 0; font-family: var(--fx-display); font-size: 27px;
+      letter-spacing: .03em; line-height: 1.05; color: var(--ink); text-wrap: balance;
+    }
+    .line { display: flex; flex-direction: column; gap: 4px }
+    .line .k {
+      font-family: var(--fx-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft);
+    }
+    .line .v { font-family: var(--fx-mono); font-size: 14px; line-height: 1.45 }
+    .line .v.lie {
+      text-decoration: line-through; text-decoration-color: var(--stamp);
+      text-decoration-thickness: 2px; color: var(--ink-soft);
+    }
+    .line .v.truth { font-weight: 600; color: var(--seal) }
+    .tally {
+      display: flex; gap: 26px; border-top: 1px solid var(--paper-line); padding-top: 13px;
+      font-family: var(--fx-mono); font-size: 11px; color: var(--ink-soft);
+      letter-spacing: .06em; text-transform: uppercase; font-variant-numeric: tabular-nums;
+    }
+    .tally b {
+      display: block; font-family: var(--fx-display); font-size: 23px;
+      letter-spacing: .02em; color: var(--ink); text-transform: none; margin-top: 3px;
+    }
+    .seednote {
+      margin: -4px 0 0; font-size: 12px; line-height: 1.55; color: var(--ink-soft);
+    }
+    .seednote code {
+      font-family: var(--fx-mono); font-size: 11.5px;
+      background: rgba(0, 0, 0, .07); padding: 1px 5px; border-radius: 3px;
+    }
+
+    .voice {
+      margin: 0; font-size: 14.5px; line-height: 1.55; font-style: italic; color: var(--ink);
+      border-left: 3px solid var(--stamp); padding-left: 13px;
+    }
+    .voice span {
+      display: block; font-style: normal; font-family: var(--fx-mono); font-size: 10px;
+      font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--stamp); margin-bottom: 6px;
+    }
+    .scores { width: 100%; border-collapse: collapse; font-family: var(--fx-mono); font-size: 12.5px }
+    .scores td {
+      border-bottom: 1px solid var(--paper-line); padding: 7px 0;
+      font-variant-numeric: tabular-nums; color: var(--ink);
+    }
+    .scores td:last-child { text-align: right; color: var(--ink-soft) }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important }
+      .card { transform: none }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="vignette"></div>
+
+  <main class="wrap">
+    <header class="top">
+      <div class="brand"><a href="../">Cả Tin</a></div>
+      <div class="meta">
+        <div class="lvl">Màn <span id="lvlNum">1</span>/<span id="lvlAll">6</span></div>
+        <div class="pips" id="pips" aria-label="Chuỗi đúng liên tiếp"></div>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="eyebrow"><span>Bảng luật</span><span id="lvlTag">Hồ sơ 01</span></div>
+      <p class="rule" id="ruleText">…</p>
+    </section>
+
+    <div class="board" id="board"></div>
+
+    <section class="log">
+      <div class="eyebrow"><span>Sổ tay</span><span id="tries">0 lần thử</span></div>
+      <ol id="logList">
+        <li class="empty">Chưa có lần thử nào.</li>
+      </ol>
+    </section>
+
+    <div class="foot">
+      <p class="hint" id="hintText" hidden></p>
+      <div class="btnrow">
+        <button class="act" id="hintBtn" hidden>Gợi ý</button>
+        <button class="act" id="resetBtn">Chơi lại từ đầu</button>
+      </div>
+      <p class="note">Qua màn bằng cách chọn đúng <strong>ba lần liên tiếp</strong>. Bàn chơi đổi sau mỗi lần thử.<br>
+        Mã ván <b id="seedTag">—</b> &mdash; mỗi ván một bộ luật khác.</p>
+    </div>
+  </main>
+
+  <div class="overlay" id="reveal" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="revealTitle">
+      <h2 id="revealTitle">Đã qua màn</h2>
+      <div class="line"><span class="k">Bảng luật đã ghi</span><span class="v lie" id="revLie"></span></div>
+      <div class="line"><span class="k">Luật thật</span><span class="v truth" id="revTruth"></span></div>
+      <div class="tally">
+        <div>Số lần thử<b id="revTries">0</b></div>
+        <div>Xếp hạng<b id="revRank">—</b></div>
+      </div>
+      <p class="voice" id="revVoice"><span>Người dẫn đường</span></p>
+      <div class="btnrow"><button class="act primary" id="nextBtn">Màn tiếp theo</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="endScreen" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="endTitle">
+      <h2 id="endTitle">Hết hồ sơ</h2>
+      <table class="scores">
+        <tbody id="scoreBody"></tbody>
+      </table>
+      <div class="tally">
+        <div>Tổng số lần thử<b id="endTotal">0</b></div>
+        <div>Mã ván<b id="endSeed">—</b></div>
+      </div>
+      <p class="seednote">Gửi mã ván cho bạn bè là họ gặp đúng sáu bảng luật vừa rồi. Mở bằng
+        <code>?van=MÃ</code> ở cuối địa chỉ trang.</p>
+      <p class="voice" id="endVoice"><span>Người dẫn đường</span></p>
+      <div class="btnrow">
+        <button class="act primary" id="againBtn">Chơi lại từ đầu</button>
+        <button class="act" id="homeBtn">Về trang chủ</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ===== levels.js ===== */
+/* ============================================================================
+   CẢ TIN — bộ sinh luật
+   ----------------------------------------------------------------------------
+   Mỗi ván sinh ra một bộ sáu bảng luật KHÁC NHAU, nên chơi lại không thể
+   dựa vào trí nhớ. Nhưng luật không sinh bừa: KIỂU NÓI DỐI là phần đã thiết kế
+   sẵn, chỉ có thuộc tính cụ thể mới bốc ngẫu nhiên. Nhờ vậy độ khó và cái cảm
+   giác "à ra thế" giữ nguyên qua mọi ván.
+
+   Ba thứ ngẫu nhiên mỗi ván:
+     1. Thuộc tính trong từng luật  (lam + số chẵn / tam giác + số lớn hơn 5 ...)
+     2. Kiểu nói dối của từng màn   (bốc trong bậc khó của màn đó)
+     3. Màn NÓI THẬT rơi vào đâu    (đâu đó từ màn 3 đến màn 6)
+
+   Mỗi ván có một MÃ VÁN bốn ký tự. Cùng mã thì cùng bộ luật, nên gửi mã cho
+   bạn bè là họ gặp đúng sáu bảng luật của mình. Mở bằng ?van=XXXX cũng được.
+   ========================================================================== */
+
+/* ---------- bộ sinh số ngẫu nhiên có hạt giống (mulberry32) ---------- */
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+/* Bảng chữ bỏ 0/O/1/I để đọc qua điện thoại không nhầm */
+const SEED_ALPHA = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+
+function newSeedCode() {
+  let s = '';
+  for (let i = 0; i < 4; i++) s += SEED_ALPHA[Math.floor(Math.random() * SEED_ALPHA.length)];
+  return s;
+}
+function normSeedCode(c) {
+  c = String(c || '').toUpperCase().replace(/[^0-9A-Z]/g, '');
+  if (c.length !== 4) return null;
+  for (let i = 0; i < 4; i++) if (SEED_ALPHA.indexOf(c[i]) < 0) return null;
+  return c;
+}
+function seedToInt(c) {
+  let n = 0;
+  for (let i = 0; i < c.length; i++) n = n * 32 + SEED_ALPHA.indexOf(c[i]);
+  return (n + 0x9E3779B9) | 0;
+}
+
+/* ---------- thuộc tính của ô ---------- */
+const AXES = { mau: 'màu sắc', hinh: 'hình dạng', so: 'con số' };
+
+/* Mỗi "điều kiện" có dạng khẳng định và dạng phủ định viết sẵn, để câu tiếng
+   Việt lúc nào cũng đọc xuôi — không ghép máy móc kiểu "không phải số chẵn". */
+const ATOMS = [
+  { ax: 'mau',  pos: 'màu lam',   neg: 'không phải màu lam',   test: t => t.color === 'lam' },
+  { ax: 'mau',  pos: 'màu đỏ',    neg: 'không phải màu đỏ',    test: t => t.color === 'đỏ' },
+  { ax: 'mau',  pos: 'màu vàng',  neg: 'không phải màu vàng',  test: t => t.color === 'vàng' },
+
+  { ax: 'hinh', pos: 'hình tròn',     neg: 'không phải hình tròn',     test: t => t.shape === 'tròn' },
+  { ax: 'hinh', pos: 'hình vuông',    neg: 'không phải hình vuông',    test: t => t.shape === 'vuông' },
+  { ax: 'hinh', pos: 'hình tam giác', neg: 'không phải hình tam giác', test: t => t.shape === 'tam giác' },
+
+  { ax: 'so', pos: 'mang số chẵn',           neg: 'mang số lẻ',                     test: t => t.num % 2 === 0 },
+  { ax: 'so', pos: 'mang số lẻ',             neg: 'mang số chẵn',                   test: t => t.num % 2 === 1 },
+  { ax: 'so', pos: 'mang số lớn hơn 5',      neg: 'mang số từ 5 trở xuống',         test: t => t.num > 5 },
+  { ax: 'so', pos: 'mang số nhỏ hơn 5',      neg: 'mang số từ 5 trở lên',           test: t => t.num < 5 },
+  { ax: 'so', pos: 'mang số chia hết cho 3', neg: 'mang số không chia hết cho 3',   test: t => t.num % 3 === 0 }
+];
+
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+/* Gợi ý tự suy ra từ luật thật: nói tên những thuộc tính KHÔNG dự phần.
+   Không bao giờ nói thẳng đáp án, chỉ thu hẹp chỗ phải tìm. */
+function hintFor(used) {
+  const rest = Object.keys(AXES).filter(k => used.indexOf(k) < 0).map(k => AXES[k]);
+  if (!rest.length) return 'Cả ba thuộc tính đều dự phần vào luật thật.';
+  return cap(rest.join(' và ')) + ' không liên quan.';
+}
+
+/* ---------- khuôn nói dối ----------
+   need = số điều kiện cần bốc, mỗi điều kiện nằm trên một thuộc tính khác nhau.
+   used = những thuộc tính mà LUẬT THẬT dùng tới (để sinh gợi ý).             */
+const TEMPLATES = {
+
+  /* Bảng luật nói đúng nhưng nói thiếu */
+  THIEU: {
+    need: 2,
+    make: (A, B) => ({
+      shown: 'Chọn ô ' + A.pos + '.',
+      truth: 'Ô ' + A.pos + ' VÀ ' + B.pos + '.',
+      test: t => A.test(t) && B.test(t),
+      used: [A.ax, B.ax]
+    }),
+    voices: [
+      'Tôi đã nói thật. Chỉ là chưa nói hết.',
+      'Một nửa sự thật vẫn được tính là một nửa.'
+    ]
+  },
+
+  /* Bảng luật nói ngược hoàn toàn */
+  DAO: {
+    need: 1,
+    make: A => ({
+      shown: 'Chọn ô ' + A.pos + '.',
+      truth: 'Ô ' + A.neg + '.',
+      test: t => !A.test(t),
+      used: [A.ax]
+    }),
+    voices: [
+      'Bạn đọc đúng từng chữ. Đó mới là vấn đề.',
+      'Ngược lại. Lúc nào cũng có thể là ngược lại.'
+    ]
+  },
+
+  /* Bảng luật chỉ sang một thuộc tính hoàn toàn không liên quan */
+  TRUC: {
+    need: 2,
+    make: (A, B) => ({
+      shown: 'Chọn ô ' + A.pos + '.',
+      truth: 'Ô ' + B.pos + '. ' + cap(AXES[A.ax]) + ' hoàn toàn không liên quan.',
+      test: t => B.test(t),
+      used: [B.ax]
+    }),
+    voices: [
+      'Đừng tin vào thứ được viết to nhất.',
+      'Tôi chỉ tay sang trái để bạn khỏi nhìn sang phải.'
+    ]
+  },
+
+  /* Hai lời nói dối chồng lên nhau: vừa ngược, vừa thiếu */
+  KETHOP: {
+    need: 2,
+    make: (A, B) => ({
+      shown: 'Chọn ô ' + A.pos + '.',
+      truth: 'Ô ' + A.neg + ' VÀ ' + B.pos + '.',
+      test: t => !A.test(t) && B.test(t),
+      used: [A.ax, B.ax]
+    }),
+    voices: [
+      'Hai lời nói dối chồng lên nhau vẫn chỉ là một bảng luật.',
+      'Bạn gỡ được lớp thứ nhất rồi. Còn một lớp nữa.'
+    ]
+  },
+
+  /* Bảng luật đưa hai lựa chọn để giấu đi thuộc tính thứ ba */
+  HOAC: {
+    need: 3,
+    make: (A, B, C) => ({
+      shown: 'Chọn ô ' + A.pos + ' hoặc ' + B.pos + '.',
+      truth: 'Ô ' + C.pos + '.',
+      test: t => C.test(t),
+      used: [C.ax]
+    }),
+    voices: [
+      'Tôi cho bạn hai lựa chọn để bạn quên rằng còn lựa chọn thứ ba.',
+      'Bạn đã ngừng đọc bảng luật. Đó là lúc bạn bắt đầu chơi được.'
+    ]
+  },
+
+  /* Bảng luật NÓI THẬT — cái bẫy khó nhất, vì lúc này bạn đã hết tin */
+  THAT: {
+    need: 1,
+    make: A => ({
+      shown: 'Chọn ô ' + A.pos + '.',
+      truth: 'Ô ' + A.pos + '. Bảng luật nói thật.',
+      test: t => A.test(t),
+      used: [A.ax]
+    }),
+    voices: [
+      'Lần này tôi nói thật. Bạn đã mất bao lâu để tin?',
+      'Không phải lần nào tôi cũng nói dối. Đó mới là chỗ khó.'
+    ]
+  }
+};
+
+/* Bậc khó của từng màn: hai màn đầu dễ, hai màn giữa vừa, hai màn cuối khó */
+const TIER_PLAN  = [1, 1, 2, 2, 3, 3];
+const TIER_POOLS = {
+  1: ['THIEU', 'DAO'],
+  2: ['TRUC', 'THIEU', 'DAO'],
+  3: ['KETHOP', 'HOAC', 'TRUC']
+};
+
+const FIRST_VOICE = 'Bảng luật đầu tiên đã nói dối bạn. Các bảng sau cũng vậy.';
+const OUTRO = 'Bạn đã đọc sáu bảng luật và tin đúng một bảng. Tỉ lệ đó vẫn cao hơn ngoài kia.';
+
+/* ---------- vũ trụ 81 ô, dùng để kiểm luật sinh ra có chơi được không ---- */
+const UNIVERSE = (function () {
+  const u = [];
+  ['lam', 'đỏ', 'vàng'].forEach(c =>
+    ['tròn', 'vuông', 'tam giác'].forEach(s => {
+      for (let n = 1; n <= 9; n++) u.push({ color: c, shape: s, num: n });
+    }));
+  return u;
+})();
+const countValid = test => UNIVERSE.filter(test).length;
+
+/* ---------- dựng một ván ----------
+   Ràng buộc để sáu màn không bị trùng lặp hay tự lộ đáp án cho nhau:
+     - màn liền kề không dùng cùng kiểu nói dối
+     - màn liền kề không dùng cùng bộ thuộc tính trong luật thật
+       (nếu không sẽ ra cảnh màn 2 "số chẵn -> số lẻ", màn 3 "số lẻ -> số chẵn")
+     - mỗi kiểu nói dối xuất hiện tối đa hai lần một ván
+     - không lặp lại nguyên văn một bảng luật đã hiện
+   Bí quá thì nới dần ràng buộc, nên vòng lặp luôn kết thúc.                  */
+function pickAtoms(R, n) {
+  const axes = ['mau', 'hinh', 'so'];
+  for (let i = axes.length - 1; i > 0; i--) {
+    const j = Math.floor(R() * (i + 1));
+    const t = axes[i]; axes[i] = axes[j]; axes[j] = t;
+  }
+  return axes.slice(0, n).map(ax => {
+    const pool = ATOMS.filter(a => a.ax === ax);
+    return pool[Math.floor(R() * pool.length)];
+  });
+}
+
+function buildRun(code) {
+  const R = mulberry32(seedToInt(code));
+  const truthSlot = 2 + Math.floor(R() * 4);   // màn nói thật rơi vào màn 3–6
+  const levels = [];
+  const seenTruth = {}, seenShown = {}, kindCount = {};
+  let prevKind = '', prevAxKey = '';
+
+  for (let i = 0; i < 6; i++) {
+    let lv = null, guard = 0;
+
+    while (!lv && guard++ < 900) {
+      const loose = guard > 500;               // nới ràng buộc nếu bí
+      let kind;
+
+      if (i === truthSlot) {
+        kind = 'THAT';
+      } else {
+        const pool = TIER_POOLS[TIER_PLAN[i]];
+        kind = pool[Math.floor(R() * pool.length)];
+        if (!loose) {
+          if (kind === prevKind) continue;
+          if ((kindCount[kind] || 0) >= 2) continue;
+        }
+      }
+
+      const T = TEMPLATES[kind];
+      const cand = T.make.apply(null, pickAtoms(R, T.need));
+      cand.kind = kind;
+      cand.hint = hintFor(cand.used);
+
+      const axKey = cand.used.slice().sort().join('+');
+      if (!loose && axKey === prevAxKey) continue;
+      if (seenShown[cand.shown] || seenTruth[cand.truth]) continue;
+
+      const n = countValid(cand.test);
+      if (n < 4 || n > 54) continue;           // quá hiếm hoặc quá lỏng
+
+      seenShown[cand.shown] = 1;
+      seenTruth[cand.truth] = 1;
+      kindCount[kind] = (kindCount[kind] || 0) + 1;
+      prevKind = kind; prevAxKey = axKey;
+      lv = cand;
+    }
+
+    // lưới an toàn: gần như không bao giờ chạm tới
+    if (!lv) {
+      const A = ATOMS[(i * 4 + 3) % ATOMS.length];
+      lv = TEMPLATES.DAO.make(A);
+      lv.kind = 'DAO';
+      lv.hint = hintFor(lv.used);
+    }
+
+    const vs = TEMPLATES[lv.kind].voices;
+    lv.voice = (i === 0) ? FIRST_VOICE : vs[Math.floor(R() * vs.length)];
+    levels.push(lv);
+  }
+
+  return levels;
+}
+
+</script>
+<script>
+/* ===== game.js ===== */
+/* ============================================================================
+   CẢ TIN — logic trò chơi
+   Dữ liệu màn chơi nằm ở levels.js (biến LEVELS và OUTRO).
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  const COLORS = ['lam', 'đỏ', 'vàng'];
+  const SHAPES = ['tròn', 'vuông', 'tam giác'];
+  const CVAR = { 'lam': 'var(--lam)', 'đỏ': 'var(--do)', 'vàng': 'var(--vang)' };
+  // màu chữ số đặt trong lòng hình, chọn riêng từng màu cho đủ tương phản
+  const CINK = { 'lam': '#EAF4FC', 'đỏ': '#FFF0EC', 'vàng': '#2E2106' };
+
+  const STREAK_TO_WIN = 3;   // số lần đúng liên tiếp để qua màn
+  const HINT_AFTER = 15;     // số lần thử trước khi nút gợi ý hiện ra
+  const FLASH_MS = 620;      // thời gian giữ dấu ĐÚNG/SAI trước khi đổi bàn
+  const KEY = 'ca-tin-v2';
+
+  const S = { seed: '', level: 0, streak: 0, tries: 0, log: [], ranks: [], locked: false };
+  let LEVELS = [];   // sinh ra từ mã ván, xem levels.js
+  let board = [];
+
+  const el = id => document.getElementById(id);
+  const rnd = n => Math.floor(Math.random() * n);
+
+  /* ---------- mã ván và lưu tiến độ ----------
+     Luật được sinh RA TỪ mã ván, không lưu vào máy. Nhờ vậy mở lại trang giữa
+     chừng vẫn gặp đúng bộ luật cũ, và gửi mã cho bạn bè là họ chơi đúng ván đó. */
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify({ seed: S.seed, level: S.level, ranks: S.ranks })); }
+    catch (e) { /* chế độ ẩn danh hoặc bị chặn — bỏ qua */ }
+  }
+  function loadSaved() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return null;
+      const d = JSON.parse(raw);
+      if (d && normSeedCode(d.seed)) return d;
+    } catch (e) { /* dữ liệu hỏng — chơi ván mới */ }
+    return null;
+  }
+  function seedFromUrl() {
+    try {
+      const m = /[?&]van=([^&]+)/i.exec(window.location.search);
+      return m ? normSeedCode(decodeURIComponent(m[1])) : null;
+    } catch (e) { return null; }
+  }
+  function openRun(seed, level, ranks) {
+    S.seed = seed;
+    LEVELS = buildRun(seed);
+    S.level = (typeof level === 'number' && level >= 0 && level < LEVELS.length) ? level : 0;
+    S.ranks = Array.isArray(ranks) ? ranks.slice(0, LEVELS.length) : [];
+    el('seedTag').textContent = seed;
+    save();
+  }
+
+  /* ---------- dựng bàn chơi ----------
+     Mỗi bàn luôn có 2–4 ô đúng và không ô nào trùng ô nào, nên không bao giờ
+     có bàn bế tắc mà cũng không dễ đoán mò.                                  */
+  const randTile = () => ({ color: COLORS[rnd(3)], shape: SHAPES[rnd(3)], num: 1 + rnd(9) });
+  const tkey = t => t.color + '|' + t.shape + '|' + t.num;
+
+  function makeBoard(test) {
+    const want = 2 + rnd(3);
+    const good = [], bad = [], seen = Object.create(null);
+    let guard = 0;
+    while ((good.length < want || bad.length < 9 - want) && guard++ < 40000) {
+      const t = randTile(), k = tkey(t);
+      if (seen[k]) continue;
+      if (test(t)) { if (good.length < want) { seen[k] = 1; good.push(t); } }
+      else { if (bad.length < 9 - want) { seen[k] = 1; bad.push(t); } }
+    }
+    const all = good.concat(bad);
+    for (let i = all.length - 1; i > 0; i--) { const j = rnd(i + 1); [all[i], all[j]] = [all[j], all[i]]; }
+    return all;
+  }
+
+  /* Con số nằm trong lòng hình: hình đã nói rõ màu và dáng rồi, không cần
+     nhãn chữ bên dưới nữa. Sổ tay vẫn ghi đủ bằng chữ để còn suy luận. */
+  function glyph(shape, color, num) {
+    const f = CVAR[color], ink = CINK[color];
+    let body, ty;
+    if (shape === 'tròn') {
+      body = '<circle cx="20" cy="20" r="16.5" fill="' + f + '"/>'; ty = 20;
+    } else if (shape === 'vuông') {
+      body = '<rect x="4" y="4" width="32" height="32" rx="3" fill="' + f + '"/>'; ty = 20;
+    } else {
+      // tam giác hẹp dần lên đỉnh, nên hạ số xuống chỗ rộng cho cân mắt
+      body = '<polygon points="20,2 38,36 2,36" fill="' + f + '"/>'; ty = 26;
+    }
+    return '<svg viewBox="0 0 40 40" aria-hidden="true">' + body +
+      '<text x="20" y="' + ty + '" dy=".35em" text-anchor="middle" fill="' + ink + '"' +
+      ' font-family="Cousine, ui-monospace, monospace" font-size="15" font-weight="700">' + num + '</text>' +
+      '</svg>';
+  }
+
+  /* ---------- vẽ ---------- */
+  function drawBoard() {
+    const host = el('board');
+    host.innerHTML = '';
+    board.forEach((t, i) => {
+      const b = document.createElement('button');
+      b.className = 'tile';
+      b.type = 'button';
+      b.dataset.i = i;
+      b.setAttribute('aria-label', t.color + ', ' + t.shape + ', số ' + t.num);
+      b.innerHTML = glyph(t.shape, t.color, t.num) +
+        '<span class="mark" aria-hidden="true"></span>';
+      host.appendChild(b);
+    });
+  }
+
+  function drawPips() {
+    const p = el('pips');
+    p.innerHTML = '';
+    for (let i = 0; i < STREAK_TO_WIN; i++) {
+      const d = document.createElement('span');
+      d.className = 'pip' + (i < S.streak ? ' on' : '');
+      p.appendChild(d);
+    }
+  }
+
+  function drawLog() {
+    const ol = el('logList');
+    ol.innerHTML = '';
+    if (!S.log.length) {
+      ol.innerHTML = '<li class="empty">Chưa có lần thử nào.</li>';
+      return;
+    }
+    S.log.slice(0, 40).forEach(r => {
+      const li = document.createElement('li');
+      li.className = r.ok ? 'ok' : 'no';
+      li.innerHTML = '<span class="v">' + (r.ok ? '✓' : '✗') + '</span>' +
+        '<span>' + r.t.color + ' · ' + r.t.shape + ' · ' + r.t.num + '</span>';
+      ol.appendChild(li);
+    });
+  }
+
+  const rankOf = n => n < 6 ? 'vàng' : (n < 12 ? 'bạc' : 'đồng');
+
+  /* ---------- vòng chơi ---------- */
+  function newRound() {
+    board = makeBoard(LEVELS[S.level].test);
+    drawBoard();
+    S.locked = false;
+  }
+
+  function startLevel() {
+    const L = LEVELS[S.level];
+    S.streak = 0; S.tries = 0; S.log = [];
+    el('lvlNum').textContent = S.level + 1;
+    el('lvlAll').textContent = LEVELS.length;
+    el('lvlTag').textContent = 'Hồ sơ ' + String(S.level + 1).padStart(2, '0');
+    el('ruleText').textContent = L.shown;
+    el('tries').textContent = '0 lần thử';
+    el('hintBtn').hidden = true;
+    el('hintText').hidden = true;
+    el('hintText').textContent = '';
+    drawPips(); drawLog(); newRound();
+  }
+
+  function onPick(i) {
+    if (S.locked) return;
+    const L = LEVELS[S.level], t = board[i], ok = !!L.test(t);
+
+    S.locked = true;
+    S.tries++;
+    S.log.unshift({ t: t, ok: ok });
+    S.streak = ok ? S.streak + 1 : 0;
+
+    const node = el('board').querySelector('[data-i="' + i + '"]');
+    if (node) {
+      node.classList.add(ok ? 'hit' : 'miss');
+      node.querySelector('.mark').textContent = ok ? 'ĐÚNG' : 'SAI';
+    }
+    Array.prototype.forEach.call(el('board').children, c => { c.disabled = true; });
+
+    el('tries').textContent = S.tries + ' lần thử';
+    drawPips(); drawLog();
+
+    if (S.tries >= HINT_AFTER && el('hintBtn').hidden && el('hintText').hidden) {
+      el('hintBtn').hidden = false;
+    }
+
+    setTimeout(() => { S.streak >= STREAK_TO_WIN ? clearLevel() : newRound(); }, FLASH_MS);
+  }
+
+  function clearLevel() {
+    const L = LEVELS[S.level];
+    S.ranks[S.level] = { tries: S.tries, rank: rankOf(S.tries) };
+    save();
+    el('revealTitle').textContent = 'Màn ' + (S.level + 1) + ' — đã qua';
+    el('revLie').textContent = L.shown;
+    el('revTruth').textContent = L.truth;
+    el('revTries').textContent = S.tries;
+    el('revRank').textContent = rankOf(S.tries);
+    el('revVoice').innerHTML = '<span>Người dẫn đường</span>' + L.voice;
+    el('nextBtn').textContent = (S.level === LEVELS.length - 1) ? 'Kết thúc' : 'Màn tiếp theo';
+    el('reveal').hidden = false;
+    el('nextBtn').focus();
+  }
+
+  function showEnd() {
+    const body = el('scoreBody');
+    body.innerHTML = '';
+    let total = 0;
+    S.ranks.forEach((r, i) => {
+      if (!r) return;
+      total += r.tries;
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>Màn ' + (i + 1) + '</td><td>' + r.tries + ' lần · ' + r.rank + '</td>';
+      body.appendChild(tr);
+    });
+    el('endTotal').textContent = total;
+    el('endSeed').textContent = S.seed;
+    el('endVoice').innerHTML = '<span>Người dẫn đường</span>' + OUTRO;
+    el('endScreen').hidden = false;
+    el('againBtn').focus();
+  }
+
+  /* Chơi lại = một mã ván MỚI, tức một bộ sáu bảng luật khác hẳn. */
+  function reset() {
+    el('reveal').hidden = true;
+    el('endScreen').hidden = true;
+    openRun(newSeedCode(), 0, []);
+    startLevel();
+  }
+
+  /* ---------- gắn sự kiện ---------- */
+  el('board').addEventListener('click', e => {
+    const b = e.target.closest('.tile');
+    if (b && !b.disabled) onPick(Number(b.dataset.i));
+  });
+
+  el('nextBtn').addEventListener('click', () => {
+    el('reveal').hidden = true;
+    if (S.level === LEVELS.length - 1) { showEnd(); return; }
+    S.level++; save(); startLevel();
+  });
+
+  el('hintBtn').addEventListener('click', () => {
+    el('hintBtn').hidden = true;
+    const h = el('hintText');
+    h.textContent = 'Gợi ý: ' + LEVELS[S.level].hint;
+    h.hidden = false;
+  });
+
+  el('resetBtn').addEventListener('click', reset);
+  el('againBtn').addEventListener('click', reset);
+  el('homeBtn').addEventListener('click', () => { window.location.href = '../'; });
+
+  (function boot() {
+    const urlSeed = seedFromUrl();
+    if (urlSeed) { openRun(urlSeed, 0, []); return startLevel(); }
+    const d = loadSaved();
+    if (d) openRun(normSeedCode(d.seed), d.level, d.ranks);
+    else openRun(newSeedCode(), 0, []);
+    startLevel();
+  })();
+})();
+
+</script>
+</body>
+
+</html>

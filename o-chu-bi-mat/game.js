@@ -345,7 +345,7 @@ function closeQ(){
   });
   S.cur=-1;
 }
-let TIME=30;
+let TIME=40;                     // giây cho mỗi hàng ngang, đổi bằng nút ⏱️ trên thanh công cụ
 function startTimer(){
   stopTimer();
   if(!S.timerOn){ $('#qTimer').style.display='none'; return; }
@@ -558,7 +558,7 @@ $('#btnAccent').onclick = ()=>{
   toast(strictAccent ? 'Chế độ <b>bắt buộc gõ dấu</b> ✍️' : 'Chế độ <b>không cần dấu</b>','info');
 };
 $('#btnTimer').onclick = e=>{
-  const opts=[30,45,60,0]; TIME = opts[(opts.indexOf(TIME)+1)%opts.length];
+  const opts=[40,60,90,0]; TIME = opts[(opts.indexOf(TIME)+1)%opts.length];
   S.timerOn = TIME>0;
   e.currentTarget.classList.toggle('off', !S.timerOn);
   e.currentTarget.querySelector('span').textContent = S.timerOn ? ('Giờ: '+TIME+'s') : 'Không giờ';

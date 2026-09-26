@@ -2986,3 +2986,648 @@
   }
 
 );
+
+
+
+(window.DEBANK = window.DEBANK || []).push(
+
+  /* =========================================================
+     1. XE MÁY
+     ========================================================= */
+  {
+    topic: "Phương tiện giao thông",
+    keyword: "XE MÁY",
+    rows: [
+
+      ["XĂNG", 0,
+        "Loại nhiên liệu lỏng phổ biến được đổ vào bình để động cơ đốt trong hoạt động là gì?"],
+
+      ["ĐÈN XE", 4,
+        "Bộ phận chiếu sáng giúp người điều khiển quan sát đường khi trời tối gọi là gì?"],
+
+      ["MŨ BẢO HIỂM", 0,
+        "Trang bị bảo vệ phần đầu mà người tham gia giao thông phải đội khi di chuyển gọi là gì?"],
+
+      ["BÁNH XE", 1,
+        "Bộ phận hình tròn tiếp xúc với mặt đường và quay khi phương tiện di chuyển gọi là gì?"],
+
+      ["YÊN XE", 0,
+        "Bộ phận để người điều khiển và người ngồi sau ngồi lên thường được gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     2. CAO SU
+     ========================================================= */
+  {
+    topic: "Nông nghiệp và công nghiệp",
+    keyword: "CAO SU",
+    rows: [
+
+      ["CÂY CÔNG NGHIỆP", 0,
+        "Nhóm cây trồng chủ yếu cung cấp nguyên liệu cho chế biến và sản xuất được gọi chung là gì?"],
+
+      ["LATEX", 1,
+        "Dịch màu trắng đục được khai thác từ một số loài cây và dùng làm nguyên liệu đàn hồi gọi là gì?"],
+
+      ["AMAZON", 4,
+        "Lưu vực rừng mưa Nam Mỹ nào là nơi cây Hevea brasiliensis có nguồn gốc tự nhiên?"],
+
+      ["SĂM LỐP", 0,
+        "Nhóm sản phẩm cho bánh phương tiện sử dụng lượng lớn vật liệu đàn hồi thường gọi chung là gì?"],
+
+      ["LƯU HÓA", 2,
+        "Quá trình dùng lưu huỳnh và nhiệt để làm vật liệu đàn hồi bền và ổn định hơn gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     3. TRÁI ĐẤT
+     ========================================================= */
+  {
+    topic: "Hành tinh của chúng ta",
+    keyword: "TRÁI ĐẤT",
+    rows: [
+
+      ["THÁI BÌNH DƯƠNG", 0,
+        "Đại dương có diện tích lớn nhất thế giới mang tên gì?"],
+
+      ["TRỌNG LỰC", 1,
+        "Lực hút khiến các vật có xu hướng rơi về phía bề mặt hành tinh gọi là gì?"],
+
+      ["ĐÁ GRANIT", 1,
+        "Loại đá magma xâm nhập thường có cấu tạo hạt thô và chứa thạch anh gọi là gì?"],
+
+      ["SINH QUYỂN", 1,
+        "Phần môi trường nơi các sinh vật tồn tại và phát triển được gọi là gì?"],
+
+      ["ĐỊA CHẤT", 0,
+        "Ngành khoa học nghiên cứu vật chất, cấu trúc và lịch sử của một hành tinh đá gọi là gì?"],
+
+      ["ĐẤT LIỀN", 1,
+        "Phần bề mặt không bị đại dương và biển bao phủ được gọi chung là gì?"],
+
+      ["TỪ TRƯỜNG", 0,
+        "Trường vật lý giúp làm lệch nhiều hạt tích điện từ gió Mặt Trời được gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     4. RADIO
+     ========================================================= */
+  {
+    topic: "Truyền thông",
+    keyword: "RADIO",
+    rows: [
+
+      ["RDS", 0,
+        "Hệ thống cho phép truyền thêm thông tin số như tên đài cùng tín hiệu FM thường được viết tắt là gì?"],
+
+      ["AM", 0,
+        "Kiểu điều chế trong đó biên độ sóng mang thay đổi theo tín hiệu được viết tắt bằng hai chữ cái nào?"],
+
+      ["DÒ SÓNG", 0,
+        "Thao tác điều chỉnh thiết bị để tìm đúng tần số của một đài phát được gọi là gì?"],
+
+      ["TIN TỨC", 1,
+        "Nội dung cập nhật các sự kiện đang diễn ra trong xã hội thường được gọi chung là gì?"],
+
+      ["LOA", 1,
+        "Thiết bị biến tín hiệu điện thành âm thanh để người nghe tiếp nhận gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     5. TIVI
+     ========================================================= */
+  {
+    topic: "Thiết bị gia đình",
+    keyword: "TIVI",
+    rows: [
+
+      ["TẦN SỐ", 0,
+        "Đại lượng biểu thị số chu kỳ của một tín hiệu trong một giây gọi là gì?"],
+
+      ["ĐIỀU KHIỂN", 1,
+        "Thiết bị cầm tay dùng để đổi kênh, chỉnh âm lượng từ xa thường gọi ngắn gọn là gì?"],
+
+      ["VIDEO", 0,
+        "Từ tiếng Anh phổ biến chỉ nội dung hình ảnh chuyển động là gì?"],
+
+      ["HDMI", 3,
+        "Chuẩn kết nối số thường dùng để truyền cả hình ảnh và âm thanh qua cùng một dây gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     6. BỘ NÃO
+     ========================================================= */
+  {
+    topic: "Cơ thể người",
+    keyword: "BỘ NÃO",
+    rows: [
+
+      ["BÁN CẦU", 0,
+        "Mỗi một trong hai phần lớn đối xứng bên trái và bên phải của cơ quan thần kinh trung tâm được gọi là gì?"],
+
+      ["HỘP SỌ", 1,
+        "Cấu trúc xương cứng bao quanh và bảo vệ cơ quan thần kinh nằm trong đầu gọi là gì?"],
+
+      ["NƠRON", 0,
+        "Tế bào chuyên tiếp nhận và truyền tín hiệu trong hệ thần kinh được gọi là gì?"],
+
+      ["VỎ NÃO", 3,
+        "Lớp ngoài nhiều nếp gấp, tham gia các chức năng nhận thức bậc cao được gọi là gì?"],
+
+      ["OXY", 0,
+        "Loại khí mà các tế bào thần kinh cần được cung cấp liên tục để duy trì hoạt động là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     7. LÀNG GỐM
+     ========================================================= */
+  {
+    topic: "Nghề thủ công truyền thống",
+    keyword: "LÀNG GỐM",
+    rows: [
+
+      ["LÒ NUNG", 0,
+        "Công trình tạo nhiệt độ cao để làm sản phẩm đất sét trở nên cứng chắc gọi là gì?"],
+
+      ["BÁT TRÀNG", 5,
+        "Địa danh ven sông Hồng nổi tiếng lâu đời với nghề làm đồ đất nung và men sứ có tên là gì?"],
+
+      ["MEN TRO", 2,
+        "Loại men truyền thống sử dụng tro thực vật làm một thành phần nguyên liệu được gọi là gì?"],
+
+      ["NGHỆ NHÂN", 1,
+        "Người có tay nghề cao và kinh nghiệm lâu năm trong một nghề thủ công truyền thống gọi là gì?"],
+
+      ["TRÁNG MEN", 4,
+        "Công đoạn phủ một lớp vật liệu có khả năng tạo bề mặt bóng sau khi nung gọi là gì?"],
+
+      ["ĐỘ XỐP", 3,
+        "Đại lượng thể hiện mức độ tồn tại của các lỗ rỗng bên trong một vật liệu được gọi là gì?"],
+
+      ["MEN RẠN", 0,
+        "Loại men tạo thành mạng đường nứt nhỏ có tính trang trí trên bề mặt sản phẩm gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     8. CON VOI
+     ========================================================= */
+  {
+    topic: "Thế giới động vật",
+    keyword: "CON VOI",
+    rows: [
+
+      ["CẶP NGÀ", 0,
+        "Hai chiếc răng cửa phát triển dài ra bên ngoài ở một số thú lớn được gọi chung là gì?"],
+
+      ["MAMMOTH", 4,
+        "Loài thú khổng lồ thời tiền sử có lông dày và cặp ngà cong nổi tiếng có tên tiếng Anh là gì?"],
+
+      ["NGÀ", 0,
+        "Phần răng phát triển dài, cứng và từng bị con người săn tìm để làm đồ mỹ nghệ gọi là gì?"],
+
+      ["VÒI", 0,
+        "Bộ phận dài, linh hoạt dùng để thở, ngửi, hút nước và cầm nắm thức ăn gọi là gì?"],
+
+      ["IVORY", 2,
+        "Vật liệu màu trắng ngà lấy từ răng nanh hoặc ngà của một số động vật có tên tiếng Anh là gì?"],
+
+      ["CHÂU PHI", 6,
+        "Châu lục có loài thú trên cạn lớn nhất hiện còn sống phân bố tự nhiên là châu nào?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     9. MÁY ẢNH
+     ========================================================= */
+  {
+    topic: "Nhiếp ảnh",
+    keyword: "MÁY ẢNH",
+    rows: [
+
+      ["MÀN TRẬP", 0,
+        "Bộ phận đóng mở để kiểm soát khoảng thời gian ánh sáng đi tới cảm biến gọi là gì?"],
+
+      ["ÁNH SÁNG", 0,
+        "Yếu tố vật lý cần được thu nhận để hình thành một bức ảnh là gì?"],
+
+      ["ĐỘ NHẠY SÁNG", 5,
+        "Đại lượng thường biểu thị bằng ISO cho biết mức độ nhạy với ánh sáng gọi là gì?"],
+
+      ["CẢM BIẾN", 1,
+        "Linh kiện điện tử tiếp nhận ánh sáng và chuyển nó thành dữ liệu hình ảnh gọi là gì?"],
+
+      ["NHIẾP ẢNH", 0,
+        "Nghệ thuật và kỹ thuật tạo hình ảnh bằng cách ghi nhận ánh sáng được gọi là gì?"],
+
+      ["HẬU KỲ", 0,
+        "Giai đoạn chỉnh màu, độ sáng, tương phản và các chi tiết sau khi chụp gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     10. RÁC THẢI
+     ========================================================= */
+  {
+    topic: "Môi trường",
+    keyword: "RÁC THẢI",
+    rows: [
+
+      ["REDUCE", 0,
+        "Trong nguyên tắc 3R, từ tiếng Anh nào chỉ việc giảm tiêu dùng và hạn chế chất bỏ đi ngay từ đầu?"],
+
+      ["TÁI CHẾ", 1,
+        "Quá trình biến vật liệu đã qua sử dụng thành nguyên liệu hoặc sản phẩm mới gọi là gì?"],
+
+      ["CHÔN LẤP", 0,
+        "Phương pháp xử lý bằng cách đưa chất bỏ đi vào khu đất được thiết kế chuyên dụng gọi là gì?"],
+
+      ["THÙNG RÁC", 0,
+        "Vật chứa được đặt trong nhà hoặc nơi công cộng để thu gom đồ bỏ đi gọi là gì?"],
+
+      ["HỮU CƠ", 0,
+        "Nhóm vật chất như thức ăn thừa, lá cây và nhiều chất có nguồn gốc sinh vật thường được gọi là gì?"],
+
+      ["GIẢM THIỂU", 2,
+        "Hành động làm cho số lượng hoặc mức độ của một vấn đề trở nên ít hơn được gọi là gì?"],
+
+      ["VI NHỰA", 1,
+        "Những mảnh nhựa có kích thước rất nhỏ tồn tại trong nước, đất và sinh vật được gọi là gì?"]
+
+    ]
+  }
+
+);
+
+
+(window.DEBANK = window.DEBANK || []).push(
+
+  /* =========================================================
+     1. TRỐNG ĐỒNG
+     ========================================================= */
+  {
+    topic: "Khảo cổ Việt Nam",
+    keyword: "TRỐNG ĐỒNG",
+    rows: [
+
+      ["THANH HÓA", 0,
+        "Tỉnh nào là nơi phát hiện di chỉ Đông Sơn, địa điểm đặt tên cho một nền văn hóa khảo cổ nổi tiếng?"],
+
+      ["RÌU ĐỒNG", 0,
+        "Loại công cụ kim loại có lưỡi rộng, được tìm thấy khá phổ biến trong các di chỉ Việt cổ, gọi là gì?"],
+
+      ["TRỐNG NGỌC LŨ", 2,
+        "Bảo vật quốc gia nổi tiếng được phát hiện tại Hà Nam và mang tên một địa phương là gì?"],
+
+      ["NGỌC LŨ", 0,
+        "Địa danh ở Hà Nam được dùng để đặt tên cho một hiện vật khảo cổ đặc biệt nổi tiếng là gì?"],
+
+      ["NGÔI SAO", 1,
+        "Họa tiết nhiều cánh thường xuất hiện ở chính giữa mặt một số cổ vật Đông Sơn có hình gì?"],
+
+      ["ĐỒNG THAU", 0,
+        "Hợp kim chủ yếu của đồng và thiếc, được người xưa sử dụng để đúc nhiều công cụ và đồ nghi lễ, gọi là gì?"],
+
+      ["MŨI TÊN ĐỒNG", 7,
+        "Loại vũ khí khảo cổ bằng kim loại, từng được tìm thấy với số lượng lớn tại thành Cổ Loa, gọi là gì?"],
+
+      ["NHÀ SÀN", 0,
+        "Kiểu nhà có mặt sàn được nâng cao bằng cột, thường xuất hiện trong các hình khắc sinh hoạt cổ, gọi là gì?"],
+
+      ["NGƯỜI HÓA TRANG", 1,
+        "Hình ảnh con người đội lông chim, mặc trang phục nghi lễ trên một số hoa văn cổ thường được mô tả là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     2. MẬT ONG
+     ========================================================= */
+  {
+    topic: "Thế giới côn trùng",
+    keyword: "MẬT ONG",
+    rows: [
+
+      ["MÙI THƠM", 0,
+        "Đặc điểm của nhiều loài hoa giúp thu hút côn trùng từ khoảng cách nhất định là gì?"],
+
+      ["MẬT HOA", 1,
+        "Chất lỏng ngọt do hoa tiết ra và được nhiều côn trùng thu thập gọi là gì?"],
+
+      ["TỔ ONG", 0,
+        "Cấu trúc gồm nhiều ô nhỏ, nơi một đàn côn trùng sinh sống và dự trữ thức ăn, gọi là gì?"],
+
+      ["ONG THỢ", 0,
+        "Nhóm cá thể đảm nhiệm việc kiếm thức ăn, xây tổ và chăm sóc ấu trùng được gọi là gì?"],
+
+      ["NHỤY HOA", 0,
+        "Bộ phận sinh sản cái nằm ở trung tâm nhiều loài hoa gọi là gì?"],
+
+      ["GIAO PHẤN", 0,
+        "Quá trình chuyển hạt phấn giữa các hoa, thường có sự hỗ trợ của côn trùng, gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     3. TÀU NGẦM
+     ========================================================= */
+  {
+    topic: "Kỹ thuật dưới biển",
+    keyword: "TÀU NGẦM",
+    rows: [
+
+      ["THỦY THỦ", 0,
+        "Người làm việc chuyên nghiệp trên các phương tiện đi biển được gọi là gì?"],
+
+      ["LA BÀN", 3,
+        "Dụng cụ sử dụng từ trường để xác định phương hướng gọi là gì?"],
+
+      ["BUỒNG MÁY", 1,
+        "Khoang chứa động cơ và nhiều thiết bị cơ khí quan trọng của một phương tiện lớn gọi là gì?"],
+
+      ["NĂNG LƯỢNG HẠT NHÂN", 0,
+        "Nguồn năng lượng nào cho phép một số phương tiện quân sự hoạt động rất lâu mà không cần tiếp nhiên liệu thường xuyên?"],
+
+      ["KÍNH TIỀM VỌNG", 11,
+        "Thiết bị quang học cho phép quan sát phía trên mặt nước trong khi người quan sát vẫn ở thấp hơn gọi là gì?"],
+
+      ["TẦNG NƯỚC", 1,
+        "Một lớp nước nằm trong một khoảng độ sâu nhất định thường được gọi là gì?"],
+
+      ["MŨI TÀU", 0,
+        "Phần phía trước của một phương tiện đường thủy thường được gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     4. SAN HÔ
+     ========================================================= */
+  {
+    topic: "Sinh vật biển",
+    keyword: "SAN HÔ",
+    rows: [
+
+      ["SINH VẬT BIỂN", 0,
+        "Các cơ thể sống có môi trường tồn tại chủ yếu ở biển được gọi chung là gì?"],
+
+      ["CANXI CACBONAT", 1,
+        "Hợp chất có công thức CaCO3 tạo nên phần lớn bộ khung cứng của nhiều sinh vật biển là gì?"],
+
+      ["NƯỚC ẤM", 0,
+        "Kiểu môi trường nhiệt độ nào thuận lợi cho nhiều loài tạo rạn ở vùng nhiệt đới phát triển?"],
+
+      ["HỆ SINH THÁI", 0,
+        "Tập hợp sinh vật cùng môi trường sống và các mối quan hệ giữa chúng được gọi là gì?"],
+
+      ["Ô NHIỄM", 0,
+        "Hiện tượng môi trường bị đưa vào các chất hoặc tác nhân gây hại được gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     5. NÚI LỬA
+     ========================================================= */
+  {
+    topic: "Địa chất",
+    keyword: "NÚI LỬA",
+    rows: [
+
+      ["NHAM THẠCH", 0,
+        "Tên gọi chung của vật chất đá nóng chảy hoặc sản phẩm đá có nguồn gốc từ hoạt động magma là gì?"],
+
+      ["NÚI PHÚ SĨ", 1,
+        "Ngọn núi cao nhất Nhật Bản, có hình nón gần đối xứng và là biểu tượng nổi tiếng của quốc gia này, tên là gì?"],
+
+      ["SILIC", 1,
+        "Nguyên tố có ký hiệu Si, là thành phần quan trọng trong nhiều khoáng vật của vỏ Trái Đất, tên là gì?"],
+
+      ["LAVA", 0,
+        "Magma sau khi thoát lên bề mặt được gọi bằng thuật ngữ tiếng Anh nào?"],
+
+      ["LỬA", 1,
+        "Hiện tượng phát sáng và tỏa nhiệt thường xuất hiện khi một chất cháy được gọi là gì?"],
+
+      ["MAGMA", 1,
+        "Đá nóng chảy còn nằm bên dưới bề mặt Trái Đất được gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     6. THƯ VIỆN
+     ========================================================= */
+  {
+    topic: "Sách và tri thức",
+    keyword: "THƯ VIỆN",
+    rows: [
+
+      ["TỦ SÁCH", 0,
+        "Đồ nội thất gồm nhiều ngăn dùng để sắp xếp và bảo quản sách gọi là gì?"],
+
+      ["THẺ MƯỢN", 1,
+        "Loại thẻ giúp người đọc làm thủ tục mang tài liệu về trong một khoảng thời gian gọi là gì?"],
+
+      ["MƯỢN SÁCH", 1,
+        "Hoạt động đăng ký mang một cuốn sách về đọc rồi trả lại sau được gọi là gì?"],
+
+      ["VĂN HỌC", 0,
+        "Lĩnh vực nghệ thuật ngôn từ bao gồm thơ, truyện, tiểu thuyết và nhiều thể loại khác gọi là gì?"],
+
+      ["ISBN", 0,
+        "Mã số tiêu chuẩn quốc tế dùng để nhận diện một ấn phẩm sách thường được viết tắt bằng bốn chữ cái nào?"],
+
+      ["TÀI LIỆU", 5,
+        "Sách, báo, luận văn, bản đồ hoặc các nguồn thông tin phục vụ học tập và nghiên cứu được gọi chung là gì?"],
+
+      ["NHÂN VIÊN", 0,
+        "Người làm việc tại một cơ quan hoặc tổ chức theo nhiệm vụ được phân công gọi chung là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     7. MẠNG XÃ HỘI
+     ========================================================= */
+  {
+    topic: "Đời sống số",
+    keyword: "MẠNG XÃ HỘI",
+    rows: [
+
+      ["MÁY CHỦ", 0,
+        "Hệ thống cung cấp dữ liệu hoặc dịch vụ cho nhiều thiết bị khác qua kết nối số gọi là gì?"],
+
+      ["BẠN BÈ", 1,
+        "Những người có mối quan hệ thân thiết hoặc quen biết với nhau thường được gọi chung là gì?"],
+
+      ["NHÓM", 0,
+        "Không gian trực tuyến tập hợp nhiều thành viên có chung một mối quan tâm thường được gọi là gì?"],
+
+      ["GẮN THẺ", 0,
+        "Thao tác liên kết tên một người vào bài viết, ảnh hoặc nội dung trực tuyến được gọi là gì?"],
+
+      ["XU HƯỚNG", 0,
+        "Nội dung hoặc chủ đề đang được nhiều người quan tâm trong cùng một thời điểm thường được gọi là gì?"],
+
+      ["MÃ XÁC THỰC", 1,
+        "Chuỗi ký tự hoặc con số được gửi để kiểm tra danh tính khi đăng nhập thường được gọi là gì?"],
+
+      ["HASHTAG", 0,
+        "Từ hoặc cụm từ đứng sau dấu thăng dùng để gom các bài viết cùng chủ đề gọi là gì?"],
+
+      ["CỘNG ĐỒNG", 1,
+        "Tập hợp những người cùng chia sẻ một mối quan tâm, sở thích hoặc mục tiêu được gọi là gì?"],
+
+      ["TIN NHẮN", 1,
+        "Nội dung văn bản ngắn được gửi trực tiếp từ người này tới người khác gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     8. ĐẠI DƯƠNG
+     ========================================================= */
+  {
+    topic: "Thế giới biển",
+    keyword: "ĐẠI DƯƠNG",
+    rows: [
+
+      ["ĐỘ SÂU", 0,
+        "Khoảng cách theo phương thẳng đứng từ mặt nước xuống một điểm bên dưới được gọi là gì?"],
+
+      ["RẠN SAN HÔ", 1,
+        "Cấu trúc dưới biển do các quần thể sinh vật nhỏ tạo nên qua thời gian dài được gọi là gì?"],
+
+      ["HẢI LƯU", 2,
+        "Dòng nước chuyển động tương đối ổn định trên phạm vi lớn trong biển được gọi là gì?"],
+
+      ["DÒNG CHẢY", 0,
+        "Sự di chuyển có hướng của một khối chất lỏng được gọi là gì?"],
+
+      ["NƯỚC MẶN", 1,
+        "Loại nước chứa lượng muối hòa tan cao hơn nhiều so với nước sông hồ gọi là gì?"],
+
+      ["ĐỘNG VẬT KHÔNG XƯƠNG SỐNG", 14,
+        "Nhóm sinh vật gồm sứa, thân mềm, giáp xác và nhiều loài không có cột sống được gọi chung là gì?"],
+
+      ["NHIỆT ĐỘ", 0,
+        "Đại lượng cho biết mức nóng hoặc lạnh của một môi trường gọi là gì?"],
+
+      ["GIÓ", 0,
+        "Chuyển động của không khí có thể góp phần tạo nên các dòng chảy bề mặt trên biển gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     9. BÓNG CHUYỀN
+     ========================================================= */
+  {
+    topic: "Thể thao",
+    keyword: "BÓNG CHUYỀN",
+    rows: [
+
+      ["BẬT NHẢY", 0,
+        "Động tác dùng lực chân đưa cơ thể lên cao khỏi mặt sân được gọi là gì?"],
+
+      ["ĐẬP BÓNG", 4,
+        "Động tác tấn công dùng tay đánh mạnh quả bóng từ trên cao xuống phần sân đối phương gọi là gì?"],
+
+      ["CHẮN BÓNG", 3,
+        "Động tác đưa tay lên cao sát lưới nhằm cản một pha tấn công của đối phương gọi là gì?"],
+
+      ["GIAO BÓNG", 0,
+        "Động tác đưa quả bóng vào cuộc để bắt đầu một lượt chơi được gọi là gì?"],
+
+      ["CHUYỀN HAI", 0,
+        "Pha xử lý thường nhằm đưa bóng tới vị trí thuận lợi cho đồng đội tấn công gọi là gì?"],
+
+      ["HÀNG SAU", 0,
+        "Khu vực gồm các vị trí đứng phía sau ba vị trí gần lưới thường được gọi là gì?"],
+
+      ["CỨU BÓNG", 2,
+        "Pha xử lý giữ cho bóng không chạm mặt sân trong một tình huống khó được gọi là gì?"],
+
+      ["TAY CHẮN", 2,
+        "Bộ phận cơ thể được đưa lên phía trên lưới để ngăn đường bóng tấn công thường được gọi là gì?"],
+
+      ["CHUYỀN MỘT", 4,
+        "Pha tiếp xúc đầu tiên sau một cú phát hoặc đợt tấn công của đối phương thường được gọi là gì?"],
+
+      ["NHẢY PHÁT", 0,
+        "Kiểu phát trong đó vận động viên tung bóng rồi bật lên trước khi đánh được gọi là gì?"]
+
+    ]
+  },
+
+
+  /* =========================================================
+     10. ĐÀN TRANH
+     ========================================================= */
+  {
+    topic: "Nhạc cụ dân tộc",
+    keyword: "ĐÀN TRANH",
+    rows: [
+
+      ["ĐÀN DÂY", 0,
+        "Nhóm nhạc cụ tạo âm chủ yếu nhờ sự rung của một hoặc nhiều dây được gọi chung là gì?"],
+
+      ["ĐÀN BẦU", 1,
+        "Nhạc cụ truyền thống Việt Nam chỉ có một dây và sử dụng cần đàn để thay đổi cao độ gọi là gì?"],
+
+      ["NGÓN TAY", 0,
+        "Bộ phận nào của bàn tay trực tiếp thực hiện nhiều kỹ thuật gảy, nhấn và vuốt dây?"],
+
+      ["TRỤC ĐÀN", 0,
+        "Bộ phận dùng để căng hoặc điều chỉnh độ căng của dây trên nhiều nhạc cụ gọi là gì?"],
+
+      ["RUNG DÂY", 0,
+        "Hiện tượng tạo dao động trên dây để phát ra âm thanh được gọi là gì?"],
+
+      ["THANH ÂM", 2,
+        "Chất lượng và màu sắc của tiếng phát ra từ một nhạc cụ thường được gọi là gì?"],
+
+      ["NHẠC CỤ", 0,
+        "Vật được chế tạo để tạo ra âm thanh phục vụ biểu diễn âm nhạc gọi chung là gì?"],
+
+      ["HỘP CỘNG HƯỞNG", 0,
+        "Bộ phận giúp tăng cường và làm tiếng của nhiều nhạc cụ dây vang rõ hơn gọi là gì?"]
+
+    ]
+  }
+
+);

@@ -61,11 +61,19 @@ const ATOMS = [
   { ax: 'hinh', pos: 'hình vuông',    neg: 'không phải hình vuông',    test: t => t.shape === 'vuông' },
   { ax: 'hinh', pos: 'hình tam giác', neg: 'không phải hình tam giác', test: t => t.shape === 'tam giác' },
 
+  /* Ô mang số 1-12. Dải 1-9 cũ không đủ cho "chia hết cho 5" — chỉ đúng mỗi
+     số 5, một ô trên chín, bàn chơi quá mỏng. Nới lên 12 thì ÷5 được {5,10},
+     ÷4 được {4,8,12}, ÷6 được {6,12}, và mở thêm cả số nguyên tố. */
   { ax: 'so', pos: 'mang số chẵn',           neg: 'mang số lẻ',                   test: t => t.num % 2 === 0 },
   { ax: 'so', pos: 'mang số lẻ',             neg: 'mang số chẵn',                 test: t => t.num % 2 === 1 },
-  { ax: 'so', pos: 'mang số lớn hơn 5',      neg: 'mang số từ 5 trở xuống',       test: t => t.num > 5 },
+  { ax: 'so', pos: 'mang số chia hết cho 3', neg: 'mang số không chia hết cho 3', test: t => t.num % 3 === 0 },
+  { ax: 'so', pos: 'mang số chia hết cho 4', neg: 'mang số không chia hết cho 4', test: t => t.num % 4 === 0 },
+  { ax: 'so', pos: 'mang số chia hết cho 5', neg: 'mang số không chia hết cho 5', test: t => t.num % 5 === 0 },
+  { ax: 'so', pos: 'mang số chia hết cho 6', neg: 'mang số không chia hết cho 6', test: t => t.num % 6 === 0 },
+  { ax: 'so', pos: 'mang số lớn hơn 6',      neg: 'mang số từ 6 trở xuống',       test: t => t.num > 6 },
   { ax: 'so', pos: 'mang số nhỏ hơn 5',      neg: 'mang số từ 5 trở lên',         test: t => t.num < 5 },
-  { ax: 'so', pos: 'mang số chia hết cho 3', neg: 'mang số không chia hết cho 3', test: t => t.num % 3 === 0 }
+  { ax: 'so', pos: 'mang số nguyên tố',      neg: 'mang số không phải nguyên tố',
+    test: t => [2, 3, 5, 7, 11].indexOf(t.num) >= 0 }
 ];
 
 /* Vị trí trên lưới 3x3, ô số 0 ở góc trên trái, ô số 8 ở góc dưới phải.
@@ -117,7 +125,7 @@ function hintFor(used) {
 const COLORS = ['lam', 'đỏ', 'vàng'];
 const SHAPES = ['tròn', 'vuông', 'tam giác'];
 const rndInt = n => Math.floor(Math.random() * n);
-const randTile = () => ({ color: COLORS[rndInt(3)], shape: SHAPES[rndInt(3)], num: 1 + rndInt(9) });
+const randTile = () => ({ color: COLORS[rndInt(3)], shape: SHAPES[rndInt(3)], num: 1 + rndInt(12) });
 const tkey = t => t.color + '|' + t.shape + '|' + t.num;
 
 function randomBoard() {
@@ -226,6 +234,22 @@ const TEMPLATES = {
              'Không phải lần nào tôi cũng nói dối. Đó mới là chỗ khó.']
   },
 
+  /* Bảng luật nêu HAI điều kiện nhưng chỉ một cái là thật. Gương soi ngược
+     của THIEU, và ác hơn: người chơi kiểm cả hai, thấy đều đúng, rồi không
+     bao giờ nghĩ tới chuyện BỚT đi một cái. */
+  THUA: {
+    need: 2,
+    make: (A, B) => ({
+      shown: 'Chọn ô ' + A.pos + ' và ' + B.pos + '.',
+      truth: 'Ô ' + B.pos + '. Điều kiện "' + A.pos + '" là thừa.',
+      test: t => B.test(t),
+      shownTest: t => A.test(t) && B.test(t),
+      used: [B.ax]
+    }),
+    voices: ['Tôi nói thừa một điều kiện. Bạn kiểm cả hai và thấy đều đúng.',
+             'Bớt đi khó hơn thêm vào. Ai cũng quen thêm vào.']
+  },
+
   /* Luật thật nói về CHỖ ô nằm, không nói gì về thứ in trên ô */
   VITRI: {
     need: 1, pos: true,
@@ -263,11 +287,27 @@ const TEMPLATES = {
 
 /* Tám màn sinh ra, rồi màn thứ chín là màn nghịch lý cố định ở dưới. */
 const TIER_PLAN  = [1, 1, 2, 2, 2, 3, 3, 3];
+/* Bậc khó xếp theo SỐ LẦN THỬ ĐO ĐƯỢC, không theo cảm tính.
+   Đo bằng một người chơi giả suy luận hoàn hảo, trung vị số lần thử:
+     DAO 5 · TRUC 6 · THUA 6 · HOAC 6 · KETHOP 8 · LICHSU 8 · VITRI 9 · THIEU 10
+   THIEU ("A và B") hoá ra KHÓ NHẤT chứ không phải dễ nhất như xếp ban đầu:
+   bảng luật đúng một nửa nên thỉnh thoảng làm theo vẫn trúng, và chính sự
+   xác nhận nửa vời đó gây rối hơn hẳn một lời nói dối trắng trợn. */
 const TIER_POOLS = {
-  1: ['THIEU', 'DAO'],
-  2: ['TRUC', 'THIEU', 'DAO', 'VITRI'],
-  3: ['KETHOP', 'HOAC', 'TRUC', 'VITRI', 'LICHSU']
+  1: ['DAO', 'TRUC', 'THUA'],
+  2: ['THIEU', 'HOAC', 'THUA', 'DAO', 'TRUC'],
+  3: ['KETHOP', 'LICHSU', 'VITRI', 'THIEU', 'HOAC']
 };
+
+/* Giới hạn lần thử mỗi màn, theo bậc khó. Hết lần thử là thua cả ván.
+   Nút gợi ý mở ở 60% giới hạn, để còn kịp dùng. */
+const LIMITS = { 1: 10, 2: 15, 3: 20 };
+
+const LOSE_VOICES = [
+  'Bạn thử rất nhiều lần, theo cùng một lối nghĩ. Tôi chỉ cần bạn đừng đổi ý.',
+  'Bạn tìm rất chăm. Chỉ là tìm đúng chỗ tôi muốn bạn tìm.',
+  'Hết lần thử rồi. Bảng luật thì vẫn còn nguyên đó, không suy suyển gì.'
+];
 
 const FIRST_VOICE = 'Bảng luật đầu tiên đã nói dối bạn. Các bảng sau cũng vậy.';
 
@@ -289,6 +329,8 @@ const PARADOX = {
   used: [], isParadox: true,
   hint: 'Bảng luật chưa bao giờ nói rằng bạn phải chọn.',
   voice: 'Bạn đã ngừng lại. Đó là nước đi duy nhất tôi không viết được thành luật.',
+  limit: 25,
+  loseVoice: 'Bạn chạm vào bàn hai mươi lăm lần. Chưa lần nào tôi bảo bạn phải chạm.',
   /* Ba câu thả dần khi người chơi càng thử càng sai */
   nudges: [
     [5,  'Cứ thử tiếp đi. Tôi có cả ngày.'],
@@ -308,10 +350,10 @@ const OUTROS = [
                   'quen, và thói quen nào cũng có người biết cách dùng.' }
 ];
 
-/* 81 tổ hợp thuộc tính, dùng để loại những luật quá hiếm hoặc quá lỏng */
+/* 108 tổ hợp thuộc tính, dùng để loại những luật quá hiếm hoặc quá lỏng */
 const UNIVERSE = (function () {
   const u = [];
-  COLORS.forEach(c => SHAPES.forEach(s => { for (let n = 1; n <= 9; n++) u.push({ color: c, shape: s, num: n }); }));
+  COLORS.forEach(c => SHAPES.forEach(s => { for (let n = 1; n <= 12; n++) u.push({ color: c, shape: s, num: n }); }));
   return u;
 })();
 const countValid = test => UNIVERSE.filter(t => test(t, 0, null)).length;
@@ -369,6 +411,7 @@ function buildRun(code) {
       if (T.hist) atoms.push(HIST[Math.floor(R() * HIST.length)]);
       const cand = T.make.apply(null, atoms);
       cand.kind = kind;
+      cand.limit = LIMITS[TIER_PLAN[i]];
       if (!cand.hint) cand.hint = hintFor(cand.used);
 
       const axKey = cand.usesPos ? 'vitri' : cand.usesPrev ? 'lichsu' : cand.used.slice().sort().join('+');
@@ -379,8 +422,10 @@ function buildRun(code) {
          về vị trí hay về nước đi trước thì phải thử dựng bàn mới biết có chơi
          được không. */
       if (!cand.usesPos && !cand.usesPrev) {
+        /* Khung tính trên 108 tổ hợp: dưới 12 thì bàn chơi quá mỏng (ví dụ
+           "÷5 VÀ màu lam" chỉ còn 6 tổ hợp), trên 72 thì quá lỏng. */
         const c = countValid(cand.test);
-        if (c < 4 || c > 54) continue;
+        if (c < 12 || c > 72) continue;
       } else {
         const probe = cand.usesPrev ? randTile() : null;
         if (!makeBoard(cand.test, probe, 120)) continue;

@@ -186,6 +186,8 @@
 
     /* ---------- sổ tay ---------- */
     .log .eyebrow { color: var(--cream-dim); opacity: .8 }
+    /* Đếm ngược lần thử: đỏ lên khi sắp hết, để người chơi kịp đổi lối nghĩ. */
+    #tries.low { color: #FF9E93; opacity: 1 }
     .log ol {
       list-style: none; margin: 9px 0 0; padding: 0;
       max-height: 170px; overflow-y: auto;
@@ -348,6 +350,7 @@
         <li>Chọn một ô bất kỳ. Game trả lời <b>đúng</b> hoặc <b>sai</b>.</li>
         <li>Đọc sổ tay, so các lần thử với nhau, suy ra luật thật.</li>
         <li>Chọn đúng <b>ba lần liên tiếp</b> là qua màn. Bàn chơi đổi sau mỗi lần thử.</li>
+        <li>Mỗi màn có <b>giới hạn số lần sai</b>. Chọn đúng thì không tính. Hết lần sai là thua cả ván.</li>
       </ol>
       <div class="seedin">
         <label for="seedInput">Mã ván</label>
@@ -377,6 +380,24 @@
     </div>
   </div>
 
+  <div class="overlay" id="loseScreen" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="loseTitle">
+      <h2 id="loseTitle">Hết lần thử</h2>
+      <div class="line"><span class="k">Bảng luật đã ghi</span><span class="v lie" id="loseLie"></span></div>
+      <div class="line"><span class="k">Luật thật</span><span class="v truth" id="loseTruth"></span></div>
+      <div class="tally">
+        <div>Dừng ở<b id="loseAt">Màn 1</b></div>
+        <div>Đã sai<b id="loseTries">0</b></div>
+        <div>Mã ván<b id="loseSeed">—</b></div>
+      </div>
+      <p class="voice" id="loseVoice"><span>Người dẫn đường</span></p>
+      <div class="btnrow">
+        <button class="act primary" id="loseAgainBtn">Ván mới</button>
+        <button class="act" id="loseHomeBtn">Về trang chủ</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="endScreen" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="endTitle">
       <h2 id="endTitle">Hết ván</h2>
@@ -384,7 +405,7 @@
         <tbody id="scoreBody"></tbody>
       </table>
       <div class="tally">
-        <div>Tổng số lần thử<b id="endTotal">0</b></div>
+        <div>Tổng số lần sai<b id="endTotal">0</b></div>
         <div>Tin bảng luật<b id="endTrust">0/9</b></div>
         <div>Mã ván<b id="endSeed">—</b></div>
       </div>
@@ -463,11 +484,19 @@ const ATOMS = [
   { ax: 'hinh', pos: 'hình vuông',    neg: 'không phải hình vuông',    test: t => t.shape === 'vuông' },
   { ax: 'hinh', pos: 'hình tam giác', neg: 'không phải hình tam giác', test: t => t.shape === 'tam giác' },
 
+  /* Ô mang số 1-12. Dải 1-9 cũ không đủ cho "chia hết cho 5" — chỉ đúng mỗi
+     số 5, một ô trên chín, bàn chơi quá mỏng. Nới lên 12 thì ÷5 được {5,10},
+     ÷4 được {4,8,12}, ÷6 được {6,12}, và mở thêm cả số nguyên tố. */
   { ax: 'so', pos: 'mang số chẵn',           neg: 'mang số lẻ',                   test: t => t.num % 2 === 0 },
   { ax: 'so', pos: 'mang số lẻ',             neg: 'mang số chẵn',                 test: t => t.num % 2 === 1 },
-  { ax: 'so', pos: 'mang số lớn hơn 5',      neg: 'mang số từ 5 trở xuống',       test: t => t.num > 5 },
+  { ax: 'so', pos: 'mang số chia hết cho 3', neg: 'mang số không chia hết cho 3', test: t => t.num % 3 === 0 },
+  { ax: 'so', pos: 'mang số chia hết cho 4', neg: 'mang số không chia hết cho 4', test: t => t.num % 4 === 0 },
+  { ax: 'so', pos: 'mang số chia hết cho 5', neg: 'mang số không chia hết cho 5', test: t => t.num % 5 === 0 },
+  { ax: 'so', pos: 'mang số chia hết cho 6', neg: 'mang số không chia hết cho 6', test: t => t.num % 6 === 0 },
+  { ax: 'so', pos: 'mang số lớn hơn 6',      neg: 'mang số từ 6 trở xuống',       test: t => t.num > 6 },
   { ax: 'so', pos: 'mang số nhỏ hơn 5',      neg: 'mang số từ 5 trở lên',         test: t => t.num < 5 },
-  { ax: 'so', pos: 'mang số chia hết cho 3', neg: 'mang số không chia hết cho 3', test: t => t.num % 3 === 0 }
+  { ax: 'so', pos: 'mang số nguyên tố',      neg: 'mang số không phải nguyên tố',
+    test: t => [2, 3, 5, 7, 11].indexOf(t.num) >= 0 }
 ];
 
 /* Vị trí trên lưới 3x3, ô số 0 ở góc trên trái, ô số 8 ở góc dưới phải.
@@ -519,7 +548,7 @@ function hintFor(used) {
 const COLORS = ['lam', 'đỏ', 'vàng'];
 const SHAPES = ['tròn', 'vuông', 'tam giác'];
 const rndInt = n => Math.floor(Math.random() * n);
-const randTile = () => ({ color: COLORS[rndInt(3)], shape: SHAPES[rndInt(3)], num: 1 + rndInt(9) });
+const randTile = () => ({ color: COLORS[rndInt(3)], shape: SHAPES[rndInt(3)], num: 1 + rndInt(12) });
 const tkey = t => t.color + '|' + t.shape + '|' + t.num;
 
 function randomBoard() {
@@ -628,6 +657,22 @@ const TEMPLATES = {
              'Không phải lần nào tôi cũng nói dối. Đó mới là chỗ khó.']
   },
 
+  /* Bảng luật nêu HAI điều kiện nhưng chỉ một cái là thật. Gương soi ngược
+     của THIEU, và ác hơn: người chơi kiểm cả hai, thấy đều đúng, rồi không
+     bao giờ nghĩ tới chuyện BỚT đi một cái. */
+  THUA: {
+    need: 2,
+    make: (A, B) => ({
+      shown: 'Chọn ô ' + A.pos + ' và ' + B.pos + '.',
+      truth: 'Ô ' + B.pos + '. Điều kiện "' + A.pos + '" là thừa.',
+      test: t => B.test(t),
+      shownTest: t => A.test(t) && B.test(t),
+      used: [B.ax]
+    }),
+    voices: ['Tôi nói thừa một điều kiện. Bạn kiểm cả hai và thấy đều đúng.',
+             'Bớt đi khó hơn thêm vào. Ai cũng quen thêm vào.']
+  },
+
   /* Luật thật nói về CHỖ ô nằm, không nói gì về thứ in trên ô */
   VITRI: {
     need: 1, pos: true,
@@ -665,11 +710,27 @@ const TEMPLATES = {
 
 /* Tám màn sinh ra, rồi màn thứ chín là màn nghịch lý cố định ở dưới. */
 const TIER_PLAN  = [1, 1, 2, 2, 2, 3, 3, 3];
+/* Bậc khó xếp theo SỐ LẦN THỬ ĐO ĐƯỢC, không theo cảm tính.
+   Đo bằng một người chơi giả suy luận hoàn hảo, trung vị số lần thử:
+     DAO 5 · TRUC 6 · THUA 6 · HOAC 6 · KETHOP 8 · LICHSU 8 · VITRI 9 · THIEU 10
+   THIEU ("A và B") hoá ra KHÓ NHẤT chứ không phải dễ nhất như xếp ban đầu:
+   bảng luật đúng một nửa nên thỉnh thoảng làm theo vẫn trúng, và chính sự
+   xác nhận nửa vời đó gây rối hơn hẳn một lời nói dối trắng trợn. */
 const TIER_POOLS = {
-  1: ['THIEU', 'DAO'],
-  2: ['TRUC', 'THIEU', 'DAO', 'VITRI'],
-  3: ['KETHOP', 'HOAC', 'TRUC', 'VITRI', 'LICHSU']
+  1: ['DAO', 'TRUC', 'THUA'],
+  2: ['THIEU', 'HOAC', 'THUA', 'DAO', 'TRUC'],
+  3: ['KETHOP', 'LICHSU', 'VITRI', 'THIEU', 'HOAC']
 };
+
+/* Giới hạn lần thử mỗi màn, theo bậc khó. Hết lần thử là thua cả ván.
+   Nút gợi ý mở ở 60% giới hạn, để còn kịp dùng. */
+const LIMITS = { 1: 10, 2: 15, 3: 20 };
+
+const LOSE_VOICES = [
+  'Bạn thử rất nhiều lần, theo cùng một lối nghĩ. Tôi chỉ cần bạn đừng đổi ý.',
+  'Bạn tìm rất chăm. Chỉ là tìm đúng chỗ tôi muốn bạn tìm.',
+  'Hết lần thử rồi. Bảng luật thì vẫn còn nguyên đó, không suy suyển gì.'
+];
 
 const FIRST_VOICE = 'Bảng luật đầu tiên đã nói dối bạn. Các bảng sau cũng vậy.';
 
@@ -691,6 +752,8 @@ const PARADOX = {
   used: [], isParadox: true,
   hint: 'Bảng luật chưa bao giờ nói rằng bạn phải chọn.',
   voice: 'Bạn đã ngừng lại. Đó là nước đi duy nhất tôi không viết được thành luật.',
+  limit: 25,
+  loseVoice: 'Bạn chạm vào bàn hai mươi lăm lần. Chưa lần nào tôi bảo bạn phải chạm.',
   /* Ba câu thả dần khi người chơi càng thử càng sai */
   nudges: [
     [5,  'Cứ thử tiếp đi. Tôi có cả ngày.'],
@@ -710,10 +773,10 @@ const OUTROS = [
                   'quen, và thói quen nào cũng có người biết cách dùng.' }
 ];
 
-/* 81 tổ hợp thuộc tính, dùng để loại những luật quá hiếm hoặc quá lỏng */
+/* 108 tổ hợp thuộc tính, dùng để loại những luật quá hiếm hoặc quá lỏng */
 const UNIVERSE = (function () {
   const u = [];
-  COLORS.forEach(c => SHAPES.forEach(s => { for (let n = 1; n <= 9; n++) u.push({ color: c, shape: s, num: n }); }));
+  COLORS.forEach(c => SHAPES.forEach(s => { for (let n = 1; n <= 12; n++) u.push({ color: c, shape: s, num: n }); }));
   return u;
 })();
 const countValid = test => UNIVERSE.filter(t => test(t, 0, null)).length;
@@ -771,6 +834,7 @@ function buildRun(code) {
       if (T.hist) atoms.push(HIST[Math.floor(R() * HIST.length)]);
       const cand = T.make.apply(null, atoms);
       cand.kind = kind;
+      cand.limit = LIMITS[TIER_PLAN[i]];
       if (!cand.hint) cand.hint = hintFor(cand.used);
 
       const axKey = cand.usesPos ? 'vitri' : cand.usesPrev ? 'lichsu' : cand.used.slice().sort().join('+');
@@ -781,8 +845,10 @@ function buildRun(code) {
          về vị trí hay về nước đi trước thì phải thử dựng bàn mới biết có chơi
          được không. */
       if (!cand.usesPos && !cand.usesPrev) {
+        /* Khung tính trên 108 tổ hợp: dưới 12 thì bàn chơi quá mỏng (ví dụ
+           "÷5 VÀ màu lam" chỉ còn 6 tổ hợp), trên 72 thì quá lỏng. */
         const c = countValid(cand.test);
-        if (c < 4 || c > 54) continue;
+        if (c < 12 || c > 72) continue;
       } else {
         const probe = cand.usesPrev ? randTile() : null;
         if (!makeBoard(cand.test, probe, 120)) continue;
@@ -991,6 +1057,12 @@ const AU = (function () {
       if (!A.ctx) return; const t = now();
       [392.00, 523.25, 659.25].forEach(function (f, i) { tone(f, t + i * 0.11, 0.55, 'triangle', 0.13); });
     },
+    lose: function () {
+      if (!A.ctx) return; const t = now();
+      [392.00, 329.63, 261.63, 196.00].forEach(function (f, i) {
+        tone(f, t + i * 0.17, 0.85, 'triangle', 0.13);
+      });
+    },
     done: function () {
       if (!A.ctx) return; const t = now();
       [261.63, 392.00, 523.25, 784.00].forEach(function (f, i) { tone(f, t + i * 0.17, 0.95, 'sine', 0.12); });
@@ -1040,12 +1112,12 @@ const AU = (function () {
   const CINK = { 'lam': '#EAF4FC', 'đỏ': '#FFF0EC', 'vàng': '#2E2106' };
 
   const STREAK_TO_WIN = 3;   // số lần đúng liên tiếp để qua màn
-  const HINT_AFTER = 15;     // số lần thử trước khi nút gợi ý hiện ra
+  const HINT_AT = 0.5;       // nút gợi ý mở ở nửa giới hạn, để còn kịp dùng
   const FLASH_MS = 620;      // thời gian giữ dấu ĐÚNG/SAI trước khi đổi bàn
   const KEY = 'ca-tin-v2';
 
   const S = { seed: '', level: 0, streak: 0, tries: 0, log: [], ranks: [],
-              locked: false, prevTile: null, trusted: [] };
+              locked: false, prevTile: null, trusted: [], misses: 0 };
   let idleT = null, crossT = null;   // đồng hồ của màn nghịch lý
   let LEVELS = [];   // sinh ra từ mã ván, xem levels.js
   let board = [];
@@ -1098,7 +1170,8 @@ const AU = (function () {
     }
     return '<svg viewBox="0 0 40 40" aria-hidden="true">' + body +
       '<text x="20" y="' + ty + '" dy=".35em" text-anchor="middle" fill="' + ink + '"' +
-      ' font-family="Cousine, ui-monospace, monospace" font-size="15" font-weight="700">' + num + '</text>' +
+      ' font-family="Cousine, ui-monospace, monospace" font-size="' + (num > 9 ? 12.5 : 15) +
+      '" font-weight="700">' + num + '</text>' +
       '</svg>';
   }
 
@@ -1144,7 +1217,18 @@ const AU = (function () {
     });
   }
 
-  const rankOf = n => n < 6 ? 'vàng' : (n < 12 ? 'bạc' : 'đồng');
+  /* Xếp hạng theo số lần SAI, không theo tổng số lần thử. Dò tìm nhiều mà
+     dò đúng hướng thì không phải là chơi dở. */
+  const rankOf = n => n <= 3 ? 'vàng' : (n <= 8 ? 'bạc' : 'đồng');
+
+  /* Giới hạn đếm số lần SAI; chọn đúng thì miễn phí. Nhờ vậy ba lần chứng
+     minh cuối không tốn gì, và người suy luận chắc tay được thưởng thật. */
+  function drawTries() {
+    const left = LEVELS[S.level].limit - S.misses;
+    const e = el('tries');
+    e.textContent = 'còn ' + left + ' lần sai';
+    e.classList.toggle('low', left <= 3);
+  }
 
   /* ---------- vòng chơi ---------- */
   /* Bàn chơi dựng theo luật THẬT của màn, và theo cả ô vừa chọn — vì có kiểu
@@ -1183,12 +1267,12 @@ const AU = (function () {
   function startLevel() {
     const L = LEVELS[S.level];
     clearIdle(); resetCross();
-    S.streak = 0; S.tries = 0; S.log = []; S.prevTile = null;
+    S.streak = 0; S.tries = 0; S.misses = 0; S.log = []; S.prevTile = null;
     el('lvlNum').textContent = S.level + 1;
     el('lvlAll').textContent = LEVELS.length;
     el('lvlTag').textContent = 'Ván ' + S.seed;
     el('ruleText').textContent = L.shown;
-    el('tries').textContent = '0 lần thử';
+    drawTries();
     el('hintBtn').hidden = true;
     el('hintText').hidden = true;
     el('hintText').textContent = '';
@@ -1208,6 +1292,7 @@ const AU = (function () {
 
     S.locked = true;
     S.tries++;
+    if (!ok) S.misses++;
     S.log.unshift({ t: t, ok: ok });
     S.streak = ok ? S.streak + 1 : 0;
     S.prevTile = t;          // nước đi này thành mốc cho nước sau
@@ -1221,24 +1306,28 @@ const AU = (function () {
     }
     Array.prototype.forEach.call(el('board').children, c => { c.disabled = true; });
 
-    el('tries').textContent = S.tries + ' lần thử';
+    drawTries();
     drawPips(); drawLog();
 
     if (L.isParadox) {
       let msg = '';
-      L.nudges.forEach(n => { if (S.tries >= n[0]) msg = n[1]; });
+      L.nudges.forEach(n => { if (S.misses >= n[0]) msg = n[1]; });
       if (msg) { el('hintText').textContent = msg; el('hintText').hidden = false; }
-    } else if (S.tries >= HINT_AFTER && el('hintBtn').hidden && el('hintText').hidden) {
+    } else if (S.misses >= Math.round(L.limit * HINT_AT) && el('hintBtn').hidden && el('hintText').hidden) {
       el('hintBtn').hidden = false;
     }
 
-    setTimeout(() => { S.streak >= STREAK_TO_WIN ? clearLevel() : newRound(); }, FLASH_MS);
+    setTimeout(() => {
+      if (S.streak >= STREAK_TO_WIN) clearLevel();
+      else if (S.misses >= L.limit) loseLevel();
+      else newRound();
+    }, FLASH_MS);
   }
 
   function clearLevel() {
     clearIdle();
     const L = LEVELS[S.level];
-    S.ranks[S.level] = { tries: S.tries, rank: rankOf(S.tries) };
+    S.ranks[S.level] = { misses: S.misses, rank: rankOf(S.misses) };
     save();
     el('revealTitle').textContent = 'Màn ' + (S.level + 1) + ' — đã qua';
     el('revLie').textContent = L.shown;
@@ -1252,15 +1341,34 @@ const AU = (function () {
     el('nextBtn').focus();
   }
 
+  /* Hết lần thử là thua cả ván. Lộ luôn luật thật — đó là phần thưởng cho
+     việc đã thua, và là thứ người chơi mang sang ván sau. */
+  function loseLevel() {
+    clearIdle();
+    AU.sfx.lose();
+    AU.musicStop();
+    const L = LEVELS[S.level];
+    el('loseLie').textContent = L.shown;
+    el('loseTruth').textContent = L.truth;
+    el('loseAt').textContent = 'Màn ' + (S.level + 1);
+    el('loseTries').textContent = S.misses;
+    el('loseSeed').textContent = S.seed;
+    const v = L.loseVoice || LOSE_VOICES[Math.floor(Math.random() * LOSE_VOICES.length)];
+    el('loseVoice').innerHTML = '<span>Người dẫn đường</span>' + v;
+    el('loseScreen').hidden = false;
+    el('loseAgainBtn').focus();
+    try { localStorage.removeItem(KEY); } catch (e) { }   // ván này hỏng rồi
+  }
+
   function showEnd() {
     const body = el('scoreBody');
     body.innerHTML = '';
     let total = 0;
     S.ranks.forEach((r, i) => {
       if (!r) return;
-      total += r.tries;
+      total += r.misses;
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td>Màn ' + (i + 1) + '</td><td>' + r.tries + ' lần · ' + r.rank + '</td>';
+      tr.innerHTML = '<td>Màn ' + (i + 1) + '</td><td>' + r.misses + ' sai · ' + r.rank + '</td>';
       body.appendChild(tr);
     });
     const trust = S.trusted.filter(Boolean).length;
@@ -1279,6 +1387,7 @@ const AU = (function () {
     AU.sfx.click();
     clearIdle();
     closeAllOverlays();
+    if (AU.isOn()) AU.musicStart();     // thua thì nhạc đã tắt, bật lại
     openRun(newSeedCode(), 0, []);
     startLevel();
   }
@@ -1287,6 +1396,7 @@ const AU = (function () {
     el('startScreen').hidden = true;
     el('reveal').hidden = true;
     el('endScreen').hidden = true;
+    el('loseScreen').hidden = true;
   }
 
   /* ---------- màn hình mở đầu ---------- */
@@ -1295,6 +1405,7 @@ const AU = (function () {
     clearIdle();
     el('reveal').hidden = true;
     el('endScreen').hidden = true;
+    el('loseScreen').hidden = true;
     const d = loadSaved();
     const canResume = !!(d && d.level > 0);
     el('resumeBtn').hidden = !canResume;
@@ -1347,6 +1458,8 @@ const AU = (function () {
 
   el('resetBtn').addEventListener('click', reset);
   el('againBtn').addEventListener('click', reset);
+  el('loseAgainBtn').addEventListener('click', reset);
+  el('loseHomeBtn').addEventListener('click', () => { window.location.href = '../'; });
   el('homeBtn').addEventListener('click', () => { window.location.href = '../'; });
 
   el('exitBtn').addEventListener('click', () => { AU.sfx.click(); showStart(); });

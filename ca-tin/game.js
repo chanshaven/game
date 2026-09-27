@@ -10,12 +10,12 @@
   const CINK = { 'lam': '#EAF4FC', 'đỏ': '#FFF0EC', 'vàng': '#2E2106' };
 
   const STREAK_TO_WIN = 3;   // số lần đúng liên tiếp để qua màn
-  const HINT_AFTER = 15;     // số lần thử trước khi nút gợi ý hiện ra
+  const HINT_AT = 0.5;       // nút gợi ý mở ở nửa giới hạn, để còn kịp dùng
   const FLASH_MS = 620;      // thời gian giữ dấu ĐÚNG/SAI trước khi đổi bàn
   const KEY = 'ca-tin-v2';
 
   const S = { seed: '', level: 0, streak: 0, tries: 0, log: [], ranks: [],
-              locked: false, prevTile: null, trusted: [] };
+              locked: false, prevTile: null, trusted: [], misses: 0 };
   let idleT = null, crossT = null;   // đồng hồ của màn nghịch lý
   let LEVELS = [];   // sinh ra từ mã ván, xem levels.js
   let board = [];
@@ -68,7 +68,8 @@
     }
     return '<svg viewBox="0 0 40 40" aria-hidden="true">' + body +
       '<text x="20" y="' + ty + '" dy=".35em" text-anchor="middle" fill="' + ink + '"' +
-      ' font-family="Cousine, ui-monospace, monospace" font-size="15" font-weight="700">' + num + '</text>' +
+      ' font-family="Cousine, ui-monospace, monospace" font-size="' + (num > 9 ? 12.5 : 15) +
+      '" font-weight="700">' + num + '</text>' +
       '</svg>';
   }
 
@@ -114,7 +115,18 @@
     });
   }
 
-  const rankOf = n => n < 6 ? 'vàng' : (n < 12 ? 'bạc' : 'đồng');
+  /* Xếp hạng theo số lần SAI, không theo tổng số lần thử. Dò tìm nhiều mà
+     dò đúng hướng thì không phải là chơi dở. */
+  const rankOf = n => n <= 3 ? 'vàng' : (n <= 8 ? 'bạc' : 'đồng');
+
+  /* Giới hạn đếm số lần SAI; chọn đúng thì miễn phí. Nhờ vậy ba lần chứng
+     minh cuối không tốn gì, và người suy luận chắc tay được thưởng thật. */
+  function drawTries() {
+    const left = LEVELS[S.level].limit - S.misses;
+    const e = el('tries');
+    e.textContent = 'còn ' + left + ' lần sai';
+    e.classList.toggle('low', left <= 3);
+  }
 
   /* ---------- vòng chơi ---------- */
   /* Bàn chơi dựng theo luật THẬT của màn, và theo cả ô vừa chọn — vì có kiểu
@@ -153,12 +165,12 @@
   function startLevel() {
     const L = LEVELS[S.level];
     clearIdle(); resetCross();
-    S.streak = 0; S.tries = 0; S.log = []; S.prevTile = null;
+    S.streak = 0; S.tries = 0; S.misses = 0; S.log = []; S.prevTile = null;
     el('lvlNum').textContent = S.level + 1;
     el('lvlAll').textContent = LEVELS.length;
     el('lvlTag').textContent = 'Ván ' + S.seed;
     el('ruleText').textContent = L.shown;
-    el('tries').textContent = '0 lần thử';
+    drawTries();
     el('hintBtn').hidden = true;
     el('hintText').hidden = true;
     el('hintText').textContent = '';
@@ -178,6 +190,7 @@
 
     S.locked = true;
     S.tries++;
+    if (!ok) S.misses++;
     S.log.unshift({ t: t, ok: ok });
     S.streak = ok ? S.streak + 1 : 0;
     S.prevTile = t;          // nước đi này thành mốc cho nước sau
@@ -191,24 +204,28 @@
     }
     Array.prototype.forEach.call(el('board').children, c => { c.disabled = true; });
 
-    el('tries').textContent = S.tries + ' lần thử';
+    drawTries();
     drawPips(); drawLog();
 
     if (L.isParadox) {
       let msg = '';
-      L.nudges.forEach(n => { if (S.tries >= n[0]) msg = n[1]; });
+      L.nudges.forEach(n => { if (S.misses >= n[0]) msg = n[1]; });
       if (msg) { el('hintText').textContent = msg; el('hintText').hidden = false; }
-    } else if (S.tries >= HINT_AFTER && el('hintBtn').hidden && el('hintText').hidden) {
+    } else if (S.misses >= Math.round(L.limit * HINT_AT) && el('hintBtn').hidden && el('hintText').hidden) {
       el('hintBtn').hidden = false;
     }
 
-    setTimeout(() => { S.streak >= STREAK_TO_WIN ? clearLevel() : newRound(); }, FLASH_MS);
+    setTimeout(() => {
+      if (S.streak >= STREAK_TO_WIN) clearLevel();
+      else if (S.misses >= L.limit) loseLevel();
+      else newRound();
+    }, FLASH_MS);
   }
 
   function clearLevel() {
     clearIdle();
     const L = LEVELS[S.level];
-    S.ranks[S.level] = { tries: S.tries, rank: rankOf(S.tries) };
+    S.ranks[S.level] = { misses: S.misses, rank: rankOf(S.misses) };
     save();
     el('revealTitle').textContent = 'Màn ' + (S.level + 1) + ' — đã qua';
     el('revLie').textContent = L.shown;
@@ -222,15 +239,34 @@
     el('nextBtn').focus();
   }
 
+  /* Hết lần thử là thua cả ván. Lộ luôn luật thật — đó là phần thưởng cho
+     việc đã thua, và là thứ người chơi mang sang ván sau. */
+  function loseLevel() {
+    clearIdle();
+    AU.sfx.lose();
+    AU.musicStop();
+    const L = LEVELS[S.level];
+    el('loseLie').textContent = L.shown;
+    el('loseTruth').textContent = L.truth;
+    el('loseAt').textContent = 'Màn ' + (S.level + 1);
+    el('loseTries').textContent = S.misses;
+    el('loseSeed').textContent = S.seed;
+    const v = L.loseVoice || LOSE_VOICES[Math.floor(Math.random() * LOSE_VOICES.length)];
+    el('loseVoice').innerHTML = '<span>Người dẫn đường</span>' + v;
+    el('loseScreen').hidden = false;
+    el('loseAgainBtn').focus();
+    try { localStorage.removeItem(KEY); } catch (e) { }   // ván này hỏng rồi
+  }
+
   function showEnd() {
     const body = el('scoreBody');
     body.innerHTML = '';
     let total = 0;
     S.ranks.forEach((r, i) => {
       if (!r) return;
-      total += r.tries;
+      total += r.misses;
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td>Màn ' + (i + 1) + '</td><td>' + r.tries + ' lần · ' + r.rank + '</td>';
+      tr.innerHTML = '<td>Màn ' + (i + 1) + '</td><td>' + r.misses + ' sai · ' + r.rank + '</td>';
       body.appendChild(tr);
     });
     const trust = S.trusted.filter(Boolean).length;
@@ -249,6 +285,7 @@
     AU.sfx.click();
     clearIdle();
     closeAllOverlays();
+    if (AU.isOn()) AU.musicStart();     // thua thì nhạc đã tắt, bật lại
     openRun(newSeedCode(), 0, []);
     startLevel();
   }
@@ -257,6 +294,7 @@
     el('startScreen').hidden = true;
     el('reveal').hidden = true;
     el('endScreen').hidden = true;
+    el('loseScreen').hidden = true;
   }
 
   /* ---------- màn hình mở đầu ---------- */
@@ -265,6 +303,7 @@
     clearIdle();
     el('reveal').hidden = true;
     el('endScreen').hidden = true;
+    el('loseScreen').hidden = true;
     const d = loadSaved();
     const canResume = !!(d && d.level > 0);
     el('resumeBtn').hidden = !canResume;
@@ -317,6 +356,8 @@
 
   el('resetBtn').addEventListener('click', reset);
   el('againBtn').addEventListener('click', reset);
+  el('loseAgainBtn').addEventListener('click', reset);
+  el('loseHomeBtn').addEventListener('click', () => { window.location.href = '../'; });
   el('homeBtn').addEventListener('click', () => { window.location.href = '../'; });
 
   el('exitBtn').addEventListener('click', () => { AU.sfx.click(); showStart(); });

@@ -186,6 +186,8 @@
 
     /* ---------- sổ tay ---------- */
     .log .eyebrow { color: var(--cream-dim); opacity: .8 }
+    /* Đếm ngược lần thử: đỏ lên khi sắp hết, để người chơi kịp đổi lối nghĩ. */
+    #tries.low { color: #FF9E93; opacity: 1 }
     .log ol {
       list-style: none; margin: 9px 0 0; padding: 0;
       max-height: 170px; overflow-y: auto;
@@ -348,6 +350,7 @@
         <li>Chọn một ô bất kỳ. Game trả lời <b>đúng</b> hoặc <b>sai</b>.</li>
         <li>Đọc sổ tay, so các lần thử với nhau, suy ra luật thật.</li>
         <li>Chọn đúng <b>ba lần liên tiếp</b> là qua màn. Bàn chơi đổi sau mỗi lần thử.</li>
+        <li>Mỗi màn có <b>giới hạn số lần sai</b>. Chọn đúng thì không tính. Hết lần sai là thua cả ván.</li>
       </ol>
       <div class="seedin">
         <label for="seedInput">Mã ván</label>
@@ -377,6 +380,24 @@
     </div>
   </div>
 
+  <div class="overlay" id="loseScreen" hidden>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="loseTitle">
+      <h2 id="loseTitle">Hết lần thử</h2>
+      <div class="line"><span class="k">Bảng luật đã ghi</span><span class="v lie" id="loseLie"></span></div>
+      <div class="line"><span class="k">Luật thật</span><span class="v truth" id="loseTruth"></span></div>
+      <div class="tally">
+        <div>Dừng ở<b id="loseAt">Màn 1</b></div>
+        <div>Đã sai<b id="loseTries">0</b></div>
+        <div>Mã ván<b id="loseSeed">—</b></div>
+      </div>
+      <p class="voice" id="loseVoice"><span>Người dẫn đường</span></p>
+      <div class="btnrow">
+        <button class="act primary" id="loseAgainBtn">Ván mới</button>
+        <button class="act" id="loseHomeBtn">Về trang chủ</button>
+      </div>
+    </div>
+  </div>
+
   <div class="overlay" id="endScreen" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="endTitle">
       <h2 id="endTitle">Hết ván</h2>
@@ -384,7 +405,7 @@
         <tbody id="scoreBody"></tbody>
       </table>
       <div class="tally">
-        <div>Tổng số lần thử<b id="endTotal">0</b></div>
+        <div>Tổng số lần sai<b id="endTotal">0</b></div>
         <div>Tin bảng luật<b id="endTrust">0/9</b></div>
         <div>Mã ván<b id="endSeed">—</b></div>
       </div>

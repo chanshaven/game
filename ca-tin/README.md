@@ -8,6 +8,9 @@ không thể ăn may, phải thật sự nắm được luật.
 
 Chín màn: tám màn sinh ra mỗi ván một khác, và màn thứ chín luôn cố định.
 
+Mỗi màn có **giới hạn số lần sai**. Chọn đúng thì không tính. Hết lần sai là thua cả
+ván, phải chơi ván mới.
+
 ## Mỗi ván một bộ luật khác
 
 Luật **không** nằm cứng trong code. Mỗi ván sinh ra chín bảng luật mới, nên chơi lại
@@ -23,6 +26,39 @@ nhiên chỉ là thuộc tính cụ thể. Ba thứ đổi mỗi ván:
 
 Điều thứ ba đáng giá nhất: vì không biết màn nào là màn thật, người chơi phải ôm câu
 hỏi "lần này nó có đang nói thật không" suốt cả ván.
+
+## Giới hạn số lần sai
+
+| Bậc khó | Màn | Được sai |
+| --- | --- | --- |
+| 1 | 1-2 | 10 lần |
+| 2 | 3-5 | 15 lần |
+| 3 | 6-8 | 20 lần |
+| — | 9 (nghịch lý) | 25 lần |
+
+Đếm **số lần sai**, không đếm tổng số lần thử. Chọn đúng thì miễn phí.
+
+Đây là khác biệt lớn hơn nó thoạt nghe. Nếu đếm tổng số lần thử thì ba lần chứng minh
+cuối cũng tốn ngân sách, và người chơi bị phạt vì chính việc dò tìm — trong khi dò tìm
+là toàn bộ nội dung của trò chơi. Đếm số lần sai thì giới hạn chỉ cắn đúng chỗ đáng
+cắn: lối nghĩ luẩn quẩn, bám mãi vào một giả thuyết đã bị bác bỏ.
+
+Sổ tay hiện số lần **còn lại** chứ không phải số đã dùng — đó mới là con số người chơi
+cần để quyết định có nên bỏ giả thuyết hiện tại hay không. Còn 3 lần trở xuống thì nó
+đỏ lên. Nút gợi ý mở ở **nửa** giới hạn.
+
+Thua thì **lộ luôn luật thật**. Đó là phần thưởng cho việc đã thua, và là thứ người
+chơi mang sang ván sau.
+
+Giới hạn ở màn nghịch lý là chỗ sắc nhất: ở đó mọi ô đều sai, nên cứ bấm mãi là thua —
+thua vì chưa bao giờ ngừng tin rằng có gì đó để chọn.
+
+**Xếp hạng** cũng theo số lần sai: vàng từ 3 lần trở xuống, bạc từ 8 trở xuống, còn lại
+là đồng.
+
+Người chơi giả suy luận hoàn hảo sai trung vị **2-3 lần** mỗi màn, nhiều nhất 13. Với
+giới hạn 10/15/20 thì nó không bao giờ thua — và như vậy là đúng: giới hạn chỉ nên cắn
+người chơi thật.
 
 ## Màn cuối
 
@@ -104,9 +140,13 @@ một nút ở màn hình mở đầu. Chỉnh nhanh trong `audio.js`: `MUSIC_VO
 khẳng định và dạng phủ định viết sẵn, để câu tiếng Việt lúc nào cũng đọc xuôi:
 
 ```js
-{ ax: 'so', pos: 'mang số nguyên tố', neg: 'mang số không nguyên tố',
-  test: t => [2,3,5,7].indexOf(t.num) >= 0 }
+{ ax: 'so', pos: 'mang số chia hết cho 7', neg: 'mang số không chia hết cho 7',
+  test: t => t.num % 7 === 0 }
 ```
+
+Ô mang số **1–12**, không phải 1–9. Dải 1–9 không đủ chỗ cho "chia hết cho 5": nó chỉ
+đúng mỗi số 5, một ô trên chín, bàn chơi quá mỏng. Nới lên 12 thì ÷5 được {5,10}, ÷4
+được {4,8,12}, ÷6 được {6,12}, và mở thêm cả số nguyên tố {2,3,5,7,11}.
 
 **Thêm kiểu nói dối mới** — thêm vào `TEMPLATES`, rồi ghi tên nó vào `TIER_POOLS` ở bậc
 khó phù hợp. `need` là số điều kiện cần bốc (mỗi cái nằm trên một thuộc tính khác nhau),
@@ -115,12 +155,27 @@ khó phù hợp. `need` là số điều kiện cần bốc (mỗi cái nằm tr
 **Đổi độ dài ván** — sửa `TIER_PLAN`. Mảng này vừa quyết định số màn vừa quyết định bậc
 khó của từng màn.
 
+**Bậc khó xếp theo số đo, không theo cảm tính.** Dựng một người chơi giả suy luận quy
+nạp với trí nhớ hoàn hảo — biết trước kho luật, mỗi lần thử xong loại hết những luật
+mâu thuẫn — rồi cho nó chơi vài nghìn màn. Trung vị số lần thử:
+
+| Kiểu | DAO | TRUC | THUA | HOAC | THAT | KETHOP | LICHSU | VITRI | THIEU |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Lần thử | 5 | 6 | 6 | 6 | 6 | 8 | 8 | 9 | **10** |
+
+Kết quả lật ngược cách xếp ban đầu: `THIEU` ("A và B") là kiểu **khó nhất**, chứ không
+phải dễ nhất. Lý do: bảng luật của nó đúng một nửa, nên làm theo vẫn trúng thỉnh
+thoảng — và sự xác nhận nửa vời đó gây rối hơn hẳn một lời nói dối trắng trợn.
+
+Với cách xếp cũ, bậc 1 chứa `THIEU` và giới hạn 10 lần thì người chơi hoàn hảo cũng
+thua 22% số màn. Sau khi xếp lại, cùng bộ giới hạn đó chỉ còn thua 1,8% số ván.
+
 Bàn chơi dựng bằng cách bốc cả bàn rồi đếm, không đạt thì bốc lại — vì luật giờ có thể
 phụ thuộc vào chỗ ô nằm và vào nước đi trước, không chọn sẵn ô đúng ô sai được nữa.
 Mỗi bàn giữ 2-4 ô đúng: ít hơn thì mò mãi không ra, nhiều hơn thì ăn may.
 
-Bộ sinh tự loại những luật hỏng: luật chỉ nói về thuộc tính thì đếm thẳng trên 81 tổ
-hợp (dưới 4 là quá hiếm, trên 54 là quá lỏng); luật nói về vị trí hay về nước đi trước
+Bộ sinh tự loại những luật hỏng: luật chỉ nói về thuộc tính thì đếm thẳng trên 108 tổ
+hợp (dưới 12 là quá hiếm — "÷5 VÀ màu lam" chỉ còn 6 tổ hợp; trên 72 là quá lỏng); luật nói về vị trí hay về nước đi trước
 thì phải thử dựng bàn mới biết có chơi được không. Nó cũng tránh hai màn liền kề dùng cùng
 kiểu nói dối hay cùng bộ thuộc tính, vì như thế màn sau sẽ tự lộ đáp án cho màn trước.
 

@@ -174,6 +174,12 @@ const AU = (function () {
       if (!A.ctx) return; const t = now();
       [392.00, 523.25, 659.25].forEach(function (f, i) { tone(f, t + i * 0.11, 0.55, 'triangle', 0.13); });
     },
+    lose: function () {
+      if (!A.ctx) return; const t = now();
+      [392.00, 329.63, 261.63, 196.00].forEach(function (f, i) {
+        tone(f, t + i * 0.17, 0.85, 'triangle', 0.13);
+      });
+    },
     done: function () {
       if (!A.ctx) return; const t = now();
       [261.63, 392.00, 523.25, 784.00].forEach(function (f, i) { tone(f, t + i * 0.17, 0.95, 'sine', 0.12); });

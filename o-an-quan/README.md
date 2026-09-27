@@ -61,6 +61,32 @@ nhau, nên minimax chạy thẳng không cần mô phỏng xác suất. Nhánh c
 Đo trên `bench.js`, đổi bên cho công bằng: **Khó thắng Thường 91%**, **Thường
 thắng Dễ 87%**. Khó đi trước thì thắng Thường trọn 50/50 ván.
 
+## Giao diện
+
+**Sỏi vẽ bằng CSS, không dùng ảnh.** Mỗi viên lấy một trong năm dáng hơi méo
+(`border-radius` bốn góc khác nhau) và một trong năm tông đá, xoay mỗi viên một
+góc — nhìn ra đống sỏi nhặt ngoài bờ sông chứ không phải mấy cái chấm tròn in
+hàng loạt. Quan là hòn to hơn hẳn, đá nâu đỏ, có viền vàng mảnh để không chìm
+vào nền ô; ô quan còn kẻ sẵn chữ "quan" cho khỏi phải đoán.
+
+**Chỗ đặt sỏi theo xoắn ốc hạt hướng dương**, chia theo mức số sỏi. Trong cùng
+một mức thì viên thứ k luôn nằm nguyên chỗ, thêm viên mới không làm mấy viên cũ
+nhảy lung tung giữa lúc đang rải.
+
+**Bàn tự dựng đứng** thành hai cột khi màn hình hẹp và cao, và bề ngang bị chặn
+theo chiều cao còn lại để không phải vừa chơi vừa cuộn.
+
+**Luật khoá trong ván.** Trước ván bấm *Tuỳ chỉnh luật chơi* để đổi chiều rải,
+quan non, giá quan, tốc độ. Đang chơi thì nút *Tuỳ chọn* chỉ cho chỉnh âm lượng
+và tốc độ rải — đổi luật giữa chừng là ván hỏng.
+
+### Một cái bẫy đã dính
+
+Tiêu đề tô gradient rồi cắt theo nét chữ (`background-clip: text`) chỉ tô được
+phần nét nằm trong hộp dòng. Đặt `line-height` dưới khoảng 1.15 là dấu sắc, dấu
+mũ, dấu ngã bị đẩy ra ngoài và mất sạch — "Ô ĂN QUAN" hiện thành "O AN QUAN".
+Đây là lỗi cũ đã gặp ở Chiếc Nón Kỳ Diệu. Đừng hạ con số đó xuống.
+
 ## File
 
     index.html   giao diện + toàn bộ CSS

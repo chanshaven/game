@@ -16,12 +16,18 @@
   const KEY = 'o-an-quan';
   const CF = {
     mode: 'may', level: 'thuong', first: '0',
-    dir: 'lock', non: '5', qv: '10', speed: 'vua', sound: true
+    dir: 'lock', non: '5', qv: '10', speed: 'vua', vol: 60
   };
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) Object.assign(CF, JSON.parse(raw));
+    if (raw) {
+      const old = JSON.parse(raw);
+      if (old.sound === false && old.vol == null) old.vol = 0;   // bản cũ chỉ có bật/tắt
+      delete old.sound;
+      Object.assign(CF, old);
+    }
   } catch (e) { }
+  CF.vol = Math.max(0, Math.min(100, +CF.vol || 0));
   function save() { try { localStorage.setItem(KEY, JSON.stringify(CF)); } catch (e) { } }
 
   const SPEED = { cham: 300, vua: 165, nhanh: 85 };
@@ -29,6 +35,7 @@
   /* ===================== âm thanh ===================================== */
   const SFX = (function () {
     let ctx = null, gain = null;
+    const level = () => (CF.vol / 100) * 0.7;
     function init() {
       if (ctx) { if (ctx.state === 'suspended' && ctx.resume) ctx.resume(); return true; }
       try {
@@ -36,7 +43,7 @@
         if (!C) return false;
         ctx = new C();
         if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
-        gain = ctx.createGain(); gain.gain.value = CF.sound ? 0.5 : 0;
+        gain = ctx.createGain(); gain.gain.value = level();
         let out = ctx.destination;
         try {
           const comp = ctx.createDynamicsCompressor();
@@ -59,7 +66,7 @@
     }
     /* tiếng sỏi: một hạt nhiễu ngắn lọc băng hẹp, nghe như đá chạm đất */
     function click(pitch, vol) {
-      if (!init() || !CF.sound) return;
+      if (!init() || CF.vol <= 0) return;
       const t0 = ctx.currentTime;
       const n = ctx.createBufferSource();
       const len = Math.floor(ctx.sampleRate * 0.05);
@@ -75,31 +82,31 @@
     }
     return {
       unlock: init,
-      setOn(v) { CF.sound = v; if (gain) gain.gain.value = v ? 0.5 : 0; },
+      setVol(v) { CF.vol = v; if (gain) gain.gain.value = level(); },
       sow(i) { click(1250 + ((i * 137) % 700), 0.34); },
       pick() { click(820, 0.5); },
       eat() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         [523, 659, 784].forEach((f, k) => tone(f, t + k * 0.06, 0.22, 'triangle', 0.16));
       },
       quan() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, t + k * 0.07, 0.4, 'triangle', 0.2));
       },
       nope() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         tone(300, t, 0.13, 'sawtooth', 0.14); tone(220, t + 0.1, 0.2, 'sawtooth', 0.12);
       },
       win() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         [523, 659, 784, 1047, 1319, 1568].forEach((f, k) => tone(f, t + k * 0.1, 0.55, 'triangle', 0.2));
       },
       lose() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         [523, 466, 392, 311].forEach((f, k) => tone(f, t + k * 0.14, 0.5, 'sine', 0.17));
       }
@@ -121,19 +128,27 @@
   const isAI = p => CF.mode === 'may' && p === 1;
 
   /* ===================== nhóm nút chọn ================================ */
+  /* Tốc độ rải chỉnh được ở hai chỗ — bảng tuỳ chỉnh trước ván và bảng tuỳ chọn
+     trong ván — nên một khoá phải kéo theo nhiều nhóm nút cùng sáng. */
+  const GROUPS = {};
+  function paintGroup(key) {
+    for (const box of GROUPS[key] || []) {
+      Array.from(box.children).forEach(b =>
+        b.setAttribute('aria-checked', String(b.dataset.v === String(CF[key]))));
+    }
+  }
   function group(elId, key, onChange) {
     const box = $(elId);
     if (!box) return;
+    (GROUPS[key] = GROUPS[key] || []).push(box);
     box.setAttribute('role', 'radiogroup');
-    const paint = () => Array.from(box.children).forEach(b =>
-      b.setAttribute('aria-checked', String(b.dataset.v === String(CF[key]))));
     box.addEventListener('click', ev => {
       const b = ev.target.closest('.chip'); if (!b) return;
-      CF[key] = b.dataset.v; save(); paint();
+      CF[key] = b.dataset.v; save(); paintGroup(key);
       SFX.unlock();
       if (onChange) onChange(b.dataset.v);
     });
-    paint();
+    paintGroup(key);
   }
 
   /* ===================== dựng bàn ===================================== */
@@ -201,7 +216,10 @@
       const el = document.createElement('div');
       el.className = 'cell' + (c.kind === 'quan' ? ' quan' : ' mine' + c.side);
       el.dataset.i = i;
-      el.innerHTML = '<div class="stones"></div><div class="cnt">0</div>';
+      el.innerHTML = (c.kind === 'quan' ? '<b class="qtag">quan</b>' : '') +
+        '<div class="stones"></div><div class="cnt">0</div>';
+      el._box = el.querySelector('.stones');
+      el._cnt = el.querySelector('.cnt');
       el._n = -1;
       el.addEventListener('click', () => onCellClick(i));
       board.appendChild(el);
@@ -219,24 +237,24 @@
      dương cho kín ô. Trong cùng một mức thì viên thứ k luôn nằm nguyên chỗ,
      thêm viên mới không làm mấy viên cũ nhảy chỗ. */
   function bucket(total) {
-    if (total <= 4) return { cap: 5, f: 0.40 };
-    if (total <= 8) return { cap: 9, f: 0.31 };
-    if (total <= 14) return { cap: 15, f: 0.245 };
-    if (total <= 22) return { cap: 23, f: 0.195 };
-    if (total <= 34) return { cap: 35, f: 0.155 };
-    return { cap: 52, f: 0.125 };
+    if (total <= 4) return { cap: 6, f: 0.27 };
+    if (total <= 8) return { cap: 10, f: 0.235 };
+    if (total <= 14) return { cap: 16, f: 0.195 };
+    if (total <= 22) return { cap: 24, f: 0.163 };
+    if (total <= 34) return { cap: 36, f: 0.135 };
+    return { cap: 52, f: 0.112 };
   }
 
   function drawCell(i, pop) {
     const c = V.cells[i], el = cellEls[i];
-    const box = el.firstElementChild, cnt = el.lastElementChild;
+    const box = el._box, cnt = el._cnt;
     const total = c.dan + c.quan;
     const prev = el._n;
     const min = el._min || 40, bw = el._w || 40, bh = el._h || 40;
     const bk = bucket(total);
 
     const danPx = Math.max(5, min * bk.f);
-    const quanPx = Math.max(9, min * 0.46);
+    const quanPx = Math.max(11, min * 0.40);
 
     /* bán kính tính bằng phần trăm, chừa đủ chỗ để viên sỏi không lòi ra */
     const rx = Math.max(4, 50 - (danPx / bw) * 52);
@@ -244,8 +262,8 @@
 
     let html = '', k = 0;
     for (let q = 0; q < c.quan; q++, k++) {
-      html += '<i class="st big" style="left:50%;top:50%;width:' + quanPx.toFixed(1) +
-        'px;height:' + quanPx.toFixed(1) + 'px"></i>';
+      html += '<i class="st big" style="--rot:' + ((i * 23) % 40 - 20) + 'deg;left:50%;top:50%;width:' +
+        quanPx.toFixed(1) + 'px;height:' + quanPx.toFixed(1) + 'px"></i>';
     }
     const shift = c.quan > 0 ? 3 : 0;          // né viên quan ngồi giữa
     const seed = i * 1.7137;                   // mỗi ô xoay một kiểu, đỡ giống hệt nhau
@@ -255,8 +273,11 @@
       const x = 50 + Math.cos(j * GA + seed) * rr * rx;
       const y = 50 + Math.sin(j * GA + seed) * rr * ry;
       const isNew = pop && prev >= 0 && k >= prev;
-      html += '<i class="st' + (isNew ? ' new' : '') + '" style="left:' + x.toFixed(1) +
-        '%;top:' + y.toFixed(1) + '%;width:' + danPx.toFixed(1) + 'px;height:' + danPx.toFixed(1) + 'px"></i>';
+      const shape = (i * 3 + d * 7) % 5;             // dáng và tông đá, cố định theo chỗ ngồi
+      const rot = ((i * 37 + d * 53) % 90) - 45;
+      html += '<i class="st v' + shape + (isNew ? ' new' : '') + '" style="--rot:' + rot + 'deg;left:' +
+        x.toFixed(1) + '%;top:' + y.toFixed(1) + '%;width:' + danPx.toFixed(1) +
+        'px;height:' + danPx.toFixed(1) + 'px"></i>';
     }
     box.innerHTML = html;
     cnt.textContent = total;
@@ -556,6 +577,10 @@
   }
 
   /* ===================== bắt đầu / kết thúc =========================== */
+  /* Màn thiết lập trên điện thoại dài hơn một màn hình, bấm Bắt đầu ở cuối
+     trang xong mà không kéo lên thì vào ván vẫn đang đứng ở lưng chừng. */
+  function toTop() { try { window.scrollTo(0, 0); } catch (e) { } }
+
   function startGame() {
     names = CF.mode === 'may'
       ? ['Bạn', 'Máy ' + (AI.LEVELS[CF.level] || AI.LEVELS.thuong).name.toLowerCase()]
@@ -577,6 +602,7 @@
     $('setup').classList.remove('on');
     $('play').classList.add('on');
     $('mOver').classList.remove('on');
+    toTop();
     busy = false;
     $('btnHint').hidden = (CF.mode !== 'may');
     updateStatus();
@@ -631,11 +657,13 @@
   group('optNon', 'non');
   group('optQV', 'qv');
   group('optSpeed', 'speed');
+  group('optSpeed2', 'speed');
   refreshSetupVisibility();
 
   $('btnStart').addEventListener('click', () => { SFX.unlock(); startGame(); });
   $('btnBack').addEventListener('click', () => {
     $('play').classList.remove('on'); $('setup').classList.add('on'); $('mOver').classList.remove('on');
+    toTop();
   });
   $('btnHint').addEventListener('click', hint);
   $('btnRules1').addEventListener('click', () => $('mRules').classList.add('on'));
@@ -643,26 +671,42 @@
   $('btnCloseRules').addEventListener('click', () => $('mRules').classList.remove('on'));
   $('mRules').addEventListener('click', ev => { if (ev.target === $('mRules')) $('mRules').classList.remove('on'); });
 
-  $('btnSound').addEventListener('click', () => {
-    const b = $('btnSound');
-    const on = b.getAttribute('aria-pressed') !== 'true';
-    b.setAttribute('aria-pressed', String(on));
-    b.textContent = on ? 'Tiếng ♪' : 'Tắt tiếng';
-    SFX.unlock(); SFX.setOn(on); save();
+  /* --- bảng tuỳ chỉnh luật (chỉ mở được trước ván) --- */
+  $('btnSettings').addEventListener('click', () => { SFX.unlock(); $('mSettings').classList.add('on'); });
+  $('btnCloseSettings').addEventListener('click', () => $('mSettings').classList.remove('on'));
+
+  /* --- bảng tuỳ chọn trong ván: âm lượng và tốc độ, không đụng tới luật --- */
+  const vol = $('vol'), volVal = $('volVal');
+  function paintVol() {
+    vol.value = CF.vol;
+    vol.style.setProperty('--fill', CF.vol + '%');
+    volVal.textContent = CF.vol === 0 ? 'Tắt' : CF.vol + '%';
+  }
+  vol.addEventListener('input', () => {
+    CF.vol = +vol.value; save(); paintVol();
+    SFX.unlock(); SFX.setVol(CF.vol);
   });
-  $('btnSound').setAttribute('aria-pressed', String(CF.sound));
-  $('btnSound').textContent = CF.sound ? 'Tiếng ♪' : 'Tắt tiếng';
+  /* nghe thử một tiếng sỏi khi thả tay, để biết to nhỏ cỡ nào */
+  vol.addEventListener('change', () => { if (CF.vol > 0) SFX.sow(3); });
+  paintVol();
+
+  $('btnOpts').addEventListener('click', () => { SFX.unlock(); $('mOptions').classList.add('on'); });
+  $('btnCloseOptions').addEventListener('click', () => $('mOptions').classList.remove('on'));
+
+  for (const id of ['mSettings', 'mOptions']) {
+    $(id).addEventListener('click', ev => { if (ev.target === $(id)) $(id).classList.remove('on'); });
+  }
 
   $('btnAgain').addEventListener('click', () => {
     /* đổi người đi trước cho công bằng: đi trước có lợi thật */
     CF.first = CF.first === '0' ? '1' : '0'; save();
-    const g = $('optFirst');
-    Array.from(g.children).forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === CF.first)));
+    paintGroup('first');
     startGame();
   });
   $('btnMenu').addEventListener('click', () => {
     $('mOver').classList.remove('on');
     $('play').classList.remove('on'); $('setup').classList.add('on');
+    toTop();
   });
 
   let rzT = null;

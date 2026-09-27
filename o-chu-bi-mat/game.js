@@ -234,7 +234,7 @@ function newGame(idx){
   S = {
     key: kl,
     rows: D.rows.map(r => ({...r, L:letters(r.a), state:'idle', hints:[]})),
-    score:0, lives:3, used:0, over:false, cur:-1,
+    score:0, lives:3, used:0, over:false, cur:-1, skipped:false, blindWin:false,
     timerOn:TIME>0, timeLeft:0, tick:null
   };
   buildBoard(); render();
@@ -279,6 +279,29 @@ function buildBoard(){
   paintSub();
 }
 
+/* ============================================================================
+   HAI MÀN HÌNH: giới thiệu và bàn chơi (cùng một trang, không tải lại)
+   ========================================================================== */
+let started = false;                       // đã bắt đầu ván nào chưa
+function showScreen(name){
+  $('#scIntro').classList.toggle('off', name!=='intro');
+  $('#scPlay').classList.toggle('off',  name!=='play');
+  if(name==='intro'){ paintIntro(); scrollTo(0,0); }
+}
+function paintIntro(){
+  $('#iCount').textContent = DE.length;
+  const playing = started && S && !S.over;
+  $('#iPlay').innerHTML = playing ? '⏯️ Chơi tiếp ván đang dở' : '▶️ Chơi ngay';
+  $('#iNew').hidden = !playing;
+  const bar = $('#iTotal');
+  if(ROUND>0){ bar.hidden=false; bar.innerHTML = 'Đã chơi <b>'+ROUND+'</b> ván · Tổng điểm <b>'+TOTAL+'đ</b>'; }
+  else bar.hidden = true;
+}
+function closeAllModals(){
+  ['#ovQ','#ovK','#ovR','#ovSkip','#ovSet','#ovRule'].forEach(id=>$(id).classList.remove('show'));
+  stopTimer(); duck(false);
+}
+
 function paintSub(){
   let t = 'Chủ đề: ' + D.topic;
   if(ROUND>0) t += ' · Ván ' + (ROUND+1) + ' · Tổng ' + TOTAL + 'đ';
@@ -286,13 +309,26 @@ function paintSub(){
 }
 
 /* ---------- vẽ lại ---------- */
-function bonusNow(){ return Math.max(30, 100 - S.used*10); }
+/* ============================================================================
+   THƯỞNG TỪ KHOÁ
+   Chưa đụng vào hàng nào mà đoán trúng ("đoán mù") là giỏi nhất -> thưởng đậm.
+   Mở càng nhiều hàng rồi mới đoán thì thưởng càng ít, sàn là 30.
+   ========================================================================== */
+/* Giải trọn vẹn một ô chữ 7 hàng được khoảng 110đ (70 điểm hàng + 40 thưởng),
+   nên mức đoán mù để nhỉnh hơn một chút là vừa — thưởng cho cái giỏi mà không
+   làm người chịu khó giải từng hàng thành ra thiệt. */
+const BLIND_BONUS = 130;
+function bonusNow(){
+  return S.used === 0 ? BLIND_BONUS : Math.max(30, 100 - (S.used - 1) * 10);
+}
+const isBlind = () => S.used === 0;
 function render(){
   $('#sScore').textContent = S.score;
   const done = S.rows.filter(r=>r.state==='open').length;
   $('#sRows').textContent = done + '/' + S.rows.length;
   $('#sLives').textContent = '★'.repeat(S.lives) + '☆'.repeat(3-S.lives) || '—';
-  $('#sBonus').textContent = S.over ? '—' : bonusNow();
+  $('#sBonus').innerHTML = S.over ? '—'
+      : bonusNow() + (isBlind() ? '<span class="blindtag">ĐOÁN MÙ</span>' : '');
   S.rows.forEach((r,i)=>{
     const el = document.querySelector('.row[data-i="'+i+'"]');
     el.classList.toggle('open',   r.state==='open');
@@ -312,6 +348,7 @@ function render(){
   });
   $('#btnGuess').disabled = S.over || S.lives<=0;
   $('#btnNext').disabled  = S.over || S.rows.every(r=>r.state!=='idle');
+  $('#btnSkip').disabled  = S.over;
 }
 
 /* ---------- toast ---------- */
@@ -448,7 +485,8 @@ function paintAccentUI(){
 /* ---------- từ khoá ---------- */
 function openK(){
   if(S.over||S.lives<=0) return;
-  $('#kMeta').innerHTML='Đúng: <b>+'+bonusNow()+'đ</b> • Sai: −15đ • Còn '+S.lives+' lượt';
+  $('#kMeta').innerHTML = (isBlind() ? '🎯 <b>Đoán mù</b>: ' : 'Đúng: ')
+      + '<b>+'+bonusNow()+'đ</b> • Sai: −15đ • Còn '+S.lives+' lượt';
   $('#kInput').value=''; $('#ovK').classList.add('show'); duck(true);
   setTimeout(()=>$('#kInput').focus(),80); sOpen();
 }
@@ -460,6 +498,7 @@ function guessK(){
     return;
   }
   if(same(v, D.keyword)){
+    S.blindWin = isBlind();
     S.score += bonusNow();
     $('#ovK').classList.remove('show'); duck(false);
     finish(true);
@@ -470,6 +509,24 @@ function guessK(){
     checkEnd();
   }
 }
+/* ---------- bỏ qua ván: lộ đáp án, đổi bằng một nửa số điểm ---------- */
+function askSkip(){
+  if(S.over) return;
+  const lose = Math.floor(S.score/2);
+  $('#skipText').innerHTML = S.score>0
+    ? 'Bỏ qua thì bạn thấy ngay đáp án và sang ô chữ khác, nhưng mất <b>một nửa số điểm ván này</b>: '
+      + '<b>'+S.score+'đ → '+(S.score-lose)+'đ</b> (mất '+lose+'đ).'
+    : 'Bạn chưa có điểm nào nên không mất gì cả. Bỏ qua thì thấy đáp án và sang ô chữ khác.';
+  $('#ovSkip').classList.add('show'); duck(true); sOpen();
+}
+function doSkip(){
+  $('#ovSkip').classList.remove('show');
+  closeQ();
+  S.score = S.score - Math.floor(S.score/2);
+  S.skipped = true;
+  finish(false);
+}
+
 function checkEnd(){
   if(S.over) return;
   const allDone = S.rows.every(r=>r.state!=='idle');
@@ -486,9 +543,12 @@ function finish(win){
   });
   document.querySelectorAll('.kc').forEach(k=>k.classList.add('on'));
   render();
-  $('#rEmoji').textContent = win ? (S.score>=140?'🏆':'🎉') : '💡';
-  $('#rTitle').textContent = win ? 'Chính xác!' : 'Kết thúc rồi!';
-  $('#rSub').textContent   = win ? 'Bạn đã tìm ra từ khoá' : 'Từ khoá là';
+  const blind = win && S.blindWin;
+  $('#rEmoji').textContent = blind ? '🎯' : win ? (S.score>=140?'🏆':'🎉') : S.skipped ? '⏭️' : '💡';
+  $('#rTitle').textContent = blind ? 'ĐOÁN MÙ!' : win ? 'Chính xác!' : S.skipped ? 'Đã bỏ qua ván' : 'Kết thúc rồi!';
+  $('#rSub').textContent   = blind ? 'Chưa mở ô nào đã ra từ khoá — quá giỏi!'
+                           : win ? 'Bạn đã tìm ra từ khoá'
+                           : S.skipped ? 'Đáp án là' : 'Từ khoá là';
   $('#rKey').textContent   = D.keyword;
   $('#rScore').textContent = S.score;
   $('#rTotal').textContent  = TOTAL;
@@ -508,7 +568,8 @@ function finish(win){
   }).join('');
   duck(true);
   setTimeout(()=>$('#ovR').classList.add('show'), 600);
-  if(win){ sWin(); confetti(); } else beep(200,.5,'sine',.12);
+  if(win){ sWin(); confetti(); if(blind){ setTimeout(confetti,420); setTimeout(sWin,300); } }
+  else beep(200,.5,'sine',.12);
 }
 
 /* ---------- confetti ---------- */
@@ -542,11 +603,38 @@ $('#kClose').onclick  = ()=>{ $('#ovK').classList.remove('show'); duck(false); }
 $('#kInput').addEventListener('keydown', e=>{ if(e.key==='Enter') guessK(); });
 $('#btnGuess').onclick = openK;
 $('#btnNext').onclick  = ()=>{ const i=S.rows.findIndex(r=>r.state==='idle'); if(i>=0) openQ(i); };
-$('#btnReset').onclick = ()=>{ $('#ovR').classList.remove('show'); duck(false); newGame(curIdx); toast('Bắt đầu lại ô chữ này 🌱','info'); };
-$('#rAgain').onclick   = ()=>{ $('#ovR').classList.remove('show'); duck(false); newGame(curIdx); };
+$('#btnSkip').onclick  = askSkip;
+$('#skipYes').onclick  = doSkip;
+$('#skipNo').onclick   = ()=>{ $('#ovSkip').classList.remove('show'); duck(false); };
+
+/* --- màn giới thiệu --- */
+/* Lúc mở trang đã dựng sẵn một bàn; nếu chưa ai đụng vào thì dùng luôn bàn đó,
+   khỏi bốc thêm một đề nữa cho phí. */
+const freshBoard = () => S && !S.over && S.used===0 && S.score===0;
+$('#iPlay').onclick = ()=>{
+  const resume = started && S && !S.over;
+  if(!resume && !freshBoard()) newGame();
+  started = true;
+  showScreen('play');
+};
+$('#iNew').onclick  = ()=>{ started=true; newGame(); showScreen('play'); };
+$('#btnBack').onclick = ()=>{ closeAllModals(); showScreen('intro'); };
+$('#rBack').onclick   = ()=>{ closeAllModals(); showScreen('intro'); };
+
+/* --- bảng luật chơi & tuỳ chọn --- */
+const openPanel  = id => { $(id).classList.add('show'); duck(true); sOpen(); };
+const closePanel = id => { $(id).classList.remove('show'); if(!$('#ovR').classList.contains('show')) duck(false); };
+$('#iRule').onclick   = ()=>openPanel('#ovRule');
+$('#ruleClose').onclick = ()=>closePanel('#ovRule');
+$('#iSet').onclick    = ()=>openPanel('#ovSet');
+$('#btnSet').onclick  = ()=>openPanel('#ovSet');
+$('#setClose').onclick= ()=>closePanel('#ovSet');
+$('#btnReset').onclick = ()=>{ $('#ovR').classList.remove('show'); duck(false); started=true; newGame(curIdx); toast('Bắt đầu lại ô chữ này 🌱','info'); };
+$('#rAgain').onclick   = ()=>{ $('#ovR').classList.remove('show'); duck(false); started=true; newGame(curIdx); };
 $('#rNext').onclick    = ()=>{
   $('#ovR').classList.remove('show'); duck(false);
   const pinned = pickedIdx();
+  started = true;
   newGame(pinned===null ? drawIdx() : pinned);
   toast('Ô chữ mới: <b>'+D.topic+'</b> 🔑','info');
 };
@@ -564,7 +652,12 @@ $('#btnTimer').onclick = e=>{
   e.currentTarget.querySelector('span').textContent = S.timerOn ? ('Giờ: '+TIME+'s') : 'Không giờ';
   if(S.cur>=0) startTimer();
 };
-document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeQ(); $('#ovK').classList.remove('show'); duck(false); }});
+document.addEventListener('keydown', e=>{
+  if(e.key!=='Escape') return;
+  closeQ();
+  ['#ovK','#ovSkip','#ovSet','#ovRule'].forEach(id=>$(id).classList.remove('show'));
+  duck(false);
+});
 addEventListener('resize', ()=>{ const cv=$('#confetti'); cv.width=innerWidth; cv.height=innerHeight; });
 
 /* ---------- chọn bộ đề ---------- */
@@ -576,7 +669,10 @@ if(DE.length>1){
     .sort((a,b)=>a.label.localeCompare(b.label,'vi'))
     .forEach(({i,label})=>{ const o=document.createElement('option'); o.value=i; o.textContent=label; sel.appendChild(o); });
   sel.value='';                       // mặc định: mỗi lần một đề khác nhau
-  sel.onchange = ()=>{ newGame(); toast(sel.value==='' ? 'Chuyển sang chế độ <b>ngẫu nhiên</b> 🎲' : 'Đã ghim chủ đề này 📌','info'); };
+  sel.onchange = ()=>{
+    started = true; newGame();
+    toast(sel.value==='' ? 'Chuyển sang chế độ <b>ngẫu nhiên</b> 🎲' : 'Đã ghim chủ đề: <b>'+D.topic+'</b> 📌','info');
+  };
 }
 
 /* ---------- kiểm tra dữ liệu, báo lỗi rõ ràng trong Console (F12) ---------- */
@@ -593,6 +689,9 @@ DE.forEach((d,di)=>{
   });
 });
 
+document.querySelectorAll('.blindnum').forEach(el=>{
+  el.textContent = el.textContent.replace(/\d+/, BLIND_BONUS);
+});
 buildAccBar(); paintAccentUI();
 if(!DE.length){
   document.querySelector('.boardcard').innerHTML =
@@ -600,5 +699,6 @@ if(!DE.length){
     'Mở file <b>questions.js</b> và thêm ít nhất một bộ đề nhé.</p>';
 } else {
   refillBag();
-  newGame();
+  newGame();                 // dựng sẵn một bàn để phía sau không trống
+  showScreen('intro');       // nhưng mở lên là thấy màn giới thiệu trước
 }

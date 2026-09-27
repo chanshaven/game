@@ -12,6 +12,19 @@ hết hàng vẫn đoán từ khoá được, và **đoán càng sớm thưởng
 
 ---
 
+## 0. Hai màn hình
+
+Mở file lên là thấy **màn giới thiệu** trước: *Chơi ngay · Luật chơi · Tuỳ chọn · Trang chủ*.
+Bấm *Chơi ngay* mới vào bàn chơi; trong bàn chơi có nút **⬅️ Giới thiệu** để quay ra.
+
+Quay ra giữa chừng **không mất ván** — màn giới thiệu sẽ đổi nút thành *⏯️ Chơi tiếp ván
+đang dở*, bên dưới có thêm *🎲 Bắt đầu ván mới* nếu muốn bỏ ván cũ.
+
+Cả hai màn nằm trong cùng một file `index.html`, không phải hai trang, nên bản gộp một
+file cũng có đủ.
+
+---
+
 ## 1. Chạy thử
 
 **Cách nhanh nhất:** nhấp đúp vào `index.html`. Trình duyệt mở lên là chơi được ngay.
@@ -117,13 +130,44 @@ học sinh nhìn vào là biết đáp án.
 | Việc | Điểm |
 |---|---|
 | Mở đúng một hàng ngang | **+10** |
-| Đoán đúng từ khoá | **+100**, trừ dần 10 mỗi hàng đã dùng, thấp nhất **30** |
+| Đoán đúng từ khoá khi **chưa mở ô nào** | **+130** — thưởng cao nhất, gọi là *đoán mù* |
+| Đoán đúng từ khoá sau khi đã mở ô | **+100**, trừ dần 10 mỗi hàng đã dùng, thấp nhất **30** |
 | Đoán sai từ khoá | **−15** và mất một lượt (có 3 lượt) |
 | Dùng gợi ý | **tăng dần**: −5, −10, −15, −20… xem bên dưới |
 
 - Trả lời sai hoặc hết giờ thì **hàng đó xám đi và khoá luôn**, không mở lại được.
 - Hết 3 lượt đoán từ khoá là kết thúc ván.
 - Xếp loại cuối ván: từ 150 điểm — *Xuất sắc*, 110 — *Giỏi*, 70 — *Khá*.
+
+### Đoán mù
+
+Có người chỉ cần nhìn chủ đề là đoán ra từ khoá. Trường hợp đó được thưởng **130 điểm**.
+
+Con số này không phải lấy đại. Cách tính điểm khiến mọi lối chơi "tử tế" đều về cùng một
+mức: mỗi hàng mở được +10 nhưng lại ăn bớt 10 của phần thưởng từ khoá, nên mở 1 hàng,
+mở 3 hàng hay giải trọn cả 7 hàng thì cuối cùng đều **110 điểm**. Đoán mù để ở 130 là
+nhỉnh hơn vừa phải — vẫn là mức cao nhất, nhưng không biến người chịu khó giải từng hàng
+thành ra thiệt thòi.
+
+Ô *Thưởng từ khoá* trên bảng điểm hiện sẵn nhãn **ĐOÁN MÙ** khi chưa mở hàng nào, mất
+nhãn ngay khi bạn đụng vào hàng đầu tiên. Đoán trúng kiểu này thì bảng kết quả hiện
+riêng dòng **ĐOÁN MÙ!** kèm pháo giấy nổ hai lần.
+
+| Lúc đoán | Thưởng |
+|---|---|
+| Chưa mở ô nào | **+130** |
+| Đã dùng 1 hàng | +100 |
+| Đã dùng 4 hàng | +70 |
+| Đã dùng 8 hàng trở lên | +30 |
+
+### Bỏ qua ván
+
+Gặp ô chữ quá khó, bấm **⏭️ Bỏ qua ván** ở cạnh nút đoán từ khoá. Game hỏi lại một lần,
+cho biết sẽ mất bao nhiêu điểm rồi mới thực hiện.
+
+Giá của việc bỏ cuộc là **một nửa số điểm của ván đó** (làm tròn xuống, ví dụ 95đ còn
+48đ). Đổi lại bạn thấy ngay toàn bộ đáp án và sang được ô chữ khác. Chưa có điểm nào thì
+không mất gì.
 
 ### Gợi ý
 
@@ -238,7 +282,7 @@ Script sẽ nhét `questions.js` và `game.js` thẳng vào trong HTML và ghi r
 `o-chu-bi-mat-1-file.html`. File đó **tự chứa mọi thứ** — gửi qua Zalo, email, USB đều
 được, người nhận mở ra là chơi, không cần thư mục kèm theo.
 
-Lưu ý: bản 1 file vẫn có nút *Trang chủ* trỏ ra `../index.html`, mở lẻ một mình thì nút
+Lưu ý: nút *Trang chủ Fiddle Game* ở màn giới thiệu trỏ ra `../index.html`, mở lẻ một mình thì nút
 đó sẽ không dẫn đi đâu cả. Không sao, mấy nút khác vẫn chạy bình thường.
 
 ---

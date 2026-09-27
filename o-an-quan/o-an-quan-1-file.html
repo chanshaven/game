@@ -68,12 +68,27 @@
 
     .wrap {
       position: relative; z-index: 1;
-      max-width: 1000px; margin: 0 auto;
+      max-width: 1180px; margin: 0 auto;
       padding: 20px 16px 36px;
     }
 
     .screen { display: none }
     .screen.on { display: block; animation: fade .3s ease both }
+
+    /* Màn thiết lập hẹp lại cho dễ đọc, khỏi trôi dạt trong khung rộng */
+    #setup { max-width: 820px; margin: 0 auto }
+
+    /* Trên màn rộng thì canh giữa theo chiều dọc: bàn cờ dính lên đỉnh rồi bỏ
+       trống nửa dưới nhìn như trang bị cụt. Trên điện thoại KHÔNG canh giữa —
+       bàn dựng đứng vốn đã cao hơn màn hình, canh giữa là mất luôn hàng nút
+       trên cùng. "safe" cũng lo việc đó, nhưng máy cũ chưa chắc hiểu. */
+    @media (min-width: 641px) {
+      #play.on {
+        display: flex; flex-direction: column;
+        justify-content: safe center;
+        min-height: calc(100dvh - 76px);
+      }
+    }
 
     @keyframes fade { from { opacity: 0; transform: translateY(8px) } }
 
@@ -130,7 +145,12 @@
     .home:hover { opacity: 1 }
 
     h1 {
-      font-family: var(--fx-display); margin: 0; line-height: .95;
+      font-family: var(--fx-display); margin: 0;
+      /* CHÚ Ý: chữ này tô gradient rồi cắt theo nét (background-clip:text). Kiểu tô
+         đó chỉ tô phần nét nằm TRONG hộp dòng, nên dòng ép sát quá (dưới khoảng
+         1.15) là dấu sắc, dấu mũ, dấu ngã bị đẩy ra ngoài và mất sạch — chữ hiện
+         thành tiếng Việt không dấu. Đừng hạ xuống dưới 1.15. */
+      line-height: 1.16;
       letter-spacing: .03em; font-size: clamp(40px, 11vw, 74px); text-align: center;
       background: linear-gradient(180deg, #FFF6DD 0%, var(--gold-400) 46%, var(--gold-600) 100%);
       -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -142,20 +162,56 @@
     }
 
     .panel {
+      max-width: 680px; margin: 0 auto;
       background: rgba(255, 244, 220, .035);
       border: 1.5px solid rgba(255, 244, 220, .12);
       border-radius: 20px; padding: 22px 20px;
     }
 
-    details.adv { margin-top: 4px }
-    details.adv > summary {
-      cursor: pointer; list-style: none; font-size: 13px; font-weight: 700;
-      color: rgba(255, 244, 220, .55); padding: 8px 0; letter-spacing: .04em;
+    /* nút mở bảng tuỳ chỉnh — trước đây là khối details xổ thẳng ra giữa trang,
+       đẩy nút Bắt đầu tụt xuống tận đáy */
+    .opener {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; cursor: pointer; font-family: var(--fx-body);
+      border: 1.5px dashed rgba(255, 244, 220, .2);
+      background: rgba(255, 244, 220, .03); color: var(--cream-dim);
+      border-radius: 14px; padding: 13px 16px; font-size: 14px; font-weight: 600;
+      transition: .15s; text-align: left;
     }
-    details.adv > summary::-webkit-details-marker { display: none }
-    details.adv > summary::before { content: "▸ "; }
-    details.adv[open] > summary::before { content: "▾ "; }
-    details.adv .field { margin-top: 16px }
+    .opener:hover { border-color: rgba(255, 209, 102, .5); color: var(--cream) }
+    .opener small { display: block; font-size: 11.5px; font-weight: 400; opacity: .55; margin-top: 3px }
+    .opener span.arr { font-size: 18px; opacity: .5; flex: 0 0 auto }
+
+    /* thanh trượt âm lượng */
+    .slider { display: flex; align-items: center; gap: 12px }
+    .slider input[type="range"] {
+      flex: 1; appearance: none; height: 6px; border-radius: 99px; margin: 0;
+      background: linear-gradient(90deg, var(--gold-500) 0%, var(--gold-500) var(--fill, 60%),
+        rgba(255, 244, 220, .13) var(--fill, 60%), rgba(255, 244, 220, .13) 100%);
+      cursor: pointer;
+    }
+    .slider input[type="range"]::-webkit-slider-thumb {
+      appearance: none; width: 22px; height: 22px; border-radius: 50%; border: 0;
+      background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+    }
+    .slider input[type="range"]::-moz-range-thumb {
+      width: 22px; height: 22px; border-radius: 50%; border: 0;
+      background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+    }
+    .slider .val {
+      font-family: var(--fx-display); font-size: 17px; min-width: 3.2em; text-align: right;
+      color: var(--gold-300); letter-spacing: .03em;
+    }
+
+    .note {
+      margin: 18px 0 0; font-size: 12.5px; line-height: 1.6;
+      color: rgba(255, 244, 220, .45); text-align: center;
+    }
+
+    /* hình minh hoạ: bàn ô ăn quan kẻ trên sân đất, tự vẽ bằng SVG */
+    .sketch { display: block; width: min(100%, 620px); margin: -6px auto 24px; opacity: .9 }
 
     .go { display: flex; gap: 10px; justify-content: center; margin-top: 26px; flex-wrap: wrap }
 
@@ -171,6 +227,7 @@
       border-radius: 11px; padding: 8px 12px; font-size: 13px; font-weight: 600;
       font-family: var(--fx-body); transition: .15s;
     }
+    .icobtn { text-decoration: none; display: inline-block; line-height: 1.3 }
     .icobtn:hover { border-color: rgba(255, 244, 220, .35); color: var(--cream) }
     .icobtn[aria-pressed="false"] { opacity: .45 }
 
@@ -196,7 +253,15 @@
     .sc.p1.turn::after { left: auto; right: 0 }
 
     /* --- bàn cờ --- */
-    .boardwrap { position: relative }
+    /* Chiều ngang bàn cờ bị chặn theo chiều cao còn lại, để bàn nở to hết mức mà
+       vẫn không phải cuộn trang. 2.862 là tỉ lệ ngang trên dọc của bàn nằm. */
+    .boardwrap {
+      position: relative; margin: 0 auto;
+      /* width:100% là bắt buộc: màn chơi là flex cột, mà margin auto hai bên làm
+         khung co lại vừa nội dung — bàn cờ tụt còn một mẩu con con. */
+      width: 100%;
+      max-width: min(100%, max(320px, calc((100dvh - 300px) * 3.307)));
+    }
     .board {
       position: relative;
       display: grid;
@@ -204,7 +269,7 @@
       grid-template-rows: repeat(2, 1fr);
       gap: 7px;
       padding: 12px;
-      aspect-ratio: 7.44 / 2.6;
+      aspect-ratio: 7.44 / 2.25;
       margin: 0 auto;
       border-radius: 26px;
       background:
@@ -221,7 +286,10 @@
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: 1.12fr repeat(5, 1fr) 1.12fr;
       aspect-ratio: 2 / 3.25;
-      max-width: 430px;
+      /* Chặn bề ngang theo chiều cao còn lại (0.615 là 2 chia 3.25) để bàn vừa
+         màn hình, khỏi vừa chơi vừa cuộn. Vẫn giữ sàn 280px, hẹp hơn nữa thì ô
+         bé quá không chạm trúng. */
+      max-width: min(430px, max(280px, calc((100dvh - 250px) * 0.615)));
     }
 
     .cell {
@@ -266,17 +334,56 @@
     }
 
     .stones { position: absolute; inset: 7%; }
+
+    /* Sỏi thật thì không tròn vành vạnh. Mỗi viên lấy một trong năm dáng hơi méo
+       và một trong bốn tông đá cuội, xoay mỗi viên một góc — nhìn ra đống sỏi
+       nhặt ngoài bờ sông chứ không phải mấy cái chấm tròn in ra hàng loạt. */
     .st {
-      position: absolute; border-radius: 50%;
-      transform: translate(-50%, -50%);
-      background: radial-gradient(circle at 32% 28%, #F2E4CB, #B9A183 55%, #6E5B45);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+      position: absolute;
+      transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+      /* Sỏi là đá, không phải hạt nhựa: chấm sáng nhỏ và mờ thôi, phần dưới ám
+         tối. Để vệt sáng to là ra quả trứng luộc. */
+      background:
+        radial-gradient(ellipse 34% 26% at 35% 26%, rgba(255, 252, 244, .22), rgba(255, 252, 244, 0) 75%),
+        radial-gradient(ellipse 90% 80% at 68% 88%, rgba(34, 20, 6, .42), rgba(34, 20, 6, 0) 66%),
+        var(--tone, #C6B69C);
+      box-shadow:
+        0 1px 1.5px rgba(0, 0, 0, .55),
+        inset 0 -1px 1.5px rgba(52, 34, 16, .45);
     }
-    .st.new { animation: pop .22s ease }
-    @keyframes pop { from { transform: translate(-50%, -50%) scale(.2); opacity: .2 } }
+
+    /* Năm dáng méo và năm tông đá khác nhau. Sỏi thật không tròn vành vạnh và
+       cũng không viên nào giống viên nào, nên mỗi viên hơi bè ngang một kiểu. */
+    .st.v0 { --tone: #CFC0A5; border-radius: 56% 44% 48% 52% / 58% 62% 38% 42% }
+    .st.v1 { --tone: #B3A38A; border-radius: 42% 58% 61% 39% / 64% 42% 58% 36% }
+    .st.v2 { --tone: #DCCFB6; border-radius: 62% 38% 45% 55% / 40% 58% 42% 60% }
+    .st.v3 { --tone: #9C8C74; border-radius: 47% 53% 38% 62% / 55% 44% 56% 45% }
+    .st.v4 { --tone: #C4AF90; border-radius: 52% 48% 58% 42% / 44% 52% 48% 56% }
+
+    .st.new { animation: pop .24s ease }
+    @keyframes pop {
+      from { transform: translate(-50%, -50%) rotate(var(--rot, 0deg)) scale(.2); opacity: .2 }
+    }
+
+    /* Quan cũng là hòn sỏi, chỉ to hơn hẳn và là loại đá khác — nâu đỏ, vân đậm.
+       Viền vàng mảnh quanh hòn để nó không chìm vào nền ô tối. */
     .st.big {
-      background: radial-gradient(circle at 32% 28%, #FFF3C9, var(--gold-400) 48%, #8C5A0E);
-      box-shadow: 0 0 14px rgba(255, 209, 102, .6), 0 2px 4px rgba(0, 0, 0, .6);
+      z-index: 2;
+      --tone: linear-gradient(152deg, #C9A268 0%, #9A6E3A 46%, #5A3A18 100%);
+      border-radius: 54% 46% 44% 56% / 60% 58% 42% 40%;
+      box-shadow:
+        0 0 0 1.5px rgba(255, 209, 102, .55),
+        0 0 16px rgba(255, 179, 70, .28),
+        0 3px 7px rgba(0, 0, 0, .75),
+        inset 0 -4px 7px rgba(50, 26, 4, .5),
+        inset 0 2px 3px rgba(255, 238, 200, .25);
+    }
+
+    /* chữ "quan" kẻ mờ trong ô bán nguyệt, cho khỏi phải đoán ô nào là ô quan */
+    .qtag {
+      position: absolute; left: 50%; top: 9px; transform: translateX(-50%);
+      font-size: clamp(8px, 1.5vw, 10.5px); letter-spacing: .26em; text-transform: uppercase;
+      font-weight: 700; color: rgba(255, 209, 102, .45); pointer-events: none;
     }
 
     .cnt {
@@ -329,8 +436,11 @@
     }
     .status b { color: var(--gold-300) }
 
+    /* Bám ngay dưới dòng trạng thái, không dính đáy màn hình: màn hình cao thì
+       lời nhắc "mất lượt" nằm cách bàn cờ nửa mét, chẳng ai kịp thấy. */
     .toast {
-      position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+      position: absolute; left: 50%; top: calc(100% + 62px);
+      transform: translateX(-50%) translateY(10px);
       z-index: 40; max-width: min(90vw, 400px); text-align: center;
       padding: 12px 20px; border-radius: 14px; font-size: 14px; font-weight: 600;
       background: rgba(38, 6, 14, .94); color: var(--cream);
@@ -384,6 +494,13 @@
     .tally .a .n { color: var(--jade) }
     .tally .b .n { color: var(--violet) }
 
+    @media (max-width: 520px) {
+      .icobtn { padding: 7px 10px; font-size: 12.5px }
+      .bar { gap: 6px }
+      .bar .tools { gap: 6px }
+      .wide { display: none }
+    }
+
     @media (max-width: 680px) {
       .board { gap: 5px; padding: 9px; border-radius: 20px }
       .sc { padding: 8px 12px }
@@ -416,6 +533,42 @@
       <p class="sub">Rải sỏi vòng quanh, chừa một ô trống rồi vơ sạch ô liền sau.
         Ai ăn được quan thì coi như nắm nửa phần thắng.</p>
 
+      <svg class="sketch" viewBox="0 36 560 106" role="img"
+        aria-label="Hình vẽ bàn ô ăn quan kẻ trên sân đất, sỏi rải quanh">
+        <defs>
+          <linearGradient id="dust" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#FFD166" stop-opacity=".16" />
+            <stop offset="1" stop-color="#FFD166" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <ellipse cx="280" cy="104" rx="250" ry="42" fill="url(#dust)" />
+        <g fill="none" stroke="#FFE9A8" stroke-opacity=".5" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M148 56 q-34 0 -34 22 t34 22" />
+          <path d="M412 56 q34 0 34 22 t-34 22" />
+          <path d="M148 56 h264 M148 78 h264 M148 100 h264" />
+          <path d="M201 56 v44 M254 56 v44 M307 56 v44 M360 56 v44" />
+        </g>
+        <g fill="#D6C9B2" fill-opacity=".78">
+          <ellipse cx="175" cy="67" rx="5.5" ry="4.6" />
+          <ellipse cx="227" cy="68" rx="5" ry="4.4" />
+          <ellipse cx="281" cy="66" rx="5.6" ry="4.7" />
+          <ellipse cx="334" cy="68" rx="5" ry="4.3" />
+          <ellipse cx="387" cy="67" rx="5.4" ry="4.5" />
+          <ellipse cx="175" cy="89" rx="5.2" ry="4.4" />
+          <ellipse cx="228" cy="90" rx="5.5" ry="4.6" />
+          <ellipse cx="281" cy="88" rx="5" ry="4.3" />
+          <ellipse cx="335" cy="90" rx="5.6" ry="4.6" />
+          <ellipse cx="388" cy="89" rx="5.1" ry="4.4" />
+          <ellipse cx="86" cy="118" rx="6" ry="4.6" fill-opacity=".45" />
+          <ellipse cx="104" cy="126" rx="4.6" ry="3.6" fill-opacity=".35" />
+          <ellipse cx="470" cy="120" rx="5.4" ry="4.2" fill-opacity=".42" />
+          <ellipse cx="452" cy="129" rx="4.2" ry="3.4" fill-opacity=".3" />
+        </g>
+        <ellipse cx="128" cy="78" rx="11" ry="9.5" fill="#EFA93A" fill-opacity=".85" />
+        <ellipse cx="432" cy="78" rx="11" ry="9.5" fill="#EFA93A" fill-opacity=".85" />
+      </svg>
+
       <div class="panel">
         <div class="field">
           <span class="lab">Chơi với ai</span>
@@ -426,7 +579,7 @@
         </div>
 
         <div class="field" id="fLevel">
-          <span class="lab">Máy chơi cỡ nào</span>
+          <span class="lab">Độ khó</span>
           <div class="chips" id="optLevel">
             <button class="chip" role="radio" data-v="de">Dễ<small>Đi tuỳ hứng</small></button>
             <button class="chip" role="radio" data-v="thuong">Thường<small>Thấy ăn là ăn</small></button>
@@ -442,10 +595,65 @@
           </div>
         </div>
 
-        <details class="adv">
-          <summary>Luật và tuỳ chỉnh</summary>
+        <button class="opener" id="btnSettings">
+          <span>Tuỳ chỉnh luật chơi
+            <small>Chiều rải sỏi · quan non · quan ăn mấy dân · tốc độ</small></span>
+          <span class="arr">›</span>
+        </button>
 
-          <div class="field">
+        <div class="go">
+          <button class="btn" id="btnStart">BẮT ĐẦU</button>
+        </div>
+      </div>
+
+      <p class="sub" style="margin-top:22px;font-size:13px;opacity:.6">
+        Bàn ba người hình tam giác và bàn bốn người hình vuông đang làm tiếp.
+      </p>
+    </section>
+
+    <!-- ============================== CHƠI =============================== -->
+    <section id="play" class="screen">
+      <div class="bar">
+        <div class="tools">
+          <a class="icobtn" href="../" title="Về trang chủ Fiddle Game">⌂<span class="wide"> Trang chủ</span></a>
+          <button class="icobtn" id="btnBack">← Đổi ván</button>
+        </div>
+        <div class="tools">
+          <button class="icobtn" id="btnHint">Mách nước</button>
+          <button class="icobtn" id="btnRules2">Luật</button>
+          <button class="icobtn" id="btnOpts">⚙<span class="wide"> Tuỳ chọn</span></button>
+        </div>
+      </div>
+
+      <div class="scores">
+        <div class="sc p0" id="sc0">
+          <div class="who" id="nm0">Bạn</div>
+          <div class="pts" id="pt0">0</div>
+          <div class="brk" id="bk0">0 dân · 0 quan</div>
+        </div>
+        <div class="sc p1" id="sc1">
+          <div class="who" id="nm1">Máy</div>
+          <div class="pts" id="pt1">0</div>
+          <div class="brk" id="bk1">0 dân · 0 quan</div>
+        </div>
+      </div>
+
+      <div class="boardwrap">
+        <div class="board" id="board"></div>
+        <div class="hand" id="hand">0</div>
+        <div class="toast" id="toast"></div>
+      </div>
+
+      <div class="status" id="status">Chạm vào một ô của bạn để rải sỏi.</div>
+    </section>
+
+  </main>
+
+  <!-- ======================= TUỲ CHỈNH LUẬT (trước ván) ======================= -->
+  <div class="modal" id="mSettings">
+    <div class="sheet">
+      <h2>Tuỳ chỉnh luật chơi</h2>
+<div class="field">
             <span class="lab">Chiều rải sỏi</span>
             <div class="chips" id="optDir">
               <button class="chip" role="radio" data-v="lock">Cổ điển — khoá một chiều<small>Cả ván chỉ rải theo một hướng</small></button>
@@ -477,53 +685,38 @@
               <button class="chip" role="radio" data-v="nhanh">Nhanh</button>
             </div>
           </div>
-        </details>
+      <div class="acts"><button class="btn" id="btnCloseSettings">Xong</button></div>
+    </div>
+  </div>
 
-        <div class="go">
-          <button class="btn" id="btnStart">BẮT ĐẦU</button>
+  <!-- ==================== TUỲ CHỌN (đang trong ván) ==================== -->
+  <div class="modal" id="mOptions">
+    <div class="sheet">
+      <h2>Tuỳ chọn</h2>
+
+      <div class="field">
+        <span class="lab">Âm lượng</span>
+        <div class="slider">
+          <input type="range" id="vol" min="0" max="100" step="5" value="60" aria-label="Âm lượng">
+          <span class="val" id="volVal">60%</span>
         </div>
       </div>
 
-      <p class="sub" style="margin-top:22px;font-size:13px;opacity:.6">
-        Bàn ba người hình tam giác và bàn bốn người hình vuông đang làm tiếp.
-      </p>
-    </section>
-
-    <!-- ============================== CHƠI =============================== -->
-    <section id="play" class="screen">
-      <div class="bar">
-        <button class="icobtn" id="btnBack">← Đổi ván</button>
-        <div class="tools">
-          <button class="icobtn" id="btnHint">Mách nước</button>
-          <button class="icobtn" id="btnRules2">Luật</button>
-          <button class="icobtn" id="btnSound" aria-pressed="true">Tiếng ♪</button>
+      <div class="field" style="margin-bottom:0">
+        <span class="lab">Tốc độ rải sỏi</span>
+        <div class="chips" id="optSpeed2">
+          <button class="chip" role="radio" data-v="cham">Chậm</button>
+          <button class="chip" role="radio" data-v="vua">Vừa</button>
+          <button class="chip" role="radio" data-v="nhanh">Nhanh</button>
         </div>
       </div>
 
-      <div class="scores">
-        <div class="sc p0" id="sc0">
-          <div class="who" id="nm0">Bạn</div>
-          <div class="pts" id="pt0">0</div>
-          <div class="brk" id="bk0">0 dân · 0 quan</div>
-        </div>
-        <div class="sc p1" id="sc1">
-          <div class="who" id="nm1">Máy</div>
-          <div class="pts" id="pt1">0</div>
-          <div class="brk" id="bk1">0 dân · 0 quan</div>
-        </div>
-      </div>
+      <p class="note">Luật thì khoá trong ván, đổi giữa chừng là ván hỏng.
+        Muốn đổi luật thì bấm <b>Đổi ván</b> rồi vào lại Tuỳ chỉnh.</p>
 
-      <div class="boardwrap">
-        <div class="board" id="board"></div>
-        <div class="hand" id="hand">0</div>
-      </div>
-
-      <div class="status" id="status">Chạm vào một ô của bạn để rải sỏi.</div>
-    </section>
-
-  </main>
-
-  <div class="toast" id="toast"></div>
+      <div class="acts"><button class="btn" id="btnCloseOptions">Xong</button></div>
+    </div>
+  </div>
 
   <!-- ============================== LUẬT ============================== -->
   <div class="modal" id="mRules">
@@ -1051,12 +1244,18 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
   const KEY = 'o-an-quan';
   const CF = {
     mode: 'may', level: 'thuong', first: '0',
-    dir: 'lock', non: '5', qv: '10', speed: 'vua', sound: true
+    dir: 'lock', non: '5', qv: '10', speed: 'vua', vol: 60
   };
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) Object.assign(CF, JSON.parse(raw));
+    if (raw) {
+      const old = JSON.parse(raw);
+      if (old.sound === false && old.vol == null) old.vol = 0;   // bản cũ chỉ có bật/tắt
+      delete old.sound;
+      Object.assign(CF, old);
+    }
   } catch (e) { }
+  CF.vol = Math.max(0, Math.min(100, +CF.vol || 0));
   function save() { try { localStorage.setItem(KEY, JSON.stringify(CF)); } catch (e) { } }
 
   const SPEED = { cham: 300, vua: 165, nhanh: 85 };
@@ -1064,6 +1263,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
   /* ===================== âm thanh ===================================== */
   const SFX = (function () {
     let ctx = null, gain = null;
+    const level = () => (CF.vol / 100) * 0.7;
     function init() {
       if (ctx) { if (ctx.state === 'suspended' && ctx.resume) ctx.resume(); return true; }
       try {
@@ -1071,7 +1271,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
         if (!C) return false;
         ctx = new C();
         if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
-        gain = ctx.createGain(); gain.gain.value = CF.sound ? 0.5 : 0;
+        gain = ctx.createGain(); gain.gain.value = level();
         let out = ctx.destination;
         try {
           const comp = ctx.createDynamicsCompressor();
@@ -1094,7 +1294,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
     }
     /* tiếng sỏi: một hạt nhiễu ngắn lọc băng hẹp, nghe như đá chạm đất */
     function click(pitch, vol) {
-      if (!init() || !CF.sound) return;
+      if (!init() || CF.vol <= 0) return;
       const t0 = ctx.currentTime;
       const n = ctx.createBufferSource();
       const len = Math.floor(ctx.sampleRate * 0.05);
@@ -1110,31 +1310,31 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
     }
     return {
       unlock: init,
-      setOn(v) { CF.sound = v; if (gain) gain.gain.value = v ? 0.5 : 0; },
+      setVol(v) { CF.vol = v; if (gain) gain.gain.value = level(); },
       sow(i) { click(1250 + ((i * 137) % 700), 0.34); },
       pick() { click(820, 0.5); },
       eat() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         [523, 659, 784].forEach((f, k) => tone(f, t + k * 0.06, 0.22, 'triangle', 0.16));
       },
       quan() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, t + k * 0.07, 0.4, 'triangle', 0.2));
       },
       nope() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         tone(300, t, 0.13, 'sawtooth', 0.14); tone(220, t + 0.1, 0.2, 'sawtooth', 0.12);
       },
       win() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         [523, 659, 784, 1047, 1319, 1568].forEach((f, k) => tone(f, t + k * 0.1, 0.55, 'triangle', 0.2));
       },
       lose() {
-        if (!init() || !CF.sound) return;
+        if (!init() || CF.vol <= 0) return;
         const t = ctx.currentTime;
         [523, 466, 392, 311].forEach((f, k) => tone(f, t + k * 0.14, 0.5, 'sine', 0.17));
       }
@@ -1156,19 +1356,27 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
   const isAI = p => CF.mode === 'may' && p === 1;
 
   /* ===================== nhóm nút chọn ================================ */
+  /* Tốc độ rải chỉnh được ở hai chỗ — bảng tuỳ chỉnh trước ván và bảng tuỳ chọn
+     trong ván — nên một khoá phải kéo theo nhiều nhóm nút cùng sáng. */
+  const GROUPS = {};
+  function paintGroup(key) {
+    for (const box of GROUPS[key] || []) {
+      Array.from(box.children).forEach(b =>
+        b.setAttribute('aria-checked', String(b.dataset.v === String(CF[key]))));
+    }
+  }
   function group(elId, key, onChange) {
     const box = $(elId);
     if (!box) return;
+    (GROUPS[key] = GROUPS[key] || []).push(box);
     box.setAttribute('role', 'radiogroup');
-    const paint = () => Array.from(box.children).forEach(b =>
-      b.setAttribute('aria-checked', String(b.dataset.v === String(CF[key]))));
     box.addEventListener('click', ev => {
       const b = ev.target.closest('.chip'); if (!b) return;
-      CF[key] = b.dataset.v; save(); paint();
+      CF[key] = b.dataset.v; save(); paintGroup(key);
       SFX.unlock();
       if (onChange) onChange(b.dataset.v);
     });
-    paint();
+    paintGroup(key);
   }
 
   /* ===================== dựng bàn ===================================== */
@@ -1236,7 +1444,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
       const el = document.createElement('div');
       el.className = 'cell' + (c.kind === 'quan' ? ' quan' : ' mine' + c.side);
       el.dataset.i = i;
-      el.innerHTML = '<div class="stones"></div><div class="cnt">0</div>';
+      el.innerHTML = (c.kind === 'quan' ? '<b class="qtag">quan</b>' : '') +
+        '<div class="stones"></div><div class="cnt">0</div>';
+      el._box = el.querySelector('.stones');
+      el._cnt = el.querySelector('.cnt');
       el._n = -1;
       el.addEventListener('click', () => onCellClick(i));
       board.appendChild(el);
@@ -1254,24 +1465,24 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
      dương cho kín ô. Trong cùng một mức thì viên thứ k luôn nằm nguyên chỗ,
      thêm viên mới không làm mấy viên cũ nhảy chỗ. */
   function bucket(total) {
-    if (total <= 4) return { cap: 5, f: 0.40 };
-    if (total <= 8) return { cap: 9, f: 0.31 };
-    if (total <= 14) return { cap: 15, f: 0.245 };
-    if (total <= 22) return { cap: 23, f: 0.195 };
-    if (total <= 34) return { cap: 35, f: 0.155 };
-    return { cap: 52, f: 0.125 };
+    if (total <= 4) return { cap: 6, f: 0.27 };
+    if (total <= 8) return { cap: 10, f: 0.235 };
+    if (total <= 14) return { cap: 16, f: 0.195 };
+    if (total <= 22) return { cap: 24, f: 0.163 };
+    if (total <= 34) return { cap: 36, f: 0.135 };
+    return { cap: 52, f: 0.112 };
   }
 
   function drawCell(i, pop) {
     const c = V.cells[i], el = cellEls[i];
-    const box = el.firstElementChild, cnt = el.lastElementChild;
+    const box = el._box, cnt = el._cnt;
     const total = c.dan + c.quan;
     const prev = el._n;
     const min = el._min || 40, bw = el._w || 40, bh = el._h || 40;
     const bk = bucket(total);
 
     const danPx = Math.max(5, min * bk.f);
-    const quanPx = Math.max(9, min * 0.46);
+    const quanPx = Math.max(11, min * 0.40);
 
     /* bán kính tính bằng phần trăm, chừa đủ chỗ để viên sỏi không lòi ra */
     const rx = Math.max(4, 50 - (danPx / bw) * 52);
@@ -1279,8 +1490,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
 
     let html = '', k = 0;
     for (let q = 0; q < c.quan; q++, k++) {
-      html += '<i class="st big" style="left:50%;top:50%;width:' + quanPx.toFixed(1) +
-        'px;height:' + quanPx.toFixed(1) + 'px"></i>';
+      html += '<i class="st big" style="--rot:' + ((i * 23) % 40 - 20) + 'deg;left:50%;top:50%;width:' +
+        quanPx.toFixed(1) + 'px;height:' + quanPx.toFixed(1) + 'px"></i>';
     }
     const shift = c.quan > 0 ? 3 : 0;          // né viên quan ngồi giữa
     const seed = i * 1.7137;                   // mỗi ô xoay một kiểu, đỡ giống hệt nhau
@@ -1290,8 +1501,11 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
       const x = 50 + Math.cos(j * GA + seed) * rr * rx;
       const y = 50 + Math.sin(j * GA + seed) * rr * ry;
       const isNew = pop && prev >= 0 && k >= prev;
-      html += '<i class="st' + (isNew ? ' new' : '') + '" style="left:' + x.toFixed(1) +
-        '%;top:' + y.toFixed(1) + '%;width:' + danPx.toFixed(1) + 'px;height:' + danPx.toFixed(1) + 'px"></i>';
+      const shape = (i * 3 + d * 7) % 5;             // dáng và tông đá, cố định theo chỗ ngồi
+      const rot = ((i * 37 + d * 53) % 90) - 45;
+      html += '<i class="st v' + shape + (isNew ? ' new' : '') + '" style="--rot:' + rot + 'deg;left:' +
+        x.toFixed(1) + '%;top:' + y.toFixed(1) + '%;width:' + danPx.toFixed(1) +
+        'px;height:' + danPx.toFixed(1) + 'px"></i>';
     }
     box.innerHTML = html;
     cnt.textContent = total;
@@ -1591,6 +1805,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
   }
 
   /* ===================== bắt đầu / kết thúc =========================== */
+  /* Màn thiết lập trên điện thoại dài hơn một màn hình, bấm Bắt đầu ở cuối
+     trang xong mà không kéo lên thì vào ván vẫn đang đứng ở lưng chừng. */
+  function toTop() { try { window.scrollTo(0, 0); } catch (e) { } }
+
   function startGame() {
     names = CF.mode === 'may'
       ? ['Bạn', 'Máy ' + (AI.LEVELS[CF.level] || AI.LEVELS.thuong).name.toLowerCase()]
@@ -1612,6 +1830,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
     $('setup').classList.remove('on');
     $('play').classList.add('on');
     $('mOver').classList.remove('on');
+    toTop();
     busy = false;
     $('btnHint').hidden = (CF.mode !== 'may');
     updateStatus();
@@ -1666,11 +1885,13 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
   group('optNon', 'non');
   group('optQV', 'qv');
   group('optSpeed', 'speed');
+  group('optSpeed2', 'speed');
   refreshSetupVisibility();
 
   $('btnStart').addEventListener('click', () => { SFX.unlock(); startGame(); });
   $('btnBack').addEventListener('click', () => {
     $('play').classList.remove('on'); $('setup').classList.add('on'); $('mOver').classList.remove('on');
+    toTop();
   });
   $('btnHint').addEventListener('click', hint);
   $('btnRules1').addEventListener('click', () => $('mRules').classList.add('on'));
@@ -1678,26 +1899,42 @@ if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
   $('btnCloseRules').addEventListener('click', () => $('mRules').classList.remove('on'));
   $('mRules').addEventListener('click', ev => { if (ev.target === $('mRules')) $('mRules').classList.remove('on'); });
 
-  $('btnSound').addEventListener('click', () => {
-    const b = $('btnSound');
-    const on = b.getAttribute('aria-pressed') !== 'true';
-    b.setAttribute('aria-pressed', String(on));
-    b.textContent = on ? 'Tiếng ♪' : 'Tắt tiếng';
-    SFX.unlock(); SFX.setOn(on); save();
+  /* --- bảng tuỳ chỉnh luật (chỉ mở được trước ván) --- */
+  $('btnSettings').addEventListener('click', () => { SFX.unlock(); $('mSettings').classList.add('on'); });
+  $('btnCloseSettings').addEventListener('click', () => $('mSettings').classList.remove('on'));
+
+  /* --- bảng tuỳ chọn trong ván: âm lượng và tốc độ, không đụng tới luật --- */
+  const vol = $('vol'), volVal = $('volVal');
+  function paintVol() {
+    vol.value = CF.vol;
+    vol.style.setProperty('--fill', CF.vol + '%');
+    volVal.textContent = CF.vol === 0 ? 'Tắt' : CF.vol + '%';
+  }
+  vol.addEventListener('input', () => {
+    CF.vol = +vol.value; save(); paintVol();
+    SFX.unlock(); SFX.setVol(CF.vol);
   });
-  $('btnSound').setAttribute('aria-pressed', String(CF.sound));
-  $('btnSound').textContent = CF.sound ? 'Tiếng ♪' : 'Tắt tiếng';
+  /* nghe thử một tiếng sỏi khi thả tay, để biết to nhỏ cỡ nào */
+  vol.addEventListener('change', () => { if (CF.vol > 0) SFX.sow(3); });
+  paintVol();
+
+  $('btnOpts').addEventListener('click', () => { SFX.unlock(); $('mOptions').classList.add('on'); });
+  $('btnCloseOptions').addEventListener('click', () => $('mOptions').classList.remove('on'));
+
+  for (const id of ['mSettings', 'mOptions']) {
+    $(id).addEventListener('click', ev => { if (ev.target === $(id)) $(id).classList.remove('on'); });
+  }
 
   $('btnAgain').addEventListener('click', () => {
     /* đổi người đi trước cho công bằng: đi trước có lợi thật */
     CF.first = CF.first === '0' ? '1' : '0'; save();
-    const g = $('optFirst');
-    Array.from(g.children).forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === CF.first)));
+    paintGroup('first');
     startGame();
   });
   $('btnMenu').addEventListener('click', () => {
     $('mOver').classList.remove('on');
     $('play').classList.remove('on'); $('setup').classList.add('on');
+    toTop();
   });
 
   let rzT = null;

@@ -466,7 +466,9 @@ footer{text-align:center;margin-top:22px;font-size:12.5px;color:#7e94ab;font-wei
       <h4>Cách chơi</h4>
       <ul>
         <li>Bấm vào số hàng <b>(1) (2) (3)…</b> hoặc bấm thẳng vào ô để mở câu hỏi.</li>
-        <li>Gõ đáp án rồi Enter. Đúng thì cả hàng lật ra, <b>+10 điểm</b>.</li>
+        <li>Gõ đáp án rồi Enter. Đúng thì cả hàng lật ra và được điểm — mỗi ô chữ
+            có <b>70 điểm hàng ngang</b> chia đều cho số hàng, nên ô chữ 7 hàng thì
+            mỗi hàng +10đ, ô chữ 12 hàng thì mỗi hàng +6đ.</li>
         <li>Sai hoặc hết giờ thì <b>hàng đó xám đi và khoá luôn</b>, không mở lại được.</li>
         <li>Mỗi hàng góp một chữ cái cho <b>từ khoá hàng dọc</b> — chữ nằm trên dải vàng.</li>
       </ul>
@@ -475,15 +477,39 @@ footer{text-align:center;margin-top:22px;font-size:12.5px;color:#7e94ab;font-wei
       <ul>
         <li>Bấm <b>🔑 Đoán từ khoá</b> bất cứ lúc nào, có <b>3 lượt</b>.</li>
         <li>Đoán khi <b>chưa mở ô nào</b> mà trúng: <b class="blindnum">+130 điểm</b> — mức cao nhất.</li>
-        <li>Mở càng nhiều hàng rồi mới đoán thì thưởng càng giảm, thấp nhất 30.</li>
-        <li>Đoán sai: −15 điểm và mất một lượt.</li>
+        <li>Mỗi hàng bạn mở ra làm lộ một chữ của từ khoá, nên <b>ăn bớt phần thưởng</b>.
+            Mở hết thì thưởng về 0 — lúc đó cả từ khoá đã hiện ra rồi.</li>
+        <li>Đoán sai: <b>−20 điểm</b>, và phần thưởng từ khoá <b>chỉ còn 60%</b> cho lần sau.
+            Sai lần thứ ba là hết lượt, ván kết thúc.</li>
       </ul>
+      <p style="margin:2px 0 6px;font-weight:700;color:#5d7186">
+        Phần bị ăn bớt luôn lớn hơn điểm vừa nhận, nên <b>đoán càng sớm tổng điểm
+        càng cao</b> — không có kiểu mở gần hết rồi mới đoán cho chắc ăn.
+        Ví dụ một ô chữ 7 hàng:</p>
       <table class="tbl">
-        <tr><td>Đoán mù — chưa mở ô nào</td><td class="blindnum">+130đ</td></tr>
-        <tr><td>Đã dùng 1 hàng</td><td>+100đ</td></tr>
-        <tr><td>Đã dùng 4 hàng</td><td>+70đ</td></tr>
-        <tr><td>Đã dùng 8 hàng trở lên</td><td>+30đ</td></tr>
+        <tr><td>Đoán mù — chưa mở hàng nào</td><td class="blindnum">130đ</td></tr>
+        <tr><td>Mở 2 hàng rồi đoán</td><td>113đ</td></tr>
+        <tr><td>Mở 4 hàng rồi đoán</td><td>96đ</td></tr>
+        <tr><td>Giải hết 7 hàng rồi đoán</td><td>70đ</td></tr>
       </table>
+      <p style="margin:6px 0 0;font-weight:700;color:#5d7186;font-size:13px">
+        Trả lời sai một <b>hàng ngang</b> thì không bị trừ vào phần thưởng — hàng đó có lộ
+        chữ nào đâu; bạn đã mất số điểm của hàng rồi, không phạt thêm lần nữa.</p>
+
+      <h4>Cái giá của việc đoán bừa</h4>
+      <p style="margin:2px 0 6px;font-weight:700;color:#5d7186">
+        Chốt từ khoá là một canh bạc thật, không phải bấm cho vui. Mỗi lần sai bạn mất
+        <b>20 điểm</b> và phần thưởng <b>teo lại còn 60%</b> — nghĩa là bạn tự phá món
+        quà mình đang nhắm tới, kể cả khi đang 0 điểm.</p>
+      <table class="tbl">
+        <tr><td>Đoán trúng ngay lần đầu</td><td>130đ</td></tr>
+        <tr><td>Sai 1 lần rồi mới trúng</td><td>58đ</td></tr>
+        <tr><td>Sai 2 lần rồi mới trúng</td><td>7đ</td></tr>
+        <tr><td>Sai cả 3 lần</td><td>hết lượt, kết thúc ván</td></tr>
+      </table>
+      <p style="margin:6px 0 0;font-weight:700;color:#5d7186;font-size:13px">
+        Trước khi bấm <b>Chốt</b>, hộp đoán luôn ghi sẵn đúng được bao nhiêu và sai thì
+        còn lại bao nhiêu — cân nhắc rồi hãy quyết.</p>
 
       <h4>Gợi ý</h4>
       <ul>

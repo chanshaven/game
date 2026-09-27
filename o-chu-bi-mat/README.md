@@ -129,36 +129,71 @@ học sinh nhìn vào là biết đáp án.
 
 | Việc | Điểm |
 |---|---|
-| Mở đúng một hàng ngang | **+10** |
-| Đoán đúng từ khoá khi **chưa mở ô nào** | **+130** — thưởng cao nhất, gọi là *đoán mù* |
-| Đoán đúng từ khoá sau khi đã mở ô | **+100**, trừ dần 10 mỗi hàng đã dùng, thấp nhất **30** |
-| Đoán sai từ khoá | **−15** và mất một lượt (có 3 lượt) |
+| Mở đúng một hàng ngang | **70 ÷ số hàng** — ô chữ 7 hàng thì +10, ô chữ 12 hàng thì +6 |
+| Đoán đúng từ khoá | **130 × (số hàng còn kín ÷ tổng số hàng)** |
+| Đoán sai từ khoá | **−20** và phần thưởng còn **60%**, mất một lượt (có 3 lượt) |
 | Dùng gợi ý | **tăng dần**: −5, −10, −15, −20… xem bên dưới |
 
 - Trả lời sai hoặc hết giờ thì **hàng đó xám đi và khoá luôn**, không mở lại được.
 - Hết 3 lượt đoán từ khoá là kết thúc ván.
 - Xếp loại cuối ván: từ 150 điểm — *Xuất sắc*, 110 — *Giỏi*, 70 — *Khá*.
 
-### Đoán mù
+### Đoán càng sớm càng được nhiều
 
-Có người chỉ cần nhìn chủ đề là đoán ra từ khoá. Trường hợp đó được thưởng **130 điểm**.
+Đây là trục chính của cách tính điểm, nên viết kỹ một chút.
 
-Con số này không phải lấy đại. Cách tính điểm khiến mọi lối chơi "tử tế" đều về cùng một
-mức: mỗi hàng mở được +10 nhưng lại ăn bớt 10 của phần thưởng từ khoá, nên mở 1 hàng,
-mở 3 hàng hay giải trọn cả 7 hàng thì cuối cùng đều **110 điểm**. Đoán mù để ở 130 là
-nhỉnh hơn vừa phải — vẫn là mức cao nhất, nhưng không biến người chịu khó giải từng hàng
-thành ra thiệt thòi.
+Mỗi hàng mở ra cho bạn điểm, **nhưng cũng để lộ một chữ cái của từ khoá**, nên nó ăn bớt
+phần thưởng từ khoá. Phần bị ăn bớt **luôn lớn hơn** số điểm vừa nhận, vì vậy tổng điểm
+giảm đều theo từng hàng. Ô chữ 7 hàng:
 
-Ô *Thưởng từ khoá* trên bảng điểm hiện sẵn nhãn **ĐOÁN MÙ** khi chưa mở hàng nào, mất
-nhãn ngay khi bạn đụng vào hàng đầu tiên. Đoán trúng kiểu này thì bảng kết quả hiện
-riêng dòng **ĐOÁN MÙ!** kèm pháo giấy nổ hai lần.
+| Lúc đoán từ khoá | Điểm hàng | Thưởng | **Tổng** |
+|---|---|---|---|
+| Chưa mở hàng nào — *đoán mù* | 0 | 130 | **130** |
+| Mở 1 hàng | 10 | 111 | **121** |
+| Mở 2 hàng | 20 | 93 | **113** |
+| Mở 4 hàng | 40 | 56 | **96** |
+| Giải hết 7 hàng | 70 | 0 | **70** |
 
-| Lúc đoán | Thưởng |
+Nhờ vậy **không có kiểu mở gần hết rồi mới đoán cho chắc ăn** — càng chần chừ càng mất
+điểm. Mở hết thì thưởng về 0, đúng thôi: lúc đó cả từ khoá đã hiện ra, đoán không còn là
+tài nữa.
+
+Đường điểm này giảm đều với mọi cỡ ô chữ, từ 4 hàng đến 12 hàng, vì **điểm mỗi hàng =
+70 ÷ số hàng**. Đồng thời ô chữ ngắn và ô chữ dài đều đáng giá như nhau (tối đa ~130đ) —
+quan trọng khi cộng dồn qua nhiều ván, chứ tính cứng +10 mỗi hàng thì ô chữ 12 hàng tự
+nhiên được gấp ba ô chữ 4 hàng.
+
+**Trả lời sai một hàng ngang không bị trừ vào phần thưởng.** Hàng sai có lộ chữ nào đâu;
+bạn đã mất số điểm của hàng đó rồi, không phạt thêm lần nữa.
+
+### Cái giá của việc đoán bừa
+
+Chốt từ khoá phải là một canh bạc thật, không phải bấm cho vui. Mỗi lần đoán sai:
+
+- **mất ngay 20 điểm**, và
+- **phần thưởng từ khoá teo lại còn 60%** cho những lần sau.
+
+Vế thứ hai mới là vế nặng: đoán bừa là tự phá món quà mình đang nhắm tới, và nó có tác
+dụng **kể cả khi người chơi đang 0 điểm** — không còn kẽ hở kiểu "hết điểm rồi thì đoán
+liều thoải mái".
+
+| Kết cục | Được |
 |---|---|
-| Chưa mở ô nào | **+130** |
-| Đã dùng 1 hàng | +100 |
-| Đã dùng 4 hàng | +70 |
-| Đã dùng 8 hàng trở lên | +30 |
+| Trúng ngay lần đầu | **130đ** |
+| Sai 1 lần rồi mới trúng | 58đ |
+| Sai 2 lần rồi mới trúng | 7đ |
+| Sai cả 3 lần | hết lượt, ván kết thúc |
+
+Hộp đoán từ khoá luôn ghi sẵn **đúng được bao nhiêu** và **sai thì thưởng còn bao nhiêu**
+ngay trước nút Chốt, nên người chơi cân nhắc có đủ thông tin rồi mới quyết. Đến lượt cuối
+thì dòng đó đổi thành *"−20đ và hết lượt, kết thúc ván"*.
+
+Nhãn **ĐOÁN MÙ** cũng mất ngay sau lần đoán sai đầu tiên — đã sai một lần thì không còn
+gọi là đoán mù nữa.
+
+Ô *Thưởng từ khoá* trên bảng điểm hiện sẵn nhãn **ĐOÁN MÙ** khi chưa mở hàng nào, và tụt
+dần mỗi lần bạn mở thêm một hàng. Đoán mù trúng thì bảng kết quả hiện riêng dòng
+**ĐOÁN MÙ!** kèm pháo giấy nổ hai lần.
 
 ### Bỏ qua ván
 

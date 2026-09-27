@@ -234,7 +234,7 @@ function newGame(idx){
   S = {
     key: kl,
     rows: D.rows.map(r => ({...r, L:letters(r.a), state:'idle', hints:[]})),
-    score:0, lives:3, used:0, over:false, cur:-1, skipped:false, blindWin:false,
+    score:0, lives:3, used:0, wrongK:0, over:false, cur:-1, skipped:false, blindWin:false,
     timerOn:TIME>0, timeLeft:0, tick:null
   };
   buildBoard(); render();
@@ -310,18 +310,42 @@ function paintSub(){
 
 /* ---------- vẽ lại ---------- */
 /* ============================================================================
-   THƯỞNG TỪ KHOÁ
-   Chưa đụng vào hàng nào mà đoán trúng ("đoán mù") là giỏi nhất -> thưởng đậm.
-   Mở càng nhiều hàng rồi mới đoán thì thưởng càng ít, sàn là 30.
+   THƯỞNG TỪ KHOÁ — đoán càng sớm càng nhiều, không có chỗ nào hoà
+   ----------------------------------------------------------------------------
+   Mỗi hàng mở được cho +10 điểm, NHƯNG cũng để lộ một chữ cái của từ khoá,
+   nên nó ăn bớt một phần thưởng từ khoá. Phần bị ăn bớt luôn LỚN HƠN 10 điểm
+   vừa nhận, vì vậy tổng điểm giảm đều theo từng hàng mở ra:
+
+       thưởng = BLIND_BONUS × (số hàng còn kín / tổng số hàng)
+
+   Ô chữ 7 hàng:  chưa mở  130đ · mở 3 hàng  30+74 = 104đ · mở hết  70+0 = 70đ.
+   Mở hết thì thưởng về 0 — lúc đó cả từ khoá đã hiện ra, đoán không còn là tài.
+
+   Hàng trả lời SAI không tính vào đây: nó chẳng để lộ chữ nào, người chơi đã
+   mất 10 điểm đáng lẽ được nhận rồi, không phạt thêm lần nữa.
    ========================================================================== */
-/* Giải trọn vẹn một ô chữ 7 hàng được khoảng 110đ (70 điểm hàng + 40 thưởng),
-   nên mức đoán mù để nhỉnh hơn một chút là vừa — thưởng cho cái giỏi mà không
-   làm người chịu khó giải từng hàng thành ra thiệt. */
-const BLIND_BONUS = 130;
+const BLIND_BONUS = 130;   // thưởng từ khoá khi chưa mở hàng nào, chưa đoán sai lần nào
+const ROW_TOTAL   = 70;    // tổng điểm của TẤT CẢ hàng ngang, chia đều cho số hàng
+const WRONG_PTS   = 20;    // mất ngay bấy nhiêu điểm mỗi lần đoán sai từ khoá
+const WRONG_KEEP  = 0.6;   // và phần thưởng còn lại chỉ còn 60%
+
+/* Điểm một hàng = 70 chia cho số hàng của ô chữ đó. Nhờ vậy ô chữ 4 hàng và ô chữ
+   12 hàng đều đáng giá như nhau (tối đa ~130đ), cộng dồn qua nhiều ván mới công bằng
+   — chứ tính cứng +10 mỗi hàng thì ô chữ dài tự nhiên được gấp ba ô chữ ngắn. */
+const rowPts     = () => Math.max(4, Math.round(ROW_TOTAL / S.rows.length));
+const openedRows = () => S.rows.filter(r => r.state === 'open').length;
+/* Đoán sai không chỉ mất 20 điểm mà còn làm chính phần thưởng teo lại, nên đoán bừa
+   là tự phá của mình — kể cả khi đang 0 điểm, không có kẽ hở "hết điểm rồi đoán liều". */
 function bonusNow(){
-  return S.used === 0 ? BLIND_BONUS : Math.max(30, 100 - (S.used - 1) * 10);
+  const R = S.rows.length;
+  return Math.round(BLIND_BONUS * (R - openedRows()) / R * Math.pow(WRONG_KEEP, S.wrongK));
 }
-const isBlind = () => S.used === 0;
+/* Phần thưởng sẽ còn lại bao nhiêu nếu lần đoán này sai */
+function bonusIfWrong(){
+  const R = S.rows.length;
+  return Math.round(BLIND_BONUS * (R - openedRows()) / R * Math.pow(WRONG_KEEP, S.wrongK + 1));
+}
+const isBlind = () => openedRows() === 0 && S.wrongK === 0;
 function render(){
   $('#sScore').textContent = S.score;
   const done = S.rows.filter(r=>r.state==='open').length;
@@ -366,7 +390,7 @@ function openQ(i){
   S.cur = i; sOpen();
   $('#qNum').textContent = i+1;
   $('#qText').textContent = r.q;
-  $('#qLen').textContent = r.L.length + ' chữ cái';
+  $('#qLen').textContent = r.L.length + ' chữ cái · đúng được +' + rowPts() + 'đ';
   paintHintBtn();
   $('#qInput').value=''; 
   $('#ovQ').classList.add('show'); duck(true);
@@ -412,7 +436,7 @@ function answer(timeout=false){
   const ok = !timeout && same(val, r.a);
   if(ok){
     r.state='open'; S.used++;
-    const pts = 10;
+    const pts = rowPts();
     S.score += pts;
     closeQ(); render(); sGood();
     flip(i);
@@ -485,8 +509,13 @@ function paintAccentUI(){
 /* ---------- từ khoá ---------- */
 function openK(){
   if(S.over||S.lives<=0) return;
+  const last = S.lives <= 1;
   $('#kMeta').innerHTML = (isBlind() ? '🎯 <b>Đoán mù</b>: ' : 'Đúng: ')
-      + '<b>+'+bonusNow()+'đ</b> • Sai: −15đ • Còn '+S.lives+' lượt';
+      + '<b style="color:#0f8f68">+'+bonusNow()+'đ</b> &nbsp;•&nbsp; Sai: '
+      + (last
+          ? '<b style="color:#d9455a">−'+WRONG_PTS+'đ và hết lượt, kết thúc ván</b>'
+          : '<b style="color:#d9455a">−'+WRONG_PTS+'đ</b>, thưởng chỉ còn <b>'+bonusIfWrong()+'đ</b>')
+      + ' &nbsp;•&nbsp; còn '+S.lives+' lượt';
   $('#kInput').value=''; $('#ovK').classList.add('show'); duck(true);
   setTimeout(()=>$('#kInput').focus(),80); sOpen();
 }
@@ -503,9 +532,12 @@ function guessK(){
     $('#ovK').classList.remove('show'); duck(false);
     finish(true);
   }else{
-    S.lives--; S.score=Math.max(0,S.score-15);
+    S.lives--; S.wrongK++;
+    S.score = Math.max(0, S.score - WRONG_PTS);
     $('#ovK').classList.remove('show'); duck(false); render(); sBad();
-    toast(S.lives>0 ? '❌ Chưa đúng rồi! Còn '+S.lives+' lượt đoán (−15đ)' : '❌ Hết lượt đoán từ khoá!','bad');
+    toast(S.lives>0
+      ? '❌ Chưa đúng! −'+WRONG_PTS+'đ, thưởng từ khoá tụt còn <b>'+bonusNow()+'đ</b> · còn '+S.lives+' lượt'
+      : '❌ Sai lần thứ ba — hết lượt đoán từ khoá!','bad');
     checkEnd();
   }
 }
@@ -563,7 +595,7 @@ function finish(win){
   $('#rList').innerHTML = S.rows.map((r,i)=>{
     const ic = r.state==='open' ? '✔' : r.state==='failed' ? '✘' : '○';
     const cl = r.state==='open' ? 'ok' : r.state==='failed' ? 'no' : '';
-    const pt = r.state==='open' ? '+10đ' : r.state==='failed' ? '0đ' : 'chưa mở';
+    const pt = r.state==='open' ? '+'+rowPts()+'đ' : r.state==='failed' ? '0đ' : 'chưa mở';
     return `<div><span class="${cl}">${ic} (${i+1})</span> <span>${r.a}</span><b>${pt}</b></div>`;
   }).join('');
   duck(true);

@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description"
+    content="Ô ăn quan — trò chơi dân gian Việt Nam. Đấu với máy ba mức hoặc hai người chung một máy. Mở trình duyệt là chơi.">
+  <meta name="theme-color" content="#26060E">
+  <title>Ô Ăn Quan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;600;800;900&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --wine-900: #26060E;
+      --wine-800: #4A0D1C;
+      --wine-700: #631226;
+      --gold-300: #FFE9A8;
+      --gold-400: #FFD166;
+      --gold-500: #EFA93A;
+      --gold-600: #B0711C;
+      --cream: #FFF4DC;
+      --cream-dim: #E8D5B4;
+      --jade: #3ECFAE;
+      --violet: #A981FF;
+      --earth: #2B1A12;
+      --earth-2: #3B2418;
+      --fx-display: "Anton", "Arial Narrow", Impact, sans-serif;
+      --fx-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box }
+
+    html, body { height: 100% }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: var(--fx-body);
+      color: var(--cream);
+      background:
+        radial-gradient(1100px 620px at 50% -14%, rgba(255, 209, 102, .20), transparent 62%),
+        radial-gradient(700px 500px at 6% 10%, rgba(255, 91, 65, .12), transparent 60%),
+        radial-gradient(700px 500px at 94% 14%, rgba(169, 129, 255, .12), transparent 60%),
+        linear-gradient(175deg, var(--wine-800) 0%, var(--wine-900) 52%, #16030A 100%);
+      background-attachment: fixed;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .beams {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .4;
+      background: conic-gradient(from 200deg at 50% -8%, transparent 0deg, rgba(255, 222, 150, .13) 7deg, transparent 15deg,
+          transparent 26deg, rgba(255, 222, 150, .09) 33deg, transparent 41deg,
+          transparent 52deg, rgba(255, 222, 150, .12) 59deg, transparent 67deg);
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .95), transparent 70%)
+    }
+
+    .vignette {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      box-shadow: inset 0 0 220px 60px rgba(10, 2, 6, .7)
+    }
+
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 1000px; margin: 0 auto;
+      padding: 20px 16px 36px;
+    }
+
+    .screen { display: none }
+    .screen.on { display: block; animation: fade .3s ease both }
+
+    @keyframes fade { from { opacity: 0; transform: translateY(8px) } }
+
+    /* ===================== nút và chip chung ===================== */
+    .btn {
+      appearance: none; border: 0; cursor: pointer; font-family: var(--fx-body);
+      font-weight: 800; letter-spacing: .02em; border-radius: 999px;
+      padding: 13px 26px; font-size: 15px;
+      color: #3A1B02;
+      background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+      box-shadow: 0 6px 0 rgba(120, 70, 8, .65), 0 12px 24px rgba(0, 0, 0, .35);
+      transition: transform .12s, box-shadow .12s;
+    }
+    .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(120, 70, 8, .65) }
+    .btn.ghost {
+      background: rgba(255, 244, 220, .07); color: var(--cream);
+      border: 1.5px solid rgba(255, 244, 220, .22); box-shadow: none; font-weight: 600;
+      padding: 10px 18px; font-size: 13.5px;
+    }
+    .btn.ghost:active { transform: translateY(2px) }
+    .btn[disabled] { opacity: .4; pointer-events: none }
+
+    .field { margin-bottom: 20px }
+    .field > .lab {
+      display: block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(255, 244, 220, .5); margin-bottom: 9px; font-weight: 700;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 9px }
+    .chip {
+      appearance: none; cursor: pointer; font-family: var(--fx-body);
+      border: 1.5px solid rgba(255, 244, 220, .18);
+      background: rgba(255, 244, 220, .05); color: var(--cream-dim);
+      border-radius: 13px; padding: 10px 16px; font-size: 14px; font-weight: 600;
+      transition: .15s; text-align: left;
+    }
+    .chip small { display: block; font-size: 11.5px; font-weight: 400; opacity: .6; margin-top: 2px }
+    .chip[aria-checked="true"] {
+      border-color: var(--gold-400); color: #3A1B02;
+      background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+      box-shadow: 0 4px 14px rgba(239, 169, 58, .3);
+    }
+    .chip[aria-checked="true"] small { opacity: .72 }
+    .chip[hidden] { display: none }
+
+    /* ===================== màn thiết lập ===================== */
+    .top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 18px;
+    }
+    .home {
+      color: var(--cream-dim); text-decoration: none; font-size: 13px;
+      opacity: .65; padding: 6px 2px;
+    }
+    .home:hover { opacity: 1 }
+
+    h1 {
+      font-family: var(--fx-display); margin: 0; line-height: .95;
+      letter-spacing: .03em; font-size: clamp(40px, 11vw, 74px); text-align: center;
+      background: linear-gradient(180deg, #FFF6DD 0%, var(--gold-400) 46%, var(--gold-600) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 4px 0 rgba(120, 60, 10, .5)) drop-shadow(0 12px 26px rgba(0, 0, 0, .5));
+    }
+    .sub {
+      text-align: center; margin: 14px auto 30px; max-width: 42ch;
+      font-size: 14.5px; line-height: 1.65; color: var(--cream-dim);
+    }
+
+    .panel {
+      background: rgba(255, 244, 220, .035);
+      border: 1.5px solid rgba(255, 244, 220, .12);
+      border-radius: 20px; padding: 22px 20px;
+    }
+
+    details.adv { margin-top: 4px }
+    details.adv > summary {
+      cursor: pointer; list-style: none; font-size: 13px; font-weight: 700;
+      color: rgba(255, 244, 220, .55); padding: 8px 0; letter-spacing: .04em;
+    }
+    details.adv > summary::-webkit-details-marker { display: none }
+    details.adv > summary::before { content: "▸ "; }
+    details.adv[open] > summary::before { content: "▾ "; }
+    details.adv .field { margin-top: 16px }
+
+    .go { display: flex; gap: 10px; justify-content: center; margin-top: 26px; flex-wrap: wrap }
+
+    /* ===================== màn chơi ===================== */
+    .bar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .bar .tools { display: flex; gap: 7px; flex-wrap: wrap }
+    .icobtn {
+      appearance: none; cursor: pointer; border: 1.5px solid rgba(255, 244, 220, .16);
+      background: rgba(255, 244, 220, .05); color: var(--cream-dim);
+      border-radius: 11px; padding: 8px 12px; font-size: 13px; font-weight: 600;
+      font-family: var(--fx-body); transition: .15s;
+    }
+    .icobtn:hover { border-color: rgba(255, 244, 220, .35); color: var(--cream) }
+    .icobtn[aria-pressed="false"] { opacity: .45 }
+
+    .scores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px }
+    .sc {
+      position: relative; overflow: hidden;
+      border: 1.5px solid rgba(255, 244, 220, .12);
+      background: rgba(255, 244, 220, .04);
+      border-radius: 16px; padding: 11px 14px;
+      transition: .25s;
+    }
+    .sc .who { font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; opacity: .72 }
+    .sc .pts { font-family: var(--fx-display); font-size: 32px; line-height: 1.05; letter-spacing: .02em }
+    .sc .brk { font-size: 11.5px; opacity: .55; margin-top: 1px }
+    .sc.p0 .who, .sc.p0 .pts { color: var(--jade) }
+    .sc.p1 .who, .sc.p1 .pts { color: var(--violet) }
+    .sc.turn { background: rgba(255, 244, 220, .09); border-color: rgba(255, 233, 168, .5) }
+    .sc.turn::after {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+      background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+    }
+    .sc.p1 { text-align: right }
+    .sc.p1.turn::after { left: auto; right: 0 }
+
+    /* --- bàn cờ --- */
+    .boardwrap { position: relative }
+    .board {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.22fr repeat(5, 1fr) 1.22fr;
+      grid-template-rows: repeat(2, 1fr);
+      gap: 7px;
+      padding: 12px;
+      aspect-ratio: 7.44 / 2.6;
+      margin: 0 auto;
+      border-radius: 26px;
+      background:
+        radial-gradient(120% 140% at 50% 0%, rgba(255, 209, 102, .07), transparent 60%),
+        linear-gradient(170deg, var(--earth-2), var(--earth) 70%, #1C110B);
+      border: 2px solid rgba(255, 209, 102, .22);
+      box-shadow: inset 0 2px 20px rgba(0, 0, 0, .55), 0 18px 44px rgba(0, 0, 0, .45);
+    }
+
+    /* Màn hình hẹp thì dựng bàn đứng lên: quan ở trên và dưới, mỗi người một
+       cột. Giữ nguyên hình chữ nhật thì ô chỉ còn rộng chừng 50px, sỏi chồng
+       lên nhau không đếm nổi. */
+    .board.vert {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: 1.12fr repeat(5, 1fr) 1.12fr;
+      aspect-ratio: 2 / 3.25;
+      max-width: 430px;
+    }
+
+    .cell {
+      position: relative; border-radius: 12px; cursor: default;
+      background: radial-gradient(110% 110% at 50% 12%, rgba(0, 0, 0, .34), rgba(0, 0, 0, .12));
+      border: 1.5px solid rgba(255, 233, 168, .16);
+      box-shadow: inset 0 3px 10px rgba(0, 0, 0, .45);
+      transition: border-color .18s, box-shadow .18s, transform .18s;
+      overflow: hidden;
+    }
+    .cell.quan {
+      border-radius: 999px;
+      background: radial-gradient(110% 110% at 50% 12%, rgba(0, 0, 0, .40), rgba(60, 30, 6, .22));
+      border-color: rgba(255, 209, 102, .34);
+    }
+    .cell.mine0 { border-color: rgba(62, 207, 174, .3) }
+    .cell.mine1 { border-color: rgba(169, 129, 255, .3) }
+
+    .cell.pick {
+      cursor: pointer;
+      border-color: var(--gold-400);
+      box-shadow: inset 0 3px 10px rgba(0, 0, 0, .45), 0 0 0 2px rgba(255, 209, 102, .22);
+    }
+    .cell.pick:hover { transform: translateY(-2px); box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 0 0 3px rgba(255,209,102,.4) }
+    .cell.hintbest { animation: hintpulse 1.1s ease-in-out infinite }
+    @keyframes hintpulse {
+      0%, 100% { box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 0 0 2px rgba(255,209,102,.25) }
+      50%      { box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 0 0 7px rgba(255,209,102,.05), 0 0 0 3px rgba(255,209,102,.75) }
+    }
+    .cell.active { border-color: var(--gold-300); box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 0 18px rgba(255,209,102,.45) }
+    .cell.drop { animation: drop .3s ease }
+    @keyframes drop { 40% { transform: scale(1.055) } }
+    .cell.eaten { animation: eaten .5s ease }
+    @keyframes eaten {
+      0% { background: rgba(255, 209, 102, .75) }
+      100% { background: rgba(0, 0, 0, .2) }
+    }
+    .cell.nono { animation: shake .42s ease }
+    @keyframes shake {
+      0%,100% { transform: translateX(0) } 20% { transform: translateX(-5px) }
+      45% { transform: translateX(5px) } 70% { transform: translateX(-3px) }
+    }
+
+    .stones { position: absolute; inset: 7%; }
+    .st {
+      position: absolute; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 32% 28%, #F2E4CB, #B9A183 55%, #6E5B45);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+    }
+    .st.new { animation: pop .22s ease }
+    @keyframes pop { from { transform: translate(-50%, -50%) scale(.2); opacity: .2 } }
+    .st.big {
+      background: radial-gradient(circle at 32% 28%, #FFF3C9, var(--gold-400) 48%, #8C5A0E);
+      box-shadow: 0 0 14px rgba(255, 209, 102, .6), 0 2px 4px rgba(0, 0, 0, .6);
+    }
+
+    .cnt {
+      position: absolute; right: 5px; bottom: 3px;
+      font-family: var(--fx-display); font-size: clamp(13px, 2.6vw, 19px);
+      line-height: 1; color: rgba(255, 244, 220, .9);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, .9);
+      pointer-events: none;
+    }
+    .cell.quan .cnt { right: 50%; transform: translateX(50%); bottom: 4px }
+    .cnt.zero { opacity: .22 }
+
+    .hand {
+      position: absolute; z-index: 5; pointer-events: none;
+      transform: translate(-50%, -50%);
+      font-family: var(--fx-display); font-size: 17px; line-height: 1; letter-spacing: .04em;
+      padding: 7px 13px; border-radius: 999px;
+      color: #3A1B02; background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .5);
+      transition: left .11s linear, top .11s linear;
+      border: 2px solid rgba(58, 27, 2, .35);
+      opacity: 0;
+    }
+    .hand.on { opacity: 1 }
+
+    .fly {
+      position: absolute; z-index: 6; pointer-events: none;
+      transform: translate(-50%, -50%);
+      font-family: var(--fx-display); font-size: 17px;
+      padding: 5px 10px; border-radius: 999px;
+      background: linear-gradient(180deg, #FFF6DD, var(--gold-400));
+      color: #3A1B02; box-shadow: 0 6px 18px rgba(0, 0, 0, .55);
+      transition: left .6s cubic-bezier(.3,.8,.4,1), top .6s cubic-bezier(.3,.8,.4,1), opacity .6s;
+    }
+
+    .dirpick { position: absolute; inset: 0; display: flex; z-index: 4; border-radius: inherit; overflow: hidden }
+    .dirpick button {
+      flex: 1; border: 0; cursor: pointer; font-family: var(--fx-display);
+      font-size: clamp(15px, 3vw, 22px); color: #3A1B02;
+      background: linear-gradient(180deg, rgba(255, 233, 168, .92), rgba(239, 169, 58, .92));
+      transition: filter .12s;
+    }
+    .dirpick button + button { border-left: 2px solid rgba(58, 27, 2, .35) }
+    .dirpick button:hover { filter: brightness(1.12) }
+
+    .status {
+      margin-top: 14px; min-height: 44px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      text-align: center; font-size: 14.5px; line-height: 1.5; color: var(--cream-dim);
+    }
+    .status b { color: var(--gold-300) }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+      z-index: 40; max-width: min(90vw, 400px); text-align: center;
+      padding: 12px 20px; border-radius: 14px; font-size: 14px; font-weight: 600;
+      background: rgba(38, 6, 14, .94); color: var(--cream);
+      border: 1.5px solid rgba(255, 209, 102, .4);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, .6);
+      opacity: 0; pointer-events: none; transition: .28s;
+    }
+    .toast.on { opacity: 1; transform: translateX(-50%) translateY(0) }
+
+    /* ===================== modal ===================== */
+    .modal {
+      position: fixed; inset: 0; z-index: 50; display: none;
+      align-items: center; justify-content: center; padding: 20px;
+      background: rgba(10, 2, 6, .82); backdrop-filter: blur(4px);
+    }
+    .modal.on { display: flex; animation: fade .25s ease both }
+    .sheet {
+      width: min(560px, 100%); max-height: 86vh; overflow-y: auto;
+      background: linear-gradient(170deg, #3A0A16, var(--wine-900));
+      border: 1.5px solid rgba(255, 209, 102, .3);
+      border-radius: 22px; padding: 26px 24px;
+      box-shadow: 0 26px 70px rgba(0, 0, 0, .7);
+    }
+    .sheet h2 {
+      font-family: var(--fx-display); margin: 0 0 14px; font-size: 30px;
+      letter-spacing: .03em; color: var(--gold-300); text-align: center;
+    }
+    .sheet h3 {
+      font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--gold-400); margin: 20px 0 7px;
+    }
+    .sheet p, .sheet li { font-size: 14px; line-height: 1.7; color: var(--cream-dim) }
+    .sheet ul { margin: 6px 0; padding-left: 20px }
+    .sheet .acts { display: flex; gap: 10px; justify-content: center; margin-top: 24px; flex-wrap: wrap }
+
+    .result { text-align: center }
+    .result .big {
+      font-family: var(--fx-display); font-size: clamp(30px, 8vw, 46px);
+      line-height: 1.05; margin: 4px 0 12px;
+    }
+    .result .big.win { color: var(--jade) }
+    .result .big.lose { color: var(--violet) }
+    .result .big.draw { color: var(--gold-300) }
+    .tally {
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      gap: 12px; margin: 18px 0 6px;
+    }
+    .tally .n { font-family: var(--fx-display); font-size: 40px; line-height: 1 }
+    .tally .l { font-size: 12px; opacity: .6; letter-spacing: .08em; text-transform: uppercase }
+    .tally .vs { opacity: .35; font-size: 13px }
+    .tally .a .n { color: var(--jade) }
+    .tally .b .n { color: var(--violet) }
+
+    @media (max-width: 680px) {
+      .board { gap: 5px; padding: 9px; border-radius: 20px }
+      .sc { padding: 8px 12px }
+      .sc .pts { font-size: 26px }
+      .sc .brk { font-size: 11px }
+      .wrap { padding: 14px 12px 24px }
+      .status { margin-top: 10px; min-height: 36px; font-size: 13.5px }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition-duration: .01ms !important }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="beams"></div>
+  <div class="vignette"></div>
+
+  <main class="wrap">
+
+    <!-- ============================ THIẾT LẬP ============================ -->
+    <section id="setup" class="screen on">
+      <div class="top">
+        <a class="home" href="../">← Fiddle Game</a>
+        <button class="icobtn" id="btnRules1">Luật chơi</button>
+      </div>
+
+      <h1>Ô ĂN QUAN</h1>
+      <p class="sub">Rải sỏi vòng quanh, chừa một ô trống rồi vơ sạch ô liền sau.
+        Ai ăn được quan thì coi như nắm nửa phần thắng.</p>
+
+      <div class="panel">
+        <div class="field">
+          <span class="lab">Chơi với ai</span>
+          <div class="chips" id="optMode">
+            <button class="chip" role="radio" data-v="may">Đấu với máy<small>Bạn cầm quân bên dưới</small></button>
+            <button class="chip" role="radio" data-v="nguoi">Hai người một máy<small>Thay nhau chạm màn hình</small></button>
+          </div>
+        </div>
+
+        <div class="field" id="fLevel">
+          <span class="lab">Máy chơi cỡ nào</span>
+          <div class="chips" id="optLevel">
+            <button class="chip" role="radio" data-v="de">Dễ<small>Đi tuỳ hứng</small></button>
+            <button class="chip" role="radio" data-v="thuong">Thường<small>Thấy ăn là ăn</small></button>
+            <button class="chip" role="radio" data-v="kho">Khó<small>Tính trước bảy nước</small></button>
+          </div>
+        </div>
+
+        <div class="field" id="fFirst">
+          <span class="lab">Ai đi trước</span>
+          <div class="chips" id="optFirst">
+            <button class="chip" role="radio" data-v="0">Bạn</button>
+            <button class="chip" role="radio" data-v="1">Đối thủ</button>
+          </div>
+        </div>
+
+        <details class="adv">
+          <summary>Luật và tuỳ chỉnh</summary>
+
+          <div class="field">
+            <span class="lab">Chiều rải sỏi</span>
+            <div class="chips" id="optDir">
+              <button class="chip" role="radio" data-v="lock">Cổ điển — khoá một chiều<small>Cả ván chỉ rải theo một hướng</small></button>
+              <button class="chip" role="radio" data-v="free">Mở rộng — tự chọn chiều<small>Mỗi lượt muốn rải hướng nào cũng được</small></button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="lab">Quan non</span>
+            <div class="chips" id="optNon">
+              <button class="chip" role="radio" data-v="5">Quan dưới 5 dân thì chưa được ăn<small>Giữ ván cờ khỏi tàn quá sớm</small></button>
+              <button class="chip" role="radio" data-v="0">Ăn quan lúc nào cũng được<small>Ván rất ngắn, ai đi trước lợi to</small></button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="lab">Một quan đáng mấy dân</span>
+            <div class="chips" id="optQV">
+              <button class="chip" role="radio" data-v="10">10 dân</button>
+              <button class="chip" role="radio" data-v="5">5 dân</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="lab">Tốc độ rải sỏi</span>
+            <div class="chips" id="optSpeed">
+              <button class="chip" role="radio" data-v="cham">Chậm</button>
+              <button class="chip" role="radio" data-v="vua">Vừa</button>
+              <button class="chip" role="radio" data-v="nhanh">Nhanh</button>
+            </div>
+          </div>
+        </details>
+
+        <div class="go">
+          <button class="btn" id="btnStart">BẮT ĐẦU</button>
+        </div>
+      </div>
+
+      <p class="sub" style="margin-top:22px;font-size:13px;opacity:.6">
+        Bàn ba người hình tam giác và bàn bốn người hình vuông đang làm tiếp.
+      </p>
+    </section>
+
+    <!-- ============================== CHƠI =============================== -->
+    <section id="play" class="screen">
+      <div class="bar">
+        <button class="icobtn" id="btnBack">← Đổi ván</button>
+        <div class="tools">
+          <button class="icobtn" id="btnHint">Mách nước</button>
+          <button class="icobtn" id="btnRules2">Luật</button>
+          <button class="icobtn" id="btnSound" aria-pressed="true">Tiếng ♪</button>
+        </div>
+      </div>
+
+      <div class="scores">
+        <div class="sc p0" id="sc0">
+          <div class="who" id="nm0">Bạn</div>
+          <div class="pts" id="pt0">0</div>
+          <div class="brk" id="bk0">0 dân · 0 quan</div>
+        </div>
+        <div class="sc p1" id="sc1">
+          <div class="who" id="nm1">Máy</div>
+          <div class="pts" id="pt1">0</div>
+          <div class="brk" id="bk1">0 dân · 0 quan</div>
+        </div>
+      </div>
+
+      <div class="boardwrap">
+        <div class="board" id="board"></div>
+        <div class="hand" id="hand">0</div>
+      </div>
+
+      <div class="status" id="status">Chạm vào một ô của bạn để rải sỏi.</div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ============================== LUẬT ============================== -->
+  <div class="modal" id="mRules">
+    <div class="sheet">
+      <h2>Luật chơi</h2>
+
+      <h3>Bày sỏi</h3>
+      <p>Mười ô vuông chia hai bên, mỗi ô năm viên dân. Hai đầu là hai ô quan hình bán nguyệt, mỗi ô một viên quan.
+        Năm ô phía mình là phần mình.</p>
+
+      <h3>Một lượt đi</h3>
+      <ul>
+        <li>Bốc hết sỏi ở <b>một ô của mình</b>, rải mỗi ô một viên theo chiều đã định.</li>
+        <li>Rải hết viên cuối, nhìn ô ngay sau đó:</li>
+        <li>— Còn sỏi thì <b>bốc luôn ô ấy</b> rải tiếp.</li>
+        <li>— <b>Trống</b> thì <b>ăn</b> sỏi ở ô liền sau ô trống ấy. Ăn xong mà lại gặp trống rồi có sỏi thì
+          ăn tiếp, gọi là <b>ăn liên hoàn</b>.</li>
+        <li>— Là <b>ô quan</b> thì mất lượt.</li>
+        <li>— Hai ô trống liền nhau thì hết lượt.</li>
+      </ul>
+
+      <h3>Quan non</h3>
+      <p>Ô quan còn dưới năm dân thì chưa được ăn. Rơi vào đúng thế đó thì mất lượt, phải chờ quan dày thêm.
+        Không có luật này thì nước đi đầu tiên đã ăn được quan và ván tàn sau vài lượt.</p>
+
+      <h3>Hết sỏi thì rải lại</h3>
+      <p>Đến lượt mà cả năm ô của mình trống thì lấy trong chỗ sỏi đã ăn, mỗi ô một viên. Không đủ thì vay của
+        đối thủ, cuối ván trả lại.</p>
+
+      <h3>Hết quan tàn dân</h3>
+      <p>Cả hai ô quan sạch sỏi là ván kết thúc. Ai còn sỏi bên phần mình thì vơ về. Một dân một điểm,
+        một quan mười điểm. Nhiều điểm hơn thì thắng.</p>
+
+      <div class="acts"><button class="btn" id="btnCloseRules">Hiểu rồi</button></div>
+    </div>
+  </div>
+
+  <!-- ============================ KẾT QUẢ ============================ -->
+  <div class="modal" id="mOver">
+    <div class="sheet result">
+      <h2>Hết quan tàn dân</h2>
+      <div class="big" id="ovBig">—</div>
+      <div class="tally">
+        <div class="a"><div class="n" id="ovA">0</div><div class="l" id="ovAL">Bạn</div></div>
+        <div class="vs">—</div>
+        <div class="b"><div class="n" id="ovB">0</div><div class="l" id="ovBL">Máy</div></div>
+      </div>
+      <p id="ovNote" style="margin-top:6px"></p>
+      <div class="acts">
+        <button class="btn" id="btnAgain">CHƠI VÁN NỮA</button>
+        <button class="btn ghost" id="btnMenu">Đổi cách chơi</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="engine.js"></script>
+  <script src="ai.js"></script>
+  <script src="game.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1715 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description"
+    content="Ô ăn quan — trò chơi dân gian Việt Nam. Đấu với máy ba mức hoặc hai người chung một máy. Mở trình duyệt là chơi.">
+  <meta name="theme-color" content="#26060E">
+  <title>Ô Ăn Quan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Be+Vietnam+Pro:wght@400;600;800;900&display=swap">
+  <style>
+    :root {
+      color-scheme: dark;
+      --wine-900: #26060E;
+      --wine-800: #4A0D1C;
+      --wine-700: #631226;
+      --gold-300: #FFE9A8;
+      --gold-400: #FFD166;
+      --gold-500: #EFA93A;
+      --gold-600: #B0711C;
+      --cream: #FFF4DC;
+      --cream-dim: #E8D5B4;
+      --jade: #3ECFAE;
+      --violet: #A981FF;
+      --earth: #2B1A12;
+      --earth-2: #3B2418;
+      --fx-display: "Anton", "Arial Narrow", Impact, sans-serif;
+      --fx-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box }
+
+    html, body { height: 100% }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: var(--fx-body);
+      color: var(--cream);
+      background:
+        radial-gradient(1100px 620px at 50% -14%, rgba(255, 209, 102, .20), transparent 62%),
+        radial-gradient(700px 500px at 6% 10%, rgba(255, 91, 65, .12), transparent 60%),
+        radial-gradient(700px 500px at 94% 14%, rgba(169, 129, 255, .12), transparent 60%),
+        linear-gradient(175deg, var(--wine-800) 0%, var(--wine-900) 52%, #16030A 100%);
+      background-attachment: fixed;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .beams {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .4;
+      background: conic-gradient(from 200deg at 50% -8%, transparent 0deg, rgba(255, 222, 150, .13) 7deg, transparent 15deg,
+          transparent 26deg, rgba(255, 222, 150, .09) 33deg, transparent 41deg,
+          transparent 52deg, rgba(255, 222, 150, .12) 59deg, transparent 67deg);
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .95), transparent 70%)
+    }
+
+    .vignette {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      box-shadow: inset 0 0 220px 60px rgba(10, 2, 6, .7)
+    }
+
+    .wrap {
+      position: relative; z-index: 1;
+      max-width: 1000px; margin: 0 auto;
+      padding: 20px 16px 36px;
+    }
+
+    .screen { display: none }
+    .screen.on { display: block; animation: fade .3s ease both }
+
+    @keyframes fade { from { opacity: 0; transform: translateY(8px) } }
+
+    /* ===================== nút và chip chung ===================== */
+    .btn {
+      appearance: none; border: 0; cursor: pointer; font-family: var(--fx-body);
+      font-weight: 800; letter-spacing: .02em; border-radius: 999px;
+      padding: 13px 26px; font-size: 15px;
+      color: #3A1B02;
+      background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+      box-shadow: 0 6px 0 rgba(120, 70, 8, .65), 0 12px 24px rgba(0, 0, 0, .35);
+      transition: transform .12s, box-shadow .12s;
+    }
+    .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(120, 70, 8, .65) }
+    .btn.ghost {
+      background: rgba(255, 244, 220, .07); color: var(--cream);
+      border: 1.5px solid rgba(255, 244, 220, .22); box-shadow: none; font-weight: 600;
+      padding: 10px 18px; font-size: 13.5px;
+    }
+    .btn.ghost:active { transform: translateY(2px) }
+    .btn[disabled] { opacity: .4; pointer-events: none }
+
+    .field { margin-bottom: 20px }
+    .field > .lab {
+      display: block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(255, 244, 220, .5); margin-bottom: 9px; font-weight: 700;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 9px }
+    .chip {
+      appearance: none; cursor: pointer; font-family: var(--fx-body);
+      border: 1.5px solid rgba(255, 244, 220, .18);
+      background: rgba(255, 244, 220, .05); color: var(--cream-dim);
+      border-radius: 13px; padding: 10px 16px; font-size: 14px; font-weight: 600;
+      transition: .15s; text-align: left;
+    }
+    .chip small { display: block; font-size: 11.5px; font-weight: 400; opacity: .6; margin-top: 2px }
+    .chip[aria-checked="true"] {
+      border-color: var(--gold-400); color: #3A1B02;
+      background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+      box-shadow: 0 4px 14px rgba(239, 169, 58, .3);
+    }
+    .chip[aria-checked="true"] small { opacity: .72 }
+    .chip[hidden] { display: none }
+
+    /* ===================== màn thiết lập ===================== */
+    .top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 18px;
+    }
+    .home {
+      color: var(--cream-dim); text-decoration: none; font-size: 13px;
+      opacity: .65; padding: 6px 2px;
+    }
+    .home:hover { opacity: 1 }
+
+    h1 {
+      font-family: var(--fx-display); margin: 0; line-height: .95;
+      letter-spacing: .03em; font-size: clamp(40px, 11vw, 74px); text-align: center;
+      background: linear-gradient(180deg, #FFF6DD 0%, var(--gold-400) 46%, var(--gold-600) 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 4px 0 rgba(120, 60, 10, .5)) drop-shadow(0 12px 26px rgba(0, 0, 0, .5));
+    }
+    .sub {
+      text-align: center; margin: 14px auto 30px; max-width: 42ch;
+      font-size: 14.5px; line-height: 1.65; color: var(--cream-dim);
+    }
+
+    .panel {
+      background: rgba(255, 244, 220, .035);
+      border: 1.5px solid rgba(255, 244, 220, .12);
+      border-radius: 20px; padding: 22px 20px;
+    }
+
+    details.adv { margin-top: 4px }
+    details.adv > summary {
+      cursor: pointer; list-style: none; font-size: 13px; font-weight: 700;
+      color: rgba(255, 244, 220, .55); padding: 8px 0; letter-spacing: .04em;
+    }
+    details.adv > summary::-webkit-details-marker { display: none }
+    details.adv > summary::before { content: "▸ "; }
+    details.adv[open] > summary::before { content: "▾ "; }
+    details.adv .field { margin-top: 16px }
+
+    .go { display: flex; gap: 10px; justify-content: center; margin-top: 26px; flex-wrap: wrap }
+
+    /* ===================== màn chơi ===================== */
+    .bar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .bar .tools { display: flex; gap: 7px; flex-wrap: wrap }
+    .icobtn {
+      appearance: none; cursor: pointer; border: 1.5px solid rgba(255, 244, 220, .16);
+      background: rgba(255, 244, 220, .05); color: var(--cream-dim);
+      border-radius: 11px; padding: 8px 12px; font-size: 13px; font-weight: 600;
+      font-family: var(--fx-body); transition: .15s;
+    }
+    .icobtn:hover { border-color: rgba(255, 244, 220, .35); color: var(--cream) }
+    .icobtn[aria-pressed="false"] { opacity: .45 }
+
+    .scores { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px }
+    .sc {
+      position: relative; overflow: hidden;
+      border: 1.5px solid rgba(255, 244, 220, .12);
+      background: rgba(255, 244, 220, .04);
+      border-radius: 16px; padding: 11px 14px;
+      transition: .25s;
+    }
+    .sc .who { font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; opacity: .72 }
+    .sc .pts { font-family: var(--fx-display); font-size: 32px; line-height: 1.05; letter-spacing: .02em }
+    .sc .brk { font-size: 11.5px; opacity: .55; margin-top: 1px }
+    .sc.p0 .who, .sc.p0 .pts { color: var(--jade) }
+    .sc.p1 .who, .sc.p1 .pts { color: var(--violet) }
+    .sc.turn { background: rgba(255, 244, 220, .09); border-color: rgba(255, 233, 168, .5) }
+    .sc.turn::after {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+      background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+    }
+    .sc.p1 { text-align: right }
+    .sc.p1.turn::after { left: auto; right: 0 }
+
+    /* --- bàn cờ --- */
+    .boardwrap { position: relative }
+    .board {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.22fr repeat(5, 1fr) 1.22fr;
+      grid-template-rows: repeat(2, 1fr);
+      gap: 7px;
+      padding: 12px;
+      aspect-ratio: 7.44 / 2.6;
+      margin: 0 auto;
+      border-radius: 26px;
+      background:
+        radial-gradient(120% 140% at 50% 0%, rgba(255, 209, 102, .07), transparent 60%),
+        linear-gradient(170deg, var(--earth-2), var(--earth) 70%, #1C110B);
+      border: 2px solid rgba(255, 209, 102, .22);
+      box-shadow: inset 0 2px 20px rgba(0, 0, 0, .55), 0 18px 44px rgba(0, 0, 0, .45);
+    }
+
+    /* Màn hình hẹp thì dựng bàn đứng lên: quan ở trên và dưới, mỗi người một
+       cột. Giữ nguyên hình chữ nhật thì ô chỉ còn rộng chừng 50px, sỏi chồng
+       lên nhau không đếm nổi. */
+    .board.vert {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: 1.12fr repeat(5, 1fr) 1.12fr;
+      aspect-ratio: 2 / 3.25;
+      max-width: 430px;
+    }
+
+    .cell {
+      position: relative; border-radius: 12px; cursor: default;
+      background: radial-gradient(110% 110% at 50% 12%, rgba(0, 0, 0, .34), rgba(0, 0, 0, .12));
+      border: 1.5px solid rgba(255, 233, 168, .16);
+      box-shadow: inset 0 3px 10px rgba(0, 0, 0, .45);
+      transition: border-color .18s, box-shadow .18s, transform .18s;
+      overflow: hidden;
+    }
+    .cell.quan {
+      border-radius: 999px;
+      background: radial-gradient(110% 110% at 50% 12%, rgba(0, 0, 0, .40), rgba(60, 30, 6, .22));
+      border-color: rgba(255, 209, 102, .34);
+    }
+    .cell.mine0 { border-color: rgba(62, 207, 174, .3) }
+    .cell.mine1 { border-color: rgba(169, 129, 255, .3) }
+
+    .cell.pick {
+      cursor: pointer;
+      border-color: var(--gold-400);
+      box-shadow: inset 0 3px 10px rgba(0, 0, 0, .45), 0 0 0 2px rgba(255, 209, 102, .22);
+    }
+    .cell.pick:hover { transform: translateY(-2px); box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 0 0 3px rgba(255,209,102,.4) }
+    .cell.hintbest { animation: hintpulse 1.1s ease-in-out infinite }
+    @keyframes hintpulse {
+      0%, 100% { box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 0 0 2px rgba(255,209,102,.25) }
+      50%      { box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 0 0 7px rgba(255,209,102,.05), 0 0 0 3px rgba(255,209,102,.75) }
+    }
+    .cell.active { border-color: var(--gold-300); box-shadow: inset 0 3px 10px rgba(0,0,0,.45), 0 0 18px rgba(255,209,102,.45) }
+    .cell.drop { animation: drop .3s ease }
+    @keyframes drop { 40% { transform: scale(1.055) } }
+    .cell.eaten { animation: eaten .5s ease }
+    @keyframes eaten {
+      0% { background: rgba(255, 209, 102, .75) }
+      100% { background: rgba(0, 0, 0, .2) }
+    }
+    .cell.nono { animation: shake .42s ease }
+    @keyframes shake {
+      0%,100% { transform: translateX(0) } 20% { transform: translateX(-5px) }
+      45% { transform: translateX(5px) } 70% { transform: translateX(-3px) }
+    }
+
+    .stones { position: absolute; inset: 7%; }
+    .st {
+      position: absolute; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 32% 28%, #F2E4CB, #B9A183 55%, #6E5B45);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .55);
+    }
+    .st.new { animation: pop .22s ease }
+    @keyframes pop { from { transform: translate(-50%, -50%) scale(.2); opacity: .2 } }
+    .st.big {
+      background: radial-gradient(circle at 32% 28%, #FFF3C9, var(--gold-400) 48%, #8C5A0E);
+      box-shadow: 0 0 14px rgba(255, 209, 102, .6), 0 2px 4px rgba(0, 0, 0, .6);
+    }
+
+    .cnt {
+      position: absolute; right: 5px; bottom: 3px;
+      font-family: var(--fx-display); font-size: clamp(13px, 2.6vw, 19px);
+      line-height: 1; color: rgba(255, 244, 220, .9);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, .9);
+      pointer-events: none;
+    }
+    .cell.quan .cnt { right: 50%; transform: translateX(50%); bottom: 4px }
+    .cnt.zero { opacity: .22 }
+
+    .hand {
+      position: absolute; z-index: 5; pointer-events: none;
+      transform: translate(-50%, -50%);
+      font-family: var(--fx-display); font-size: 17px; line-height: 1; letter-spacing: .04em;
+      padding: 7px 13px; border-radius: 999px;
+      color: #3A1B02; background: linear-gradient(180deg, var(--gold-300), var(--gold-500));
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .5);
+      transition: left .11s linear, top .11s linear;
+      border: 2px solid rgba(58, 27, 2, .35);
+      opacity: 0;
+    }
+    .hand.on { opacity: 1 }
+
+    .fly {
+      position: absolute; z-index: 6; pointer-events: none;
+      transform: translate(-50%, -50%);
+      font-family: var(--fx-display); font-size: 17px;
+      padding: 5px 10px; border-radius: 999px;
+      background: linear-gradient(180deg, #FFF6DD, var(--gold-400));
+      color: #3A1B02; box-shadow: 0 6px 18px rgba(0, 0, 0, .55);
+      transition: left .6s cubic-bezier(.3,.8,.4,1), top .6s cubic-bezier(.3,.8,.4,1), opacity .6s;
+    }
+
+    .dirpick { position: absolute; inset: 0; display: flex; z-index: 4; border-radius: inherit; overflow: hidden }
+    .dirpick button {
+      flex: 1; border: 0; cursor: pointer; font-family: var(--fx-display);
+      font-size: clamp(15px, 3vw, 22px); color: #3A1B02;
+      background: linear-gradient(180deg, rgba(255, 233, 168, .92), rgba(239, 169, 58, .92));
+      transition: filter .12s;
+    }
+    .dirpick button + button { border-left: 2px solid rgba(58, 27, 2, .35) }
+    .dirpick button:hover { filter: brightness(1.12) }
+
+    .status {
+      margin-top: 14px; min-height: 44px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      text-align: center; font-size: 14.5px; line-height: 1.5; color: var(--cream-dim);
+    }
+    .status b { color: var(--gold-300) }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+      z-index: 40; max-width: min(90vw, 400px); text-align: center;
+      padding: 12px 20px; border-radius: 14px; font-size: 14px; font-weight: 600;
+      background: rgba(38, 6, 14, .94); color: var(--cream);
+      border: 1.5px solid rgba(255, 209, 102, .4);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, .6);
+      opacity: 0; pointer-events: none; transition: .28s;
+    }
+    .toast.on { opacity: 1; transform: translateX(-50%) translateY(0) }
+
+    /* ===================== modal ===================== */
+    .modal {
+      position: fixed; inset: 0; z-index: 50; display: none;
+      align-items: center; justify-content: center; padding: 20px;
+      background: rgba(10, 2, 6, .82); backdrop-filter: blur(4px);
+    }
+    .modal.on { display: flex; animation: fade .25s ease both }
+    .sheet {
+      width: min(560px, 100%); max-height: 86vh; overflow-y: auto;
+      background: linear-gradient(170deg, #3A0A16, var(--wine-900));
+      border: 1.5px solid rgba(255, 209, 102, .3);
+      border-radius: 22px; padding: 26px 24px;
+      box-shadow: 0 26px 70px rgba(0, 0, 0, .7);
+    }
+    .sheet h2 {
+      font-family: var(--fx-display); margin: 0 0 14px; font-size: 30px;
+      letter-spacing: .03em; color: var(--gold-300); text-align: center;
+    }
+    .sheet h3 {
+      font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--gold-400); margin: 20px 0 7px;
+    }
+    .sheet p, .sheet li { font-size: 14px; line-height: 1.7; color: var(--cream-dim) }
+    .sheet ul { margin: 6px 0; padding-left: 20px }
+    .sheet .acts { display: flex; gap: 10px; justify-content: center; margin-top: 24px; flex-wrap: wrap }
+
+    .result { text-align: center }
+    .result .big {
+      font-family: var(--fx-display); font-size: clamp(30px, 8vw, 46px);
+      line-height: 1.05; margin: 4px 0 12px;
+    }
+    .result .big.win { color: var(--jade) }
+    .result .big.lose { color: var(--violet) }
+    .result .big.draw { color: var(--gold-300) }
+    .tally {
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      gap: 12px; margin: 18px 0 6px;
+    }
+    .tally .n { font-family: var(--fx-display); font-size: 40px; line-height: 1 }
+    .tally .l { font-size: 12px; opacity: .6; letter-spacing: .08em; text-transform: uppercase }
+    .tally .vs { opacity: .35; font-size: 13px }
+    .tally .a .n { color: var(--jade) }
+    .tally .b .n { color: var(--violet) }
+
+    @media (max-width: 680px) {
+      .board { gap: 5px; padding: 9px; border-radius: 20px }
+      .sc { padding: 8px 12px }
+      .sc .pts { font-size: 26px }
+      .sc .brk { font-size: 11px }
+      .wrap { padding: 14px 12px 24px }
+      .status { margin-top: 10px; min-height: 36px; font-size: 13.5px }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition-duration: .01ms !important }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="beams"></div>
+  <div class="vignette"></div>
+
+  <main class="wrap">
+
+    <!-- ============================ THIẾT LẬP ============================ -->
+    <section id="setup" class="screen on">
+      <div class="top">
+        <a class="home" href="../">← Fiddle Game</a>
+        <button class="icobtn" id="btnRules1">Luật chơi</button>
+      </div>
+
+      <h1>Ô ĂN QUAN</h1>
+      <p class="sub">Rải sỏi vòng quanh, chừa một ô trống rồi vơ sạch ô liền sau.
+        Ai ăn được quan thì coi như nắm nửa phần thắng.</p>
+
+      <div class="panel">
+        <div class="field">
+          <span class="lab">Chơi với ai</span>
+          <div class="chips" id="optMode">
+            <button class="chip" role="radio" data-v="may">Đấu với máy<small>Bạn cầm quân bên dưới</small></button>
+            <button class="chip" role="radio" data-v="nguoi">Hai người một máy<small>Thay nhau chạm màn hình</small></button>
+          </div>
+        </div>
+
+        <div class="field" id="fLevel">
+          <span class="lab">Máy chơi cỡ nào</span>
+          <div class="chips" id="optLevel">
+            <button class="chip" role="radio" data-v="de">Dễ<small>Đi tuỳ hứng</small></button>
+            <button class="chip" role="radio" data-v="thuong">Thường<small>Thấy ăn là ăn</small></button>
+            <button class="chip" role="radio" data-v="kho">Khó<small>Tính trước bảy nước</small></button>
+          </div>
+        </div>
+
+        <div class="field" id="fFirst">
+          <span class="lab">Ai đi trước</span>
+          <div class="chips" id="optFirst">
+            <button class="chip" role="radio" data-v="0">Bạn</button>
+            <button class="chip" role="radio" data-v="1">Đối thủ</button>
+          </div>
+        </div>
+
+        <details class="adv">
+          <summary>Luật và tuỳ chỉnh</summary>
+
+          <div class="field">
+            <span class="lab">Chiều rải sỏi</span>
+            <div class="chips" id="optDir">
+              <button class="chip" role="radio" data-v="lock">Cổ điển — khoá một chiều<small>Cả ván chỉ rải theo một hướng</small></button>
+              <button class="chip" role="radio" data-v="free">Mở rộng — tự chọn chiều<small>Mỗi lượt muốn rải hướng nào cũng được</small></button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="lab">Quan non</span>
+            <div class="chips" id="optNon">
+              <button class="chip" role="radio" data-v="5">Quan dưới 5 dân thì chưa được ăn<small>Giữ ván cờ khỏi tàn quá sớm</small></button>
+              <button class="chip" role="radio" data-v="0">Ăn quan lúc nào cũng được<small>Ván rất ngắn, ai đi trước lợi to</small></button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="lab">Một quan đáng mấy dân</span>
+            <div class="chips" id="optQV">
+              <button class="chip" role="radio" data-v="10">10 dân</button>
+              <button class="chip" role="radio" data-v="5">5 dân</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="lab">Tốc độ rải sỏi</span>
+            <div class="chips" id="optSpeed">
+              <button class="chip" role="radio" data-v="cham">Chậm</button>
+              <button class="chip" role="radio" data-v="vua">Vừa</button>
+              <button class="chip" role="radio" data-v="nhanh">Nhanh</button>
+            </div>
+          </div>
+        </details>
+
+        <div class="go">
+          <button class="btn" id="btnStart">BẮT ĐẦU</button>
+        </div>
+      </div>
+
+      <p class="sub" style="margin-top:22px;font-size:13px;opacity:.6">
+        Bàn ba người hình tam giác và bàn bốn người hình vuông đang làm tiếp.
+      </p>
+    </section>
+
+    <!-- ============================== CHƠI =============================== -->
+    <section id="play" class="screen">
+      <div class="bar">
+        <button class="icobtn" id="btnBack">← Đổi ván</button>
+        <div class="tools">
+          <button class="icobtn" id="btnHint">Mách nước</button>
+          <button class="icobtn" id="btnRules2">Luật</button>
+          <button class="icobtn" id="btnSound" aria-pressed="true">Tiếng ♪</button>
+        </div>
+      </div>
+
+      <div class="scores">
+        <div class="sc p0" id="sc0">
+          <div class="who" id="nm0">Bạn</div>
+          <div class="pts" id="pt0">0</div>
+          <div class="brk" id="bk0">0 dân · 0 quan</div>
+        </div>
+        <div class="sc p1" id="sc1">
+          <div class="who" id="nm1">Máy</div>
+          <div class="pts" id="pt1">0</div>
+          <div class="brk" id="bk1">0 dân · 0 quan</div>
+        </div>
+      </div>
+
+      <div class="boardwrap">
+        <div class="board" id="board"></div>
+        <div class="hand" id="hand">0</div>
+      </div>
+
+      <div class="status" id="status">Chạm vào một ô của bạn để rải sỏi.</div>
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- ============================== LUẬT ============================== -->
+  <div class="modal" id="mRules">
+    <div class="sheet">
+      <h2>Luật chơi</h2>
+
+      <h3>Bày sỏi</h3>
+      <p>Mười ô vuông chia hai bên, mỗi ô năm viên dân. Hai đầu là hai ô quan hình bán nguyệt, mỗi ô một viên quan.
+        Năm ô phía mình là phần mình.</p>
+
+      <h3>Một lượt đi</h3>
+      <ul>
+        <li>Bốc hết sỏi ở <b>một ô của mình</b>, rải mỗi ô một viên theo chiều đã định.</li>
+        <li>Rải hết viên cuối, nhìn ô ngay sau đó:</li>
+        <li>— Còn sỏi thì <b>bốc luôn ô ấy</b> rải tiếp.</li>
+        <li>— <b>Trống</b> thì <b>ăn</b> sỏi ở ô liền sau ô trống ấy. Ăn xong mà lại gặp trống rồi có sỏi thì
+          ăn tiếp, gọi là <b>ăn liên hoàn</b>.</li>
+        <li>— Là <b>ô quan</b> thì mất lượt.</li>
+        <li>— Hai ô trống liền nhau thì hết lượt.</li>
+      </ul>
+
+      <h3>Quan non</h3>
+      <p>Ô quan còn dưới năm dân thì chưa được ăn. Rơi vào đúng thế đó thì mất lượt, phải chờ quan dày thêm.
+        Không có luật này thì nước đi đầu tiên đã ăn được quan và ván tàn sau vài lượt.</p>
+
+      <h3>Hết sỏi thì rải lại</h3>
+      <p>Đến lượt mà cả năm ô của mình trống thì lấy trong chỗ sỏi đã ăn, mỗi ô một viên. Không đủ thì vay của
+        đối thủ, cuối ván trả lại.</p>
+
+      <h3>Hết quan tàn dân</h3>
+      <p>Cả hai ô quan sạch sỏi là ván kết thúc. Ai còn sỏi bên phần mình thì vơ về. Một dân một điểm,
+        một quan mười điểm. Nhiều điểm hơn thì thắng.</p>
+
+      <div class="acts"><button class="btn" id="btnCloseRules">Hiểu rồi</button></div>
+    </div>
+  </div>
+
+  <!-- ============================ KẾT QUẢ ============================ -->
+  <div class="modal" id="mOver">
+    <div class="sheet result">
+      <h2>Hết quan tàn dân</h2>
+      <div class="big" id="ovBig">—</div>
+      <div class="tally">
+        <div class="a"><div class="n" id="ovA">0</div><div class="l" id="ovAL">Bạn</div></div>
+        <div class="vs">—</div>
+        <div class="b"><div class="n" id="ovB">0</div><div class="l" id="ovBL">Máy</div></div>
+      </div>
+      <p id="ovNote" style="margin-top:6px"></p>
+      <div class="acts">
+        <button class="btn" id="btnAgain">CHƠI VÁN NỮA</button>
+        <button class="btn ghost" id="btnMenu">Đổi cách chơi</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ===== engine.js ===== */
+/* ============================================================================
+   Ô ĂN QUAN — luật chơi
+   Thuần logic, không đụng tới DOM. Chạy được bằng node để kiểm tra.
+
+   BÀN CỜ LÀ MỘT VÒNG TRÒN
+   Dù là bàn 2 người (hình chữ nhật), 3 người (tam giác) hay 4 người (vuông),
+   sỏi vẫn chỉ chạy vòng quanh theo một đường khép kín. Nên trong code bàn cờ
+   chỉ là một mảng ô nối đuôi nhau:
+
+       [quan 0] [5 ô của người 0] [quan 1] [5 ô của người 1] [quan 2] ...
+
+   Bàn 2 người ra đúng 12 ô như bàn cổ điển. Bàn 3 người ra 18 ô, 4 người ra
+   24 ô. Viết một lần, dùng cho cả ba.
+
+   MỘT LƯỢT ĐI
+   1. Bốc hết sỏi ở một ô dân của mình, rải mỗi ô một viên theo chiều đã chọn.
+   2. Rải hết viên cuối, nhìn ô kế tiếp:
+      - là ô quan        -> mất lượt, hết lượt.
+      - còn sỏi          -> bốc luôn ô đó, rải tiếp.
+      - trống            -> ăn sỏi ở ô liền sau ô trống ấy. Ăn xong mà lại gặp
+                            một ô trống nữa rồi một ô có sỏi thì ăn tiếp
+                            (ăn liên hoàn). Hai ô trống liền nhau thì dừng.
+   2b. QUAN NON: ô quan còn dưới 5 dân thì chưa được ăn. Ai rải vào đúng thế ăn
+      quan non thì mất lượt, phải chờ quan "già" thêm. Không có luật này thì
+      nước đầu tiên của ván đã ăn được quan và ván tàn sau mấy lượt.
+   3. Đến lượt ai mà cả năm ô của người đó trống thì phải rải lại: lấy trong
+      chỗ sỏi đã ăn, mỗi ô một viên. Không đủ thì vay của đối thủ, cuối ván trả.
+   4. Hết quan tàn dân: cả hai ô quan sạch sỏi thì ván kết thúc, ai còn sỏi
+      bên phần mình thì vơ về. Dân 1 điểm, quan 10 điểm.
+   ========================================================================== */
+const OAQ = (function () {
+  'use strict';
+
+  const DEFAULTS = {
+    players: 2,        // 2, 3 hay 4
+    perSide: 5,        // số ô dân mỗi người
+    startDan: 5,       // sỏi ban đầu mỗi ô dân
+    startQuan: 1,      // quan ban đầu mỗi ô quan
+    quanValue: 10,     // một quan ăn bằng mấy dân
+    quanNon: 5,        // quan còn dưới ngần này dân thì chưa được ăn (0 = bỏ luật)
+    lockDirection: true, // cổ điển: khoá một chiều cả ván
+    fixedDir: 1        // chiều khoá (+1 hoặc -1)
+  };
+
+  /* ---- dựng ván mới -------------------------------------------------- */
+  function newGame(opts) {
+    const o = Object.assign({}, DEFAULTS, opts || {});
+    const cells = [];
+    for (let s = 0; s < o.players; s++) {
+      cells.push({ kind: 'quan', side: -1, corner: s, dan: 0, quan: o.startQuan });
+      for (let k = 0; k < o.perSide; k++) {
+        cells.push({ kind: 'dan', side: s, idx: k, dan: o.startDan, quan: 0 });
+      }
+    }
+    return {
+      opts: o,
+      n: o.players,
+      perSide: o.perSide,
+      cells: cells,
+      captured: Array.from({ length: o.players }, () => ({ dan: 0, quan: 0 })),
+      debt: Array.from({ length: o.players }, () => new Array(o.players).fill(0)),
+      turn: 0,
+      over: false,
+      moveCount: 0
+    };
+  }
+
+  function clone(s) {
+    return {
+      opts: s.opts, n: s.n, perSide: s.perSide,
+      cells: s.cells.map(c => ({
+        kind: c.kind, side: c.side, idx: c.idx, corner: c.corner, dan: c.dan, quan: c.quan
+      })),
+      captured: s.captured.map(c => ({ dan: c.dan, quan: c.quan })),
+      debt: s.debt.map(r => r.slice()),
+      turn: s.turn, over: s.over, moveCount: s.moveCount
+    };
+  }
+
+  /* ---- tra cứu ------------------------------------------------------- */
+  function sideCells(s, p) {
+    const start = p * (s.perSide + 1) + 1, out = [];
+    for (let k = 0; k < s.perSide; k++) out.push(start + k);
+    return out;
+  }
+  function quanIndex(s, p) { return p * (s.perSide + 1); }
+  function ownerOf(s, i) { return s.cells[i].side; }
+  function next(s, i, dir) { const L = s.cells.length; return (i + dir + L) % L; }
+
+  function allQuanEmpty(s) {
+    for (let i = 0; i < s.cells.length; i++) {
+      const c = s.cells[i];
+      if (c.kind === 'quan' && (c.dan > 0 || c.quan > 0)) return false;
+    }
+    return true;
+  }
+
+  function legalMoves(s, p) {
+    if (p === undefined || p === null) p = s.turn;
+    if (s.over) return [];
+    const dirs = s.opts.lockDirection ? [s.opts.fixedDir] : [1, -1];
+    const out = [];
+    for (const i of sideCells(s, p)) {
+      if (s.cells[i].dan > 0) for (const d of dirs) out.push({ cell: i, dir: d });
+    }
+    return out;
+  }
+
+  function score(s, p) {
+    return s.captured[p].dan + s.captured[p].quan * s.opts.quanValue;
+  }
+
+  /* Tổng sỏi trên bàn + trong tay mọi người. Dùng để kiểm tra không rơi vãi. */
+  function census(s) {
+    let dan = 0, quan = 0;
+    for (const c of s.cells) { dan += c.dan; quan += c.quan; }
+    for (const c of s.captured) { dan += c.dan; quan += c.quan; }
+    return { dan: dan, quan: quan };
+  }
+
+  /* ---- rải lại khi hết sỏi -------------------------------------------- */
+  function needsRefill(s, p) {
+    return sideCells(s, p).every(i => s.cells[i].dan === 0);
+  }
+
+  function refill(s, p, events) {
+    const placed = [];
+    for (const i of sideCells(s, p)) {
+      let from = p;
+      if (s.captured[p].dan > 0) {
+        s.captured[p].dan--;
+      } else {
+        /* vay của người đang giữ nhiều dân nhất */
+        let best = -1, bestv = 0;
+        for (let q = 0; q < s.n; q++) {
+          if (q !== p && s.captured[q].dan > bestv) { bestv = s.captured[q].dan; best = q; }
+        }
+        if (best < 0) {
+          if (placed.length) events.push({ t: 'refill', player: p, placed: placed });
+          return false;                     // cả làng hết sỏi, không rải nổi
+        }
+        s.captured[best].dan--;
+        s.debt[p][best]++;
+        from = best;
+      }
+      s.cells[i].dan++;
+      placed.push({ cell: i, from: from });
+    }
+    events.push({ t: 'refill', player: p, placed: placed });
+    return true;
+  }
+
+  /* ---- kết thúc ván --------------------------------------------------- */
+  function finish(s, events, reason) {
+    for (let p = 0; p < s.n; p++) {
+      const got = [];
+      for (const i of sideCells(s, p)) {
+        const c = s.cells[i];
+        if (c.dan || c.quan) {
+          s.captured[p].dan += c.dan; s.captured[p].quan += c.quan;
+          got.push({ cell: i, dan: c.dan, quan: c.quan });
+          c.dan = 0; c.quan = 0;
+        }
+      }
+      if (got.length) events.push({ t: 'sweep', player: p, got: got });
+    }
+    /* sỏi còn kẹt ở ô quan (chỉ xảy ra khi ván tàn vì bí nước): chia đôi cho
+       hai người ngồi kề ô đó, lẻ ra thì phần người phía sau. */
+    for (let c = 0; c < s.n; c++) {
+      const qi = quanIndex(s, c), qc = s.cells[qi];
+      if (!qc.dan && !qc.quan) continue;
+      const after = c, before = (c - 1 + s.n) % s.n;
+      const half = Math.floor(qc.dan / 2);
+      s.captured[before].dan += half;
+      s.captured[after].dan += qc.dan - half;
+      if (qc.quan) s.captured[after].quan += qc.quan;
+      events.push({ t: 'splitQuan', cell: qi, to: [before, after], dan: qc.dan, quan: qc.quan });
+      qc.dan = 0; qc.quan = 0;
+    }
+
+    /* trả nợ đã vay */
+    for (let p = 0; p < s.n; p++) {
+      for (let q = 0; q < s.n; q++) {
+        const d = s.debt[p][q];
+        if (d > 0) {
+          s.captured[p].dan -= d; s.captured[q].dan += d; s.debt[p][q] = 0;
+          events.push({ t: 'settle', from: p, to: q, dan: d });
+        }
+      }
+    }
+    s.over = true;
+    events.push({ t: 'over', reason: reason || 'hetquan' });
+  }
+
+  /* ---- đi một nước ----------------------------------------------------
+     Sửa thẳng vào state, trả về danh sách sự kiện để giao diện chạy hoạt ảnh.
+     Muốn thử nước mà không đổi ván thật thì clone() trước.                */
+  function applyMove(s, move) {
+    const events = [];
+    if (s.over) return events;
+    const p = s.turn;
+    const dir = s.opts.lockDirection ? s.opts.fixedDir : (move.dir || 1);
+
+    let pos = move.cell;
+    if (s.cells[pos].kind !== 'dan' || s.cells[pos].side !== p || s.cells[pos].dan <= 0) {
+      return events;                        // nước không hợp lệ, bỏ qua
+    }
+
+    let hand = s.cells[pos].dan;
+    s.cells[pos].dan = 0;
+    events.push({ t: 'pick', cell: pos, count: hand, player: p, chain: false });
+
+    let guard = 0;
+    while (true) {
+      if (++guard > 4000) { events.push({ t: 'stall' }); break; }
+
+      while (hand > 0) {
+        pos = next(s, pos, dir);
+        s.cells[pos].dan++;
+        hand--;
+        events.push({ t: 'sow', cell: pos, player: p, left: hand });
+      }
+
+      const nx = next(s, pos, dir);
+      const nc = s.cells[nx];
+
+      if (nc.kind === 'quan') { events.push({ t: 'stopQuan', cell: nx, player: p }); break; }
+
+      if (nc.dan > 0) {                      // còn sỏi -> bốc tiếp
+        hand = nc.dan; nc.dan = 0; pos = nx;
+        events.push({ t: 'pick', cell: nx, count: hand, player: p, chain: true });
+        continue;
+      }
+
+      /* ô kế tiếp trống -> ăn, và ăn liên hoàn nếu còn gặp trống-rồi-có */
+      let cur = nx, ate = false, blocked = false, g2 = 0;
+      while (++g2 < 200) {
+        const tgt = next(s, cur, dir);
+        const tc = s.cells[tgt];
+        if (tc.dan > 0 || tc.quan > 0) {
+          if (tc.kind === 'quan' && tc.quan > 0 && s.opts.quanNon > 0 && tc.dan < s.opts.quanNon) {
+            events.push({ t: 'quanNon', cell: tgt, player: p, have: tc.dan, need: s.opts.quanNon });
+            blocked = true;
+            break;                                   // quan còn non, mất lượt
+          }
+          s.captured[p].dan += tc.dan;
+          s.captured[p].quan += tc.quan;
+          events.push({ t: 'eat', cell: tgt, dan: tc.dan, quan: tc.quan, player: p, kind: tc.kind });
+          tc.dan = 0; tc.quan = 0;
+          ate = true;
+          cur = next(s, tgt, dir);
+          const cc = s.cells[cur];
+          if (cc.dan > 0 || cc.quan > 0) break;   // ô kế không trống -> thôi
+        } else break;                              // hai ô trống liền -> thôi
+      }
+      if (!ate && !blocked) events.push({ t: 'stopEmpty', cell: nx, player: p });
+      break;
+    }
+
+    s.moveCount++;
+
+    if (allQuanEmpty(s)) { finish(s, events, 'hetquan'); return events; }
+
+    /* chuyển lượt, rải lại cho ai hết sỏi */
+    let q = p, found = false;
+    for (let k = 0; k < s.n; k++) {
+      q = (q + 1) % s.n;
+      if (needsRefill(s, q)) refill(s, q, events);
+      if (legalMoves(s, q).length > 0) { s.turn = q; found = true; break; }
+    }
+    if (!found) finish(s, events, 'bi');
+    return events;
+  }
+
+  /* Thử một nước trên bản sao, trả về {state, events} — cho máy tính toán. */
+  function simulate(s, move) {
+    const c = clone(s);
+    const ev = applyMove(c, move);
+    return { state: c, events: ev };
+  }
+
+  const API = {
+    DEFAULTS: DEFAULTS,
+    newGame: newGame, clone: clone, simulate: simulate,
+    sideCells: sideCells, quanIndex: quanIndex, ownerOf: ownerOf, next: next,
+    legalMoves: legalMoves, applyMove: applyMove,
+    score: score, census: census, needsRefill: needsRefill, allQuanEmpty: allQuanEmpty
+  };
+  return API;
+})();
+
+if (typeof module !== 'undefined' && module.exports) module.exports = OAQ;
+
+</script>
+<script>
+/* ===== ai.js ===== */
+/* ============================================================================
+   Ô ĂN QUAN — máy đấu
+
+   Dễ     : đi gần như ngẫu nhiên, chỉ tránh nước dại rõ ràng.
+   Thường : nhìn trước một nước — ăn được nhiều nhất, trừ đi chỗ đối thủ ăn lại.
+   Khó    : minimax cắt tỉa alpha-beta. Nhánh chỉ có năm nước nên đào sâu được.
+
+   Ô ăn quan không có yếu tố may rủi: cùng một thế, cùng một nước thì kết quả
+   luôn như nhau. Nên minimax chạy thẳng, không cần mô phỏng xác suất.
+   ========================================================================== */
+const OAQ_AI = (function (E) {
+  'use strict';
+
+  const LEVELS = {
+    de:     { name: 'Dễ',     depth: 0, noise: 1.0 },
+    thuong: { name: 'Thường', depth: 2, noise: 0.25 },
+    kho:    { name: 'Khó',    depth: 7, noise: 0 }
+  };
+
+  /* Điểm thế cờ dưới con mắt của người chơi me.
+     Sỏi đã ăn là chắc ăn. Sỏi còn nằm bên phần mình chỉ đáng một phần nhỏ:
+     cuối ván mới được vơ, mà từ giờ đến đó nó có thể chạy sang nhà hàng xóm. */
+  function evaluate(s, me) {
+    let best = -Infinity, mine = E.score(s, me);
+    for (let q = 0; q < s.n; q++) if (q !== me) best = Math.max(best, E.score(s, q));
+    let v = mine - best;
+
+    for (let p = 0; p < s.n; p++) {
+      let onside = 0;
+      for (const i of E.sideCells(s, p)) onside += s.cells[i].dan;
+      v += (p === me ? 0.12 : -0.12) * onside;
+    }
+
+    /* Quan chưa ai ăn: ai đang ở thế dễ với tới thì hơn một chút. Đo thô bằng
+       khoảng cách từ ô có sỏi gần nhất của mình tới ô quan. Quan còn non thì
+       chưa ăn được, coi như chưa đáng thèm. */
+    const non = s.opts.quanNon || 0;
+    for (let c = 0; c < s.n; c++) {
+      const qi = E.quanIndex(s, c), qc = s.cells[qi];
+      if (qc.quan <= 0) continue;
+      const ripe = (non <= 0 || qc.dan >= non);
+      const pot = qc.quan * s.opts.quanValue + qc.dan;
+      if (!ripe) { v += 0.05 * qc.dan; continue; }
+      for (let p = 0; p < s.n; p++) {
+        let near = 99;
+        for (const i of E.sideCells(s, p)) {
+          if (s.cells[i].dan <= 0) continue;
+          const d = (qi - i + s.cells.length) % s.cells.length;
+          near = Math.min(near, d);
+        }
+        if (near < 99) v += (p === me ? 1 : -1) * pot * 0.02 * (1 / (1 + near));
+      }
+    }
+    return v;
+  }
+
+  function terminalValue(s, me) {
+    let best = -Infinity;
+    for (let q = 0; q < s.n; q++) if (q !== me) best = Math.max(best, E.score(s, q));
+    const d = E.score(s, me) - best;
+    return d * 100;   // ván đã xong thì hơn hẳn mọi thế cờ đang dở
+  }
+
+  /* Minimax hai người. Ba bốn người thì dùng đánh giá tham một nước. */
+  function search(s, me, depth, alpha, beta, nodes) {
+    if (s.over) return terminalValue(s, me);
+    if (depth <= 0) return evaluate(s, me);
+    nodes.n++;
+    if (nodes.n > nodes.cap) return evaluate(s, me);
+
+    const turn = s.turn;
+    const moves = E.legalMoves(s, turn);
+    if (!moves.length) return evaluate(s, me);
+
+    const maximizing = (turn === me);
+    let best = maximizing ? -Infinity : Infinity;
+
+    for (const mv of moves) {
+      const c = E.clone(s);
+      E.applyMove(c, mv);
+      const v = search(c, me, depth - 1, alpha, beta, nodes);
+      if (maximizing) {
+        if (v > best) best = v;
+        if (best > alpha) alpha = best;
+      } else {
+        if (v < best) best = v;
+        if (best < beta) beta = best;
+      }
+      if (beta <= alpha) break;
+    }
+    return best;
+  }
+
+  /* Ăn được bao nhiêu trong chính nước này */
+  function immediateGain(events, p) {
+    let g = 0;
+    for (const e of events) if (e.t === 'eat' && e.player === p) g += e.dan + e.quan * 10;
+    return g;
+  }
+
+  function pick(state, level) {
+    const L = LEVELS[level] || LEVELS.thuong;
+    const me = state.turn;
+    const moves = E.legalMoves(state, me);
+    if (!moves.length) return null;
+    if (moves.length === 1) return moves[0];
+
+    const scored = [];
+
+    if (L.depth <= 0) {
+      /* Dễ: chấm điểm rất thô — ăn được thì thích, ngoài ra tuỳ hứng. */
+      for (const mv of moves) {
+        const r = E.simulate(state, mv);
+        scored.push({ mv: mv, v: immediateGain(r.events, me) * 0.5 + Math.random() * 6 });
+      }
+    } else if (state.n > 2) {
+      /* Nhiều người: tham một nước, có nhìn qua nước trả đũa của người kế tiếp. */
+      for (const mv of moves) {
+        const r = E.simulate(state, mv);
+        let v = immediateGain(r.events, me) + evaluate(r.state, me) * 0.5;
+        if (!r.state.over) {
+          const nxt = r.state.turn;
+          if (nxt !== me) {
+            let worst = 0;
+            for (const m2 of E.legalMoves(r.state, nxt)) {
+              worst = Math.max(worst, immediateGain(E.simulate(r.state, m2).events, nxt));
+            }
+            v -= worst * 0.8;
+          }
+        }
+        scored.push({ mv: mv, v: v });
+      }
+    } else {
+      const nodes = { n: 0, cap: 120000 };
+      for (const mv of moves) {
+        const c = E.clone(state);
+        E.applyMove(c, mv);
+        const v = search(c, me, L.depth - 1, -Infinity, Infinity, nodes);
+        scored.push({ mv: mv, v: v });
+      }
+    }
+
+    if (L.noise > 0) for (const s of scored) s.v += (Math.random() - 0.5) * L.noise * 4;
+
+    scored.sort((a, b) => b.v - a.v);
+    return scored[0].mv;
+  }
+
+  return { LEVELS: LEVELS, pick: pick, evaluate: evaluate };
+})(typeof module !== 'undefined' && module.exports ? require('./engine.js') : OAQ);
+
+if (typeof module !== 'undefined' && module.exports) module.exports = OAQ_AI;
+
+</script>
+<script>
+/* ===== game.js ===== */
+/* ============================================================================
+   Ô ĂN QUAN — giao diện
+
+   engine.js giữ luật, ai.js giữ máy đấu, file này chỉ lo vẽ và chạy hoạt ảnh.
+   Mỗi nước đi engine trả về một danh sách sự kiện (bốc, rải, ăn, rải lại...),
+   ở đây phát lần lượt từng cái cho người chơi nhìn thấy sỏi chạy tới đâu.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  const E = OAQ, AI = OAQ_AI;
+  const $ = id => document.getElementById(id);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ===================== cài đặt lưu lại ============================== */
+  const KEY = 'o-an-quan';
+  const CF = {
+    mode: 'may', level: 'thuong', first: '0',
+    dir: 'lock', non: '5', qv: '10', speed: 'vua', sound: true
+  };
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) Object.assign(CF, JSON.parse(raw));
+  } catch (e) { }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(CF)); } catch (e) { } }
+
+  const SPEED = { cham: 300, vua: 165, nhanh: 85 };
+
+  /* ===================== âm thanh ===================================== */
+  const SFX = (function () {
+    let ctx = null, gain = null;
+    function init() {
+      if (ctx) { if (ctx.state === 'suspended' && ctx.resume) ctx.resume(); return true; }
+      try {
+        const C = window.AudioContext || window.webkitAudioContext;
+        if (!C) return false;
+        ctx = new C();
+        if (ctx.state === 'suspended' && ctx.resume) ctx.resume();
+        gain = ctx.createGain(); gain.gain.value = CF.sound ? 0.5 : 0;
+        let out = ctx.destination;
+        try {
+          const comp = ctx.createDynamicsCompressor();
+          comp.threshold.value = -10; comp.ratio.value = 4; comp.connect(ctx.destination); out = comp;
+        } catch (e) { }
+        gain.connect(out);
+        return true;
+      } catch (e) { return false; }
+    }
+    function tone(f, t0, dur, type, vol) {
+      if (!ctx) return;
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type || 'triangle';
+      o.frequency.setValueAtTime(f, t0);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol), t0 + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(g); g.connect(gain);
+      o.start(t0); o.stop(t0 + dur + 0.05);
+    }
+    /* tiếng sỏi: một hạt nhiễu ngắn lọc băng hẹp, nghe như đá chạm đất */
+    function click(pitch, vol) {
+      if (!init() || !CF.sound) return;
+      const t0 = ctx.currentTime;
+      const n = ctx.createBufferSource();
+      const len = Math.floor(ctx.sampleRate * 0.05);
+      const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+      n.buffer = buf;
+      const f = ctx.createBiquadFilter();
+      f.type = 'bandpass'; f.frequency.value = pitch || 1500; f.Q.value = 2.2;
+      const g = ctx.createGain(); g.gain.value = vol == null ? 0.5 : vol;
+      n.connect(f); f.connect(g); g.connect(gain);
+      n.start(t0);
+    }
+    return {
+      unlock: init,
+      setOn(v) { CF.sound = v; if (gain) gain.gain.value = v ? 0.5 : 0; },
+      sow(i) { click(1250 + ((i * 137) % 700), 0.34); },
+      pick() { click(820, 0.5); },
+      eat() {
+        if (!init() || !CF.sound) return;
+        const t = ctx.currentTime;
+        [523, 659, 784].forEach((f, k) => tone(f, t + k * 0.06, 0.22, 'triangle', 0.16));
+      },
+      quan() {
+        if (!init() || !CF.sound) return;
+        const t = ctx.currentTime;
+        [523, 659, 784, 1047, 1319].forEach((f, k) => tone(f, t + k * 0.07, 0.4, 'triangle', 0.2));
+      },
+      nope() {
+        if (!init() || !CF.sound) return;
+        const t = ctx.currentTime;
+        tone(300, t, 0.13, 'sawtooth', 0.14); tone(220, t + 0.1, 0.2, 'sawtooth', 0.12);
+      },
+      win() {
+        if (!init() || !CF.sound) return;
+        const t = ctx.currentTime;
+        [523, 659, 784, 1047, 1319, 1568].forEach((f, k) => tone(f, t + k * 0.1, 0.55, 'triangle', 0.2));
+      },
+      lose() {
+        if (!init() || !CF.sound) return;
+        const t = ctx.currentTime;
+        [523, 466, 392, 311].forEach((f, k) => tone(f, t + k * 0.14, 0.5, 'sine', 0.17));
+      }
+    };
+  })();
+
+  /* ===================== trạng thái màn hình ========================== */
+  let S = null;          // ván thật, engine đã đi xong tới nước mới nhất
+  let V = null;          /* thế cờ đang VẼ. engine sửa state ngay lập tức, nên nếu
+                            cứ thế vẽ theo S thì ô nào bị bốc lại trong chuỗi ăn
+                            liên hoàn sẽ hiện 0 từ trước khi sỏi rơi vào. V là bản
+                            sao chép chạy lại từng bước theo nhịp hoạt ảnh. */
+  let cellEls = [];
+  let busy = false;      // đang chạy hoạt ảnh, chặn bấm
+  let names = ['Bạn', 'Máy'];
+  let record = { w: 0, l: 0, d: 0 };
+  try { const r = localStorage.getItem(KEY + '-rec'); if (r) record = JSON.parse(r); } catch (e) { }
+
+  const isAI = p => CF.mode === 'may' && p === 1;
+
+  /* ===================== nhóm nút chọn ================================ */
+  function group(elId, key, onChange) {
+    const box = $(elId);
+    if (!box) return;
+    box.setAttribute('role', 'radiogroup');
+    const paint = () => Array.from(box.children).forEach(b =>
+      b.setAttribute('aria-checked', String(b.dataset.v === String(CF[key]))));
+    box.addEventListener('click', ev => {
+      const b = ev.target.closest('.chip'); if (!b) return;
+      CF[key] = b.dataset.v; save(); paint();
+      SFX.unlock();
+      if (onChange) onChange(b.dataset.v);
+    });
+    paint();
+  }
+
+  /* ===================== dựng bàn ===================================== */
+  /* Với bàn hai người: ô 0 là quan trái, ô 1..5 là hàng dưới (người 0) chạy
+     từ trái sang phải, ô 6 là quan phải, ô 7..11 là hàng trên (người 1) chạy
+     từ phải sang trái. Xếp vậy thì đi vòng quanh đúng một đường khép kín. */
+  function gridSpot(i, perSide, vert) {
+    if (vert) {
+      /* Bàn đứng: quan trên cùng và dưới cùng chiếm cả hai cột. Phần người 0
+         chạy xuôi xuống cột phải, phần người 1 chạy ngược lên cột trái. */
+      const rows = perSide + 2;
+      if (i === 0) return { c: 1, r: 1, rs: 1, cs: 2 };
+      if (i === perSide + 1) return { c: 1, r: rows, rs: 1, cs: 2 };
+      if (i <= perSide) return { c: 2, r: 1 + i, rs: 1, cs: 1 };
+      const k = i - perSide - 2;                    // 0..4 chạy ngược lên
+      return { c: 1, r: rows - 1 - k, rs: 1, cs: 1 };
+    }
+    const cols = perSide + 2;                       // 5 ô + 2 quan
+    if (i === 0) return { c: 1, r: 1, rs: 2, cs: 1 };
+    if (i === perSide + 1) return { c: cols, r: 1, rs: 2, cs: 1 };
+    if (i <= perSide) return { c: 1 + i, r: 2, rs: 1, cs: 1 };
+    const k = i - perSide - 2;                      // 0..4 chạy ngược
+    return { c: cols - 1 - k, r: 1, rs: 1, cs: 1 };
+  }
+
+  /* Bàn nằm ngang đẹp trên máy tính, nhưng trên điện thoại dọc thì ô hẹp quá.
+     Đứng hay nằm là tuỳ khung hình, không phải tuỳ mỗi chiều rộng. */
+  function wantVertical() {
+    return window.innerWidth < 640 && window.innerHeight > window.innerWidth * 1.15;
+  }
+
+  let vertNow = null;
+  function layoutBoard() {
+    const vert = wantVertical();
+    const board = $('board');
+    board.classList.toggle('vert', vert);
+    if (vert !== vertNow) {
+      vertNow = vert;
+      for (let i = 0; i < cellEls.length; i++) {
+        const sp = gridSpot(i, S.perSide, vert), el = cellEls[i];
+        el.style.gridColumn = sp.c + ' / span ' + sp.cs;
+        el.style.gridRow = sp.r + ' / span ' + sp.rs;
+      }
+    }
+    measure();
+  }
+
+  /* Đo ô một lần rồi nhớ lại: lúc rải sỏi vẽ lại liên tục, hỏi kích thước
+     từng viên một thì trình duyệt phải tính lại bố cục mỗi khung hình. */
+  function measure() {
+    for (const el of cellEls) {
+      const r = el.getBoundingClientRect();
+      el._w = r.width * 0.86;
+      el._h = r.height * 0.86;
+      el._min = Math.min(el._w, el._h);
+    }
+  }
+
+  function buildBoard() {
+    const board = $('board');
+    board.innerHTML = '';
+    cellEls = [];
+    for (let i = 0; i < S.cells.length; i++) {
+      const c = S.cells[i];
+      const el = document.createElement('div');
+      el.className = 'cell' + (c.kind === 'quan' ? ' quan' : ' mine' + c.side);
+      el.dataset.i = i;
+      el.innerHTML = '<div class="stones"></div><div class="cnt">0</div>';
+      el._n = -1;
+      el.addEventListener('click', () => onCellClick(i));
+      board.appendChild(el);
+      cellEls.push(el);
+    }
+    vertNow = null;
+    layoutBoard();
+  }
+
+  /* Sỏi rải theo xoắn ốc hạt hướng dương: viên thứ k luôn nằm đúng một chỗ,
+     thêm viên mới không làm mấy viên cũ nhảy lung tung. */
+  const GA = 2.39996323;
+
+  /* Mỗi mức số sỏi có một "sức chứa" riêng, sỏi rải theo xoắn ốc hạt hướng
+     dương cho kín ô. Trong cùng một mức thì viên thứ k luôn nằm nguyên chỗ,
+     thêm viên mới không làm mấy viên cũ nhảy chỗ. */
+  function bucket(total) {
+    if (total <= 4) return { cap: 5, f: 0.40 };
+    if (total <= 8) return { cap: 9, f: 0.31 };
+    if (total <= 14) return { cap: 15, f: 0.245 };
+    if (total <= 22) return { cap: 23, f: 0.195 };
+    if (total <= 34) return { cap: 35, f: 0.155 };
+    return { cap: 52, f: 0.125 };
+  }
+
+  function drawCell(i, pop) {
+    const c = V.cells[i], el = cellEls[i];
+    const box = el.firstElementChild, cnt = el.lastElementChild;
+    const total = c.dan + c.quan;
+    const prev = el._n;
+    const min = el._min || 40, bw = el._w || 40, bh = el._h || 40;
+    const bk = bucket(total);
+
+    const danPx = Math.max(5, min * bk.f);
+    const quanPx = Math.max(9, min * 0.46);
+
+    /* bán kính tính bằng phần trăm, chừa đủ chỗ để viên sỏi không lòi ra */
+    const rx = Math.max(4, 50 - (danPx / bw) * 52);
+    const ry = Math.max(4, 50 - (danPx / bh) * 52);
+
+    let html = '', k = 0;
+    for (let q = 0; q < c.quan; q++, k++) {
+      html += '<i class="st big" style="left:50%;top:50%;width:' + quanPx.toFixed(1) +
+        'px;height:' + quanPx.toFixed(1) + 'px"></i>';
+    }
+    const shift = c.quan > 0 ? 3 : 0;          // né viên quan ngồi giữa
+    const seed = i * 1.7137;                   // mỗi ô xoay một kiểu, đỡ giống hệt nhau
+    for (let d = 0; d < c.dan; d++, k++) {
+      const j = d + shift;
+      const rr = Math.sqrt((j + 0.6) / (bk.cap + shift));
+      const x = 50 + Math.cos(j * GA + seed) * rr * rx;
+      const y = 50 + Math.sin(j * GA + seed) * rr * ry;
+      const isNew = pop && prev >= 0 && k >= prev;
+      html += '<i class="st' + (isNew ? ' new' : '') + '" style="left:' + x.toFixed(1) +
+        '%;top:' + y.toFixed(1) + '%;width:' + danPx.toFixed(1) + 'px;height:' + danPx.toFixed(1) + 'px"></i>';
+    }
+    box.innerHTML = html;
+    cnt.textContent = total;
+    cnt.className = 'cnt' + (total === 0 ? ' zero' : '');
+    el._n = total;
+  }
+
+  function drawAll(pop) { for (let i = 0; i < V.cells.length; i++) drawCell(i, pop); }
+
+  /* ===================== bảng điểm ==================================== */
+  function drawScores() {
+    for (let p = 0; p < 2; p++) {
+      $('nm' + p).textContent = names[p];
+      $('pt' + p).textContent = E.score(V, p);
+      $('bk' + p).textContent = V.captured[p].dan + ' dân · ' + V.captured[p].quan + ' quan';
+      $('sc' + p).classList.toggle('turn', !S.over && S.turn === p);
+    }
+  }
+
+  /* ===================== thông báo ==================================== */
+  let toastT = null;
+  function toast(msg, ms) {
+    const t = $('toast');
+    t.textContent = msg; t.classList.add('on');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => t.classList.remove('on'), ms || 1700);
+  }
+  function status(html) { $('status').innerHTML = html; }
+
+  /* ===================== hoạt ảnh ===================================== */
+  function centerOf(el) {
+    const a = el.getBoundingClientRect(), b = $('board').parentElement.getBoundingClientRect();
+    return { x: a.left - b.left + a.width / 2, y: a.top - b.top + a.height / 2 };
+  }
+  function moveHand(i, n) {
+    const h = $('hand'), el = cellEls[i], p = centerOf(el);
+    /* nhấc lên khỏi mặt ô một chút, đè lên đám sỏi thì nhìn không ra */
+    const lift = Math.min(el.getBoundingClientRect().height * 0.42, 34);
+    h.style.left = p.x + 'px';
+    h.style.top = (p.y - lift) + 'px';
+    h.textContent = '✋ ' + n;
+    h.classList.add('on');
+  }
+  function hideHand() { $('hand').classList.remove('on'); }
+
+  function flyTo(fromCell, player, text) {
+    const wrap = $('board').parentElement;
+    const a = centerOf(cellEls[fromCell]);
+    const f = document.createElement('div');
+    f.className = 'fly'; f.textContent = text;
+    f.style.left = a.x + 'px'; f.style.top = a.y + 'px';
+    wrap.appendChild(f);
+    const target = $('sc' + player).getBoundingClientRect();
+    const b = wrap.getBoundingClientRect();
+    requestAnimationFrame(() => {
+      f.style.left = (target.left - b.left + target.width / 2) + 'px';
+      f.style.top = (target.top - b.top + target.height / 2) + 'px';
+      f.style.opacity = '0';
+    });
+    setTimeout(() => f.remove(), 700);
+  }
+
+  /* Chạy một sự kiện lên thế cờ đang vẽ. Sai sót có bị lọt thì cuối nước đi
+     V được gán lại bằng S nên bàn cờ tự khớp lại, không trôi dần. */
+  function stepView(e) {
+    const c = e.cell != null ? V.cells[e.cell] : null;
+    switch (e.t) {
+      case 'pick': c.dan = 0; break;
+      case 'sow': c.dan++; break;
+      case 'eat':
+        V.captured[e.player].dan += e.dan;
+        V.captured[e.player].quan += e.quan;
+        c.dan = 0; c.quan = 0;
+        break;
+      case 'refill':
+        for (const pl of e.placed) { V.cells[pl.cell].dan++; V.captured[pl.from].dan--; }
+        break;
+      case 'sweep':
+        for (const g of e.got) {
+          V.captured[e.player].dan += g.dan;
+          V.captured[e.player].quan += g.quan;
+          V.cells[g.cell].dan = 0; V.cells[g.cell].quan = 0;
+        }
+        break;
+      case 'splitQuan': {
+        const half = Math.floor(e.dan / 2);
+        V.captured[e.to[0]].dan += half;
+        V.captured[e.to[1]].dan += e.dan - half;
+        V.captured[e.to[1]].quan += e.quan;
+        c.dan = 0; c.quan = 0;
+        break;
+      }
+      case 'settle':
+        V.captured[e.from].dan -= e.dan;
+        V.captured[e.to].dan += e.dan;
+        break;
+    }
+  }
+
+  async function playEvents(events) {
+    const ms = SPEED[CF.speed] || 165;
+    for (const e of events) {
+      switch (e.t) {
+
+        case 'pick':
+          cellEls[e.cell].classList.add('active');
+          stepView(e);
+          drawCell(e.cell, false);
+          moveHand(e.cell, e.count);
+          SFX.pick();
+          await sleep(e.chain ? ms * 1.5 : ms * 1.8);
+          cellEls[e.cell].classList.remove('active');
+          break;
+
+        case 'sow':
+          moveHand(e.cell, e.left);
+          stepView(e);
+          drawCell(e.cell, true);
+          cellEls[e.cell].classList.add('drop');
+          SFX.sow(e.cell);
+          setTimeout(() => cellEls[e.cell].classList.remove('drop'), 300);
+          await sleep(ms);
+          break;
+
+        case 'eat': {
+          hideHand();
+          const el = cellEls[e.cell];
+          el.classList.add('eaten');
+          const pts = e.dan + e.quan * S.opts.quanValue;
+          flyTo(e.cell, e.player, '+' + pts);
+          stepView(e);
+          drawCell(e.cell, false);
+          if (e.quan > 0) { SFX.quan(); toast(names[e.player] + ' ăn được QUAN! +' + pts + ' điểm', 2200); }
+          else SFX.eat();
+          drawScores();
+          await sleep(e.quan > 0 ? 780 : 460);
+          el.classList.remove('eaten');
+          break;
+        }
+
+        case 'quanNon':
+          hideHand();
+          cellEls[e.cell].classList.add('nono');
+          SFX.nope();
+          toast('Quan mới có ' + e.have + ' dân, còn non — chưa ăn được, mất lượt.', 2400);
+          await sleep(700);
+          cellEls[e.cell].classList.remove('nono');
+          break;
+
+        case 'stopQuan':
+          hideHand();
+          cellEls[e.cell].classList.add('nono');
+          SFX.nope();
+          toast('Viên cuối dừng ngay trước ô quan — mất lượt.', 1900);
+          await sleep(600);
+          cellEls[e.cell].classList.remove('nono');
+          break;
+
+        case 'stopEmpty':
+          hideHand();
+          await sleep(220);
+          break;
+
+        case 'refill':
+          hideHand();
+          toast(names[e.player] + ' hết sỏi, phải rải lại mỗi ô một viên.', 2100);
+          for (const pl of e.placed) {
+            V.cells[pl.cell].dan++; V.captured[pl.from].dan--;
+            drawCell(pl.cell, true);
+            drawScores();                 // cho thấy chỗ sỏi đã ăn vơi dần đi
+            cellEls[pl.cell].classList.add('drop');
+            SFX.sow(pl.cell);
+            setTimeout(() => cellEls[pl.cell].classList.remove('drop'), 300);
+            await sleep(Math.max(70, ms * 0.7));
+          }
+          drawScores();
+          break;
+
+        case 'sweep':
+          stepView(e);
+          for (const g of e.got) {
+            drawCell(g.cell, false);
+            flyTo(g.cell, e.player, '+' + (g.dan + g.quan * S.opts.quanValue));
+          }
+          drawScores();
+          await sleep(320);
+          break;
+
+        case 'splitQuan':
+          stepView(e);
+          drawCell(e.cell, false);
+          drawScores();
+          await sleep(260);
+          break;
+
+        case 'settle':
+          stepView(e);
+          drawScores();
+          break;
+
+        case 'stall':
+          toast('Nước đi này chạy vòng mãi không dứt — engine phải cắt ngang.', 2600);
+          break;
+      }
+    }
+    hideHand();
+    V = S;                     // khớp lại với thế thật, xoá mọi sai lệch nếu có
+    drawAll(false);
+    drawScores();
+  }
+
+  /* ===================== lượt đi ====================================== */
+  function clearPick() {
+    cellEls.forEach(el => { el.classList.remove('pick', 'hintbest'); const d = el.querySelector('.dirpick'); if (d) d.remove(); });
+  }
+
+  function markPick() {
+    clearPick();
+    if (S.over || busy) return;
+    if (isAI(S.turn)) return;
+    for (const mv of E.legalMoves(S)) cellEls[mv.cell].classList.add('pick');
+  }
+
+  function onCellClick(i) {
+    if (busy || S.over || isAI(S.turn)) return;
+    const moves = E.legalMoves(S).filter(m => m.cell === i);
+    if (!moves.length) return;
+    SFX.unlock();
+    if (moves.length === 1) { go(moves[0]); return; }
+
+    /* được chọn chiều: hiện hai mũi tên ngay trên ô vừa chạm */
+    clearPick();
+    const el = cellEls[i];
+    const box = document.createElement('div');
+    box.className = 'dirpick';
+    for (const mv of moves.sort((a, b) => a.dir - b.dir)) {
+      const b = document.createElement('button');
+      b.textContent = mv.dir > 0 ? '▶' : '◀';
+      b.title = mv.dir > 0 ? 'Rải xuôi' : 'Rải ngược';
+      b.addEventListener('click', ev => { ev.stopPropagation(); go(mv); });
+      box.appendChild(b);
+    }
+    el.appendChild(box);
+    status('Chọn chiều rải. Chạm chỗ khác để bỏ.');
+    setTimeout(() => {
+      const off = ev => {
+        if (!el.contains(ev.target)) { clearPick(); markPick(); updateStatus(); document.removeEventListener('click', off); }
+      };
+      document.addEventListener('click', off);
+    }, 0);
+  }
+
+  async function go(mv) {
+    busy = true;
+    clearPick();
+    status('<b>' + names[S.turn] + '</b> đang rải sỏi…');
+    V = E.clone(S);                       // giữ thế cờ TRƯỚC nước đi để vẽ dần
+    const events = E.applyMove(S, mv);
+    await playEvents(events);
+    busy = false;
+    after();
+  }
+
+  function after() {
+    if (S.over) { showOver(); return; }
+    drawScores();
+    updateStatus();
+    if (isAI(S.turn)) {
+      busy = true;
+      setTimeout(() => {
+        const mv = AI.pick(S, CF.level);
+        busy = false;
+        if (mv) go(mv); else { S.over = true; showOver(); }
+      }, 380);
+    } else {
+      markPick();
+    }
+  }
+
+  function updateStatus() {
+    if (S.over) return;
+    const who = S.turn === 0 ? names[0] : names[1];
+    if (isAI(S.turn)) { status('<b>' + who + '</b> đang nghĩ…'); return; }
+    const extra = CF.dir === 'free' ? ' rồi chọn chiều' : '';
+    status('Lượt <b>' + who + '</b> — chạm một ô sáng' + extra + '.');
+  }
+
+  /* ===================== mách nước ==================================== */
+  function hint() {
+    if (busy || S.over || isAI(S.turn)) return;
+    const mv = AI.pick(S, 'kho');
+    if (!mv) return;
+    clearPick(); markPick();
+    cellEls[mv.cell].classList.add('hintbest');
+    if (CF.dir === 'free') toast('Thử ô này, rải ' + (mv.dir > 0 ? 'xuôi ▶' : 'ngược ◀'), 2000);
+    else toast('Thử ô này xem', 1500);
+  }
+
+  /* ===================== bắt đầu / kết thúc =========================== */
+  function startGame() {
+    names = CF.mode === 'may'
+      ? ['Bạn', 'Máy ' + (AI.LEVELS[CF.level] || AI.LEVELS.thuong).name.toLowerCase()]
+      : ['Người 1', 'Người 2'];
+
+    S = E.newGame({
+      players: 2,
+      lockDirection: CF.dir === 'lock',
+      quanNon: parseInt(CF.non, 10),
+      quanValue: parseInt(CF.qv, 10)
+    });
+    S.turn = parseInt(CF.first, 10) === 1 ? 1 : 0;
+    V = S;
+
+    buildBoard();
+    requestAnimationFrame(() => { layoutBoard(); drawAll(false); });
+    drawAll(false);
+    drawScores();
+    $('setup').classList.remove('on');
+    $('play').classList.add('on');
+    $('mOver').classList.remove('on');
+    busy = false;
+    $('btnHint').hidden = (CF.mode !== 'may');
+    updateStatus();
+    if (isAI(S.turn)) after(); else markPick();
+  }
+
+  function showOver() {
+    clearPick();
+    drawScores();
+    const a = E.score(S, 0), b = E.score(S, 1);
+    const big = $('ovBig');
+    $('ovA').textContent = a; $('ovB').textContent = b;
+    $('ovAL').textContent = names[0]; $('ovBL').textContent = names[1];
+
+    let note = '';
+    if (a === b) {
+      big.textContent = 'HOÀ'; big.className = 'big draw';
+      record.d++; SFX.eat();
+      note = 'Đúng bằng nhau, không ai chịu ai.';
+    } else if (CF.mode === 'may') {
+      const win = a > b;
+      big.textContent = win ? 'BẠN THẮNG' : 'MÁY THẮNG';
+      big.className = 'big ' + (win ? 'win' : 'lose');
+      win ? record.w++ : record.l++;
+      win ? SFX.win() : SFX.lose();
+      note = 'Đối đầu với máy: thắng ' + record.w + ' · thua ' + record.l + ' · hoà ' + record.d + '.';
+    } else {
+      const win = a > b;
+      big.textContent = (win ? names[0] : names[1]).toUpperCase() + ' THẮNG';
+      big.className = 'big ' + (win ? 'win' : 'lose');
+      SFX.win();
+      note = 'Cách nhau ' + Math.abs(a - b) + ' điểm.';
+    }
+    try { localStorage.setItem(KEY + '-rec', JSON.stringify(record)); } catch (e) { }
+    $('ovNote').textContent = note;
+    status('Ván đã xong.');
+    setTimeout(() => $('mOver').classList.add('on'), 550);
+  }
+
+  /* ===================== nối dây ====================================== */
+  function refreshSetupVisibility() {
+    $('fLevel').hidden = (CF.mode !== 'may');
+    const f = $('optFirst').children;
+    f[0].textContent = CF.mode === 'may' ? 'Bạn' : 'Người 1';
+    f[1].textContent = CF.mode === 'may' ? 'Máy' : 'Người 2';
+  }
+
+  group('optMode', 'mode', refreshSetupVisibility);
+  group('optLevel', 'level');
+  group('optFirst', 'first');
+  group('optDir', 'dir');
+  group('optNon', 'non');
+  group('optQV', 'qv');
+  group('optSpeed', 'speed');
+  refreshSetupVisibility();
+
+  $('btnStart').addEventListener('click', () => { SFX.unlock(); startGame(); });
+  $('btnBack').addEventListener('click', () => {
+    $('play').classList.remove('on'); $('setup').classList.add('on'); $('mOver').classList.remove('on');
+  });
+  $('btnHint').addEventListener('click', hint);
+  $('btnRules1').addEventListener('click', () => $('mRules').classList.add('on'));
+  $('btnRules2').addEventListener('click', () => $('mRules').classList.add('on'));
+  $('btnCloseRules').addEventListener('click', () => $('mRules').classList.remove('on'));
+  $('mRules').addEventListener('click', ev => { if (ev.target === $('mRules')) $('mRules').classList.remove('on'); });
+
+  $('btnSound').addEventListener('click', () => {
+    const b = $('btnSound');
+    const on = b.getAttribute('aria-pressed') !== 'true';
+    b.setAttribute('aria-pressed', String(on));
+    b.textContent = on ? 'Tiếng ♪' : 'Tắt tiếng';
+    SFX.unlock(); SFX.setOn(on); save();
+  });
+  $('btnSound').setAttribute('aria-pressed', String(CF.sound));
+  $('btnSound').textContent = CF.sound ? 'Tiếng ♪' : 'Tắt tiếng';
+
+  $('btnAgain').addEventListener('click', () => {
+    /* đổi người đi trước cho công bằng: đi trước có lợi thật */
+    CF.first = CF.first === '0' ? '1' : '0'; save();
+    const g = $('optFirst');
+    Array.from(g.children).forEach(b => b.setAttribute('aria-checked', String(b.dataset.v === CF.first)));
+    startGame();
+  });
+  $('btnMenu').addEventListener('click', () => {
+    $('mOver').classList.remove('on');
+    $('play').classList.remove('on'); $('setup').classList.add('on');
+  });
+
+  let rzT = null;
+  window.addEventListener('resize', () => {
+    if (!S) return;
+    clearTimeout(rzT);
+    rzT = setTimeout(() => { layoutBoard(); drawAll(false); }, 120);
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) SFX.unlock(); });
+})();
+
+</script>
+</body>
+
+</html>

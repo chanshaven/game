@@ -16,7 +16,7 @@
   const KEY = 'o-an-quan';
   const CF = {
     mode: 'may', level: 'thuong', first: '0',
-    dir: 'lock', non: '5', qv: '10', speed: 'vua', vol: 60
+    dir: 'free', non: '5', qv: '10', speed: 'vua', vol: 60
   };
   try {
     const raw = localStorage.getItem(KEY);
@@ -501,33 +501,96 @@
     for (const mv of E.legalMoves(S)) cellEls[mv.cell].classList.add('pick');
   }
 
-  function onCellClick(i) {
-    if (busy || S.over || isAI(S.turn)) return;
-    const moves = E.legalMoves(S).filter(m => m.cell === i);
-    if (!moves.length) return;
-    SFX.unlock();
-    if (moves.length === 1) { go(moves[0]); return; }
+  /* Bàn nằm thì chiều rải là trái phải, bàn dựng đứng thì là lên xuống — mà
+     ngay trên cùng một bàn, hướng của cùng một chiều còn khác nhau giữa hai
+     người: phần người này chạy xuôi xuống, phần người kia chạy ngược lên. Nên
+     mũi tên phải đo từ chỗ ngồi thật của ô kế tiếp, không đoán theo bố cục. */
+  function dirArrow(i, dir) {
+    const a = cellEls[i].getBoundingClientRect();
+    const b = cellEls[E.next(S, i, dir)].getBoundingClientRect();
+    const x = (b.left + b.width / 2) - (a.left + a.width / 2);
+    const y = (b.top + b.height / 2) - (a.top + a.height / 2);
+    const updown = Math.abs(y) > Math.abs(x);
+    return {
+      x: x, y: y, updown: updown,
+      glyph: updown ? (y > 0 ? '▼' : '▲') : (x > 0 ? '▶' : '◀'),
+      ten: updown ? (y > 0 ? 'xuống' : 'lên') : (x > 0 ? 'sang phải' : 'sang trái')
+    };
+  }
 
-    /* được chọn chiều: hiện hai mũi tên ngay trên ô vừa chạm */
+  function showDirPick(i, moves) {
     clearPick();
     const el = cellEls[i];
+    const info = moves.map(mv => ({ mv: mv, v: dirArrow(i, mv.dir) }));
+    const updown = info.every(o => o.v.updown);
+    info.sort((p, q) => updown ? p.v.y - q.v.y : p.v.x - q.v.x);
+
     const box = document.createElement('div');
-    box.className = 'dirpick';
-    for (const mv of moves.sort((a, b) => a.dir - b.dir)) {
+    box.className = 'dirpick' + (updown ? ' updown' : '');
+    for (const o of info) {
       const b = document.createElement('button');
-      b.textContent = mv.dir > 0 ? '▶' : '◀';
-      b.title = mv.dir > 0 ? 'Rải xuôi' : 'Rải ngược';
-      b.addEventListener('click', ev => { ev.stopPropagation(); go(mv); });
+      b.textContent = o.v.glyph;
+      b.title = 'Rải ' + o.v.ten;
+      b.addEventListener('click', ev => { ev.stopPropagation(); go(o.mv); });
       box.appendChild(b);
     }
     el.appendChild(box);
     status('Chọn chiều rải. Chạm chỗ khác để bỏ.');
     setTimeout(() => {
       const off = ev => {
-        if (!el.contains(ev.target)) { clearPick(); markPick(); updateStatus(); document.removeEventListener('click', off); }
+        if (!el.contains(ev.target)) {
+          clearPick(); markPick(); updateStatus();
+          document.removeEventListener('click', off);
+        }
       };
       document.addEventListener('click', off);
     }, 0);
+  }
+
+  function onCellClick(i) {
+    if (busy || S.over || isAI(S.turn)) return;
+    const moves = E.legalMoves(S).filter(m => m.cell === i);
+    if (!moves.length) return;
+    SFX.unlock();
+    if (moves.length === 1) { go(moves[0]); return; }
+    showDirPick(i, moves);
+  }
+
+  /* ===================== lướt để chọn chiều =========================== *
+     Chạm vào ô rồi lướt theo hướng muốn rải. Nhanh hơn chạm rồi bấm mũi tên,
+     và hợp tay hơn trên điện thoại. Lướt nhẹ quá thì coi như chạm, để cái
+     click lo tiếp.                                                          */
+  let swipe = null;
+  const SWIPE_MIN = 20;      // px, dưới mức này coi là chạm
+  const SWIPE_COS = 0.5;     // hướng lướt phải lệch dưới 60° so với hướng rải
+
+  function wireSwipe() {
+    const board = $('board');
+    board.addEventListener('pointerdown', ev => {
+      if (!S || busy || S.over || isAI(S.turn)) return;
+      const cell = ev.target.closest('.cell.pick');
+      if (!cell) return;
+      swipe = { i: +cell.dataset.i, x: ev.clientX, y: ev.clientY };
+    });
+    board.addEventListener('pointercancel', () => { swipe = null; });
+    board.addEventListener('pointerup', ev => {
+      const sw = swipe; swipe = null;
+      if (!sw || !S || busy || S.over || isAI(S.turn)) return;
+      const dx = ev.clientX - sw.x, dy = ev.clientY - sw.y;
+      const len = Math.hypot(dx, dy);
+      if (len < SWIPE_MIN) return;
+      const moves = E.legalMoves(S).filter(m => m.cell === sw.i);
+      if (!moves.length) return;
+
+      let best = null, bestCos = SWIPE_COS;
+      for (const mv of moves) {
+        const v = dirArrow(sw.i, mv.dir);
+        const vl = Math.hypot(v.x, v.y) || 1;
+        const cos = (dx * v.x + dy * v.y) / (len * vl);
+        if (cos > bestCos) { bestCos = cos; best = mv; }
+      }
+      if (best) { SFX.unlock(); go(best); }
+    });
   }
 
   async function go(mv) {
@@ -557,12 +620,18 @@
     }
   }
 
+  const coarse = (function () {
+    try { return window.matchMedia('(pointer: coarse)').matches; } catch (e) { return false; }
+  })();
+
   function updateStatus() {
     if (S.over) return;
     const who = S.turn === 0 ? names[0] : names[1];
     if (isAI(S.turn)) { status('<b>' + who + '</b> đang nghĩ…'); return; }
-    const extra = CF.dir === 'free' ? ' rồi chọn chiều' : '';
-    status('Lượt <b>' + who + '</b> — chạm một ô sáng' + extra + '.');
+    if (CF.dir !== 'free') { status('Lượt <b>' + who + '</b> — chạm một ô sáng.'); return; }
+    status('Lượt <b>' + who + '</b> — ' +
+      (coarse ? 'chạm một ô rồi <b>lướt</b> theo hướng muốn rải.'
+              : 'chạm một ô rồi chọn chiều, hoặc kéo theo hướng muốn rải.'));
   }
 
   /* ===================== mách nước ==================================== */
@@ -671,10 +740,6 @@
   $('btnCloseRules').addEventListener('click', () => $('mRules').classList.remove('on'));
   $('mRules').addEventListener('click', ev => { if (ev.target === $('mRules')) $('mRules').classList.remove('on'); });
 
-  /* --- bảng tuỳ chỉnh luật (chỉ mở được trước ván) --- */
-  $('btnSettings').addEventListener('click', () => { SFX.unlock(); $('mSettings').classList.add('on'); });
-  $('btnCloseSettings').addEventListener('click', () => $('mSettings').classList.remove('on'));
-
   /* --- bảng tuỳ chọn trong ván: âm lượng và tốc độ, không đụng tới luật --- */
   const vol = $('vol'), volVal = $('volVal');
   function paintVol() {
@@ -693,7 +758,7 @@
   $('btnOpts').addEventListener('click', () => { SFX.unlock(); $('mOptions').classList.add('on'); });
   $('btnCloseOptions').addEventListener('click', () => $('mOptions').classList.remove('on'));
 
-  for (const id of ['mSettings', 'mOptions']) {
+  for (const id of ['mOptions']) {
     $(id).addEventListener('click', ev => { if (ev.target === $(id)) $(id).classList.remove('on'); });
   }
 
@@ -710,6 +775,8 @@
   });
 
   let rzT = null;
+  wireSwipe();
+
   window.addEventListener('resize', () => {
     if (!S) return;
     clearTimeout(rzT);

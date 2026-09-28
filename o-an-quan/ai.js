@@ -13,7 +13,7 @@ const OAQ_AI = (function (E) {
 
   const LEVELS = {
     de:     { name: 'Dễ',     depth: 0, noise: 1.0 },
-    thuong: { name: 'Thường', depth: 2, noise: 0.25 },
+    thuong: { name: 'Trung bình', depth: 2, noise: 0.25 },
     kho:    { name: 'Khó',    depth: 7, noise: 0 }
   };
 

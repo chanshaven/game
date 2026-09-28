@@ -43,23 +43,24 @@ sỏi đã ăn, mỗi ô một viên. Không đủ thì vay của đối thủ, 
 **Hết quan tàn dân.** Cả hai ô quan sạch sỏi là xong ván. Ai còn sỏi bên phần
 mình thì vơ về. Dân một điểm, quan mười điểm (đổi được thành năm).
 
-**Chiều rải.** Luật dân gian cho chọn chiều mỗi lượt. Bản này mặc định *khoá một
-chiều* cho dễ học, mở "Mở rộng — tự chọn chiều" thì mỗi lượt được chọn trái phải.
+**Chiều rải.** Luật dân gian cho chọn chiều mỗi lượt, nên **hai chiều là mặc
+định**. Chọn *một chiều* thì cả ván chỉ rải theo một hướng — dễ học hơn, và máy
+cũng dễ tính hơn.
 
 ## Máy đấu
 
 | Mức | Cách nghĩ |
 | --- | --- |
 | Dễ | Gần như ngẫu nhiên, thấy ăn thì hơi thích |
-| Thường | Tham ăn một nước, có ngó nước trả đũa |
+| Trung bình | Tham ăn một nước, có ngó nước trả đũa |
 | Khó | Minimax cắt tỉa alpha-beta, sâu 7 nước |
 
 Ô ăn quan không có may rủi: cùng một thế, cùng một nước thì kết quả luôn như
 nhau, nên minimax chạy thẳng không cần mô phỏng xác suất. Nhánh chỉ có năm nước
 (mười nếu được chọn chiều) nên đào sâu bảy tầng vẫn nhẹ.
 
-Đo trên `bench.js`, đổi bên cho công bằng: **Khó thắng Thường 91%**, **Thường
-thắng Dễ 87%**. Khó đi trước thì thắng Thường trọn 50/50 ván.
+Đo trên `bench.js`, đổi bên cho công bằng: **Khó thắng Trung bình 91%**, **Trung
+bình thắng Dễ 87%**. Khó đi trước thì thắng Trung bình trọn 50/50 ván.
 
 ## Giao diện
 
@@ -76,9 +77,21 @@ nhảy lung tung giữa lúc đang rải.
 **Bàn tự dựng đứng** thành hai cột khi màn hình hẹp và cao, và bề ngang bị chặn
 theo chiều cao còn lại để không phải vừa chơi vừa cuộn.
 
-**Luật khoá trong ván.** Trước ván bấm *Tuỳ chỉnh luật chơi* để đổi chiều rải,
-quan non, giá quan, tốc độ. Đang chơi thì nút *Tuỳ chọn* chỉ cho chỉnh âm lượng
-và tốc độ rải — đổi luật giữa chừng là ván hỏng.
+**Bày hết tuỳ chỉnh ra màn thiết lập**, xếp thành lưới hai cột. Ai muốn chơi
+ngay thì bấm Bắt đầu, không phải mở bảng nào. Trên điện thoại nút Bắt đầu bám
+đáy màn hình để khỏi cuộn hết bảy mục mới bấm được.
+
+**Luật khoá trong ván.** Đang chơi thì nút *Tuỳ chọn* chỉ cho chỉnh âm lượng và
+tốc độ rải — đổi luật giữa chừng là ván hỏng.
+
+**Chọn chiều bằng cách lướt.** Chạm vào ô rồi lướt theo hướng muốn rải. Lướt nhẹ
+dưới 20px thì coi như chạm, và hướng lướt phải lệch dưới 60° so với hướng rải
+mới tính. Không lướt thì chạm rồi bấm mũi tên như cũ.
+
+**Mũi tên đo từ chỗ ngồi thật của ô kế tiếp**, không đoán theo bố cục. Bàn nằm
+thì ra trái phải, bàn dựng đứng ra lên xuống — mà ngay trên cùng một bàn, hướng
+của cùng một chiều còn khác nhau giữa hai người, vì phần người này chạy xuôi
+xuống còn phần người kia chạy ngược lên.
 
 ### Một cái bẫy đã dính
 
@@ -107,12 +120,15 @@ nước — ăn quan, quan non, rải lại khi hết dân.
 
 ## Người đi trước có lợi
 
-Khoá một chiều thì người đi trước thắng **70%** (máy Thường đấu máy Thường, 300
-ván). Cho chọn chiều thì cán cân lật hẳn: người đi trước chỉ còn thắng **27%** —
-đi sau được nhìn nước của đối thủ rồi mới chọn hướng, lợi hơn hẳn.
+Khoá một chiều thì người đi trước thắng **70%** (hai máy Trung bình, 300 ván).
+Cho chọn chiều thì cán cân lật hẳn: người đi trước chỉ còn thắng **27%** — đi
+sau được nhìn nước của đối thủ rồi mới chọn hướng, lợi hơn hẳn.
 
 Chênh lệch này là có thật trong trò chơi, không phải lỗi. Nên sau mỗi ván game
 **tự đổi người đi trước**.
+
+Lưu ý: mặc định hiện tại là *hai chiều* + *bạn đi trước*, tức là người chơi đang
+cầm bên thiệt. Muốn dễ thở thì để máy đi trước, hoặc chuyển sang một chiều.
 
 ## Còn thiếu
 

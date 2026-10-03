@@ -438,6 +438,17 @@
         transition: none !important
       }
     }
+
+    /* ===== Ảnh thẻ Ai Là Triệu Phú: logo tròn của chương trình ===== */
+    .altp-logo {
+      width: 132px;
+      height: 132px;
+      filter: drop-shadow(0 8px 22px rgba(0, 0, 0, .55));
+      transition: transform .35s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .card:hover .altp-logo { transform: scale(1.06) rotate(-4deg); }
+
   </style>
 </head>
 
@@ -538,6 +549,25 @@
             <span>1–2 người</span>
             <span>Máy 3 mức</span>
             <span>Có mách nước</span>
+          </div>
+          <div class="play"><span>CHƠI NGAY</span></div>
+        </div>
+      </a>
+
+      <!-- ===== Ai Là Triệu Phú ===== -->
+      <a class="card" href="./ai-la-trieu-phu/">
+        <div class="thumb">
+          <img class="altp-logo" src="./ai-la-trieu-phu/logo.svg" alt=""
+            loading="lazy" width="150" height="150">
+        </div>
+        <div class="body">
+          <div class="name">Ai Là Triệu Phú</div>
+          <p class="desc">Mười lăm câu hỏi, bốn quyền trợ giúp, hai mốc an toàn. Tiếng dẫn cắt từ chương
+            trình thật, nên chơi phải bật loa. Người thân và khán giả cũng có lúc trả lời sai.</p>
+          <div class="tags">
+            <span>1 người</span>
+            <span>Có tiếng dẫn</span>
+            <span>Có đồng hồ đếm giờ</span>
           </div>
           <div class="play"><span>CHƠI NGAY</span></div>
         </div>
